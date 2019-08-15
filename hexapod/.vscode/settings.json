@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "confhard.h": "c",
+        "confboard.h": "c"
+    }
+}

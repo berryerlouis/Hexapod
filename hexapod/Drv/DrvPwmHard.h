@@ -1,0 +1,22 @@
+/*
+ * DrvPwnHard.h
+ *
+ * Created: 23/10/2016 12:58:24
+ *  Author: berryer
+ */ 
+
+
+#ifndef DRVPWM_HARD_H_
+#define DRVPWM_HARD_H_
+
+#include "Tools/tools_typedefs.h"
+#include "Drv/DrvIo.h"
+////////////////////////////////////////////PUBLIC DEFINES///////////////////////////////////////////
+#define PWM_HARD_TICKS_PER_US			64U //	1/16000000MHz * 1024 => 64 ticks pour 1 µs
+
+/////////////////////////////////////////PUBLIC STRUCTURES/////////////////////////////////////////
+
+
+/////////////////////////////////////////PUBLIC FUNCTIONS/////////////////////////////////////////
+
+#endif /* DRVPWM_HARD_H_ */

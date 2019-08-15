@@ -1,0 +1,1625 @@
+
+dist/Release/production/hexapod.production.elf:     file format elf32-avr
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .data         000000e8  00800100  00000d6a  00000dfe  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  1 .text         00000d6a  00000000  00000000  00000094  2**1
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  2 .bss          000007f9  008001e8  008001e8  00000ee6  2**0
+                  ALLOC
+  3 .comment      00000030  00000000  00000000  00000ee6  2**0
+                  CONTENTS, READONLY
+  4 .note.gnu.avr.deviceinfo 00000040  00000000  00000000  00000f18  2**2
+                  CONTENTS, READONLY
+  5 .debug_aranges 00000040  00000000  00000000  00000f58  2**3
+                  CONTENTS, READONLY, DEBUGGING
+  6 .debug_info   000008ee  00000000  00000000  00000f98  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  7 .debug_abbrev 00000751  00000000  00000000  00001886  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  8 .debug_line   00000281  00000000  00000000  00001fd7  2**0
+                  CONTENTS, READONLY, DEBUGGING
+  9 .debug_str    00000296  00000000  00000000  00002258  2**0
+                  CONTENTS, READONLY, DEBUGGING
+
+Disassembly of section .text:
+
+00000000 <__vectors>:
+   0:	0c 94 46 00 	jmp	0x8c	; 0x8c <__ctors_end>
+   4:	0c 94 65 00 	jmp	0xca	; 0xca <__bad_interrupt>
+   8:	0c 94 65 00 	jmp	0xca	; 0xca <__bad_interrupt>
+   c:	0c 94 65 00 	jmp	0xca	; 0xca <__bad_interrupt>
+  10:	0c 94 65 00 	jmp	0xca	; 0xca <__bad_interrupt>
+  14:	0c 94 65 00 	jmp	0xca	; 0xca <__bad_interrupt>
+  18:	0c 94 65 00 	jmp	0xca	; 0xca <__bad_interrupt>
+  1c:	0c 94 65 00 	jmp	0xca	; 0xca <__bad_interrupt>
+  20:	0c 94 65 00 	jmp	0xca	; 0xca <__bad_interrupt>
+  24:	0c 94 f7 02 	jmp	0x5ee	; 0x5ee <__vector_9>
+  28:	0c 94 65 00 	jmp	0xca	; 0xca <__bad_interrupt>
+  2c:	0c 94 65 00 	jmp	0xca	; 0xca <__bad_interrupt>
+  30:	0c 94 65 00 	jmp	0xca	; 0xca <__bad_interrupt>
+  34:	0c 94 65 00 	jmp	0xca	; 0xca <__bad_interrupt>
+  38:	0c 94 65 00 	jmp	0xca	; 0xca <__bad_interrupt>
+  3c:	0c 94 65 00 	jmp	0xca	; 0xca <__bad_interrupt>
+  40:	0c 94 65 00 	jmp	0xca	; 0xca <__bad_interrupt>
+  44:	0c 94 65 00 	jmp	0xca	; 0xca <__bad_interrupt>
+  48:	0c 94 6c 02 	jmp	0x4d8	; 0x4d8 <__vector_18>
+  4c:	0c 94 65 00 	jmp	0xca	; 0xca <__bad_interrupt>
+  50:	0c 94 3b 04 	jmp	0x876	; 0x876 <__vector_20>
+  54:	0c 94 60 04 	jmp	0x8c0	; 0x8c0 <__vector_21>
+  58:	0c 94 f5 04 	jmp	0x9ea	; 0x9ea <__vector_22>
+  5c:	0c 94 65 00 	jmp	0xca	; 0xca <__bad_interrupt>
+  60:	0c 94 65 00 	jmp	0xca	; 0xca <__bad_interrupt>
+  64:	0c 94 65 00 	jmp	0xca	; 0xca <__bad_interrupt>
+  68:	0c 94 65 00 	jmp	0xca	; 0xca <__bad_interrupt>
+  6c:	0c 94 65 00 	jmp	0xca	; 0xca <__bad_interrupt>
+  70:	0c 94 93 04 	jmp	0x926	; 0x926 <__vector_28>
+  74:	0c 94 b8 04 	jmp	0x970	; 0x970 <__vector_29>
+  78:	0c 94 eb 04 	jmp	0x9d6	; 0x9d6 <__vector_30>
+  7c:	0c 94 65 00 	jmp	0xca	; 0xca <__bad_interrupt>
+  80:	0c 94 65 00 	jmp	0xca	; 0xca <__bad_interrupt>
+  84:	0c 94 65 00 	jmp	0xca	; 0xca <__bad_interrupt>
+  88:	0c 94 65 00 	jmp	0xca	; 0xca <__bad_interrupt>
+
+0000008c <__ctors_end>:
+  8c:	11 24       	eor	r1, r1
+  8e:	1f be       	out	0x3f, r1	; 63
+  90:	cf ef       	ldi	r28, 0xFF	; 255
+  92:	d0 e4       	ldi	r29, 0x40	; 64
+  94:	de bf       	out	0x3e, r29	; 62
+  96:	cd bf       	out	0x3d, r28	; 61
+
+00000098 <__do_copy_data>:
+  98:	11 e0       	ldi	r17, 0x01	; 1
+  9a:	a0 e0       	ldi	r26, 0x00	; 0
+  9c:	b1 e0       	ldi	r27, 0x01	; 1
+  9e:	ea e6       	ldi	r30, 0x6A	; 106
+  a0:	fd e0       	ldi	r31, 0x0D	; 13
+  a2:	00 e0       	ldi	r16, 0x00	; 0
+  a4:	0b bf       	out	0x3b, r16	; 59
+  a6:	02 c0       	rjmp	.+4      	; 0xac <__do_copy_data+0x14>
+  a8:	07 90       	elpm	r0, Z+
+  aa:	0d 92       	st	X+, r0
+  ac:	a8 3e       	cpi	r26, 0xE8	; 232
+  ae:	b1 07       	cpc	r27, r17
+  b0:	d9 f7       	brne	.-10     	; 0xa8 <__do_copy_data+0x10>
+
+000000b2 <__do_clear_bss>:
+  b2:	29 e0       	ldi	r18, 0x09	; 9
+  b4:	a8 ee       	ldi	r26, 0xE8	; 232
+  b6:	b1 e0       	ldi	r27, 0x01	; 1
+  b8:	01 c0       	rjmp	.+2      	; 0xbc <.do_clear_bss_start>
+
+000000ba <.do_clear_bss_loop>:
+  ba:	1d 92       	st	X+, r1
+
+000000bc <.do_clear_bss_start>:
+  bc:	a1 3e       	cpi	r26, 0xE1	; 225
+  be:	b2 07       	cpc	r27, r18
+  c0:	e1 f7       	brne	.-8      	; 0xba <.do_clear_bss_loop>
+  c2:	0e 94 1a 06 	call	0xc34	; 0xc34 <main>
+  c6:	0c 94 b3 06 	jmp	0xd66	; 0xd66 <_exit>
+
+000000ca <__bad_interrupt>:
+  ca:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+
+000000ce <DrvButtonIsrCallbackTimer>:
+  ce:	80 91 87 07 	lds	r24, 0x0787	; 0x800787 <MesButtons+0x1>
+  d2:	81 30       	cpi	r24, 0x01	; 1
+  d4:	49 f5       	brne	.+82     	; 0x128 <DrvButtonIsrCallbackTimer+0x5a>
+  d6:	80 91 89 07 	lds	r24, 0x0789	; 0x800789 <MesButtons+0x3>
+  da:	81 30       	cpi	r24, 0x01	; 1
+  dc:	91 f4       	brne	.+36     	; 0x102 <DrvButtonIsrCallbackTimer+0x34>
+  de:	80 91 86 07 	lds	r24, 0x0786	; 0x800786 <MesButtons>
+  e2:	0e 94 0c 01 	call	0x218	; 0x218 <DrvIoGetPinState>
+  e6:	81 11       	cpse	r24, r1
+  e8:	1d c0       	rjmp	.+58     	; 0x124 <DrvButtonIsrCallbackTimer+0x56>
+  ea:	80 91 88 07 	lds	r24, 0x0788	; 0x800788 <MesButtons+0x2>
+  ee:	8f 5f       	subi	r24, 0xFF	; 255
+  f0:	80 93 88 07 	sts	0x0788, r24	; 0x800788 <MesButtons+0x2>
+  f4:	80 91 88 07 	lds	r24, 0x0788	; 0x800788 <MesButtons+0x2>
+  f8:	8a 30       	cpi	r24, 0x0A	; 10
+  fa:	b0 f0       	brcs	.+44     	; 0x128 <DrvButtonIsrCallbackTimer+0x5a>
+  fc:	10 92 89 07 	sts	0x0789, r1	; 0x800789 <MesButtons+0x3>
+ 100:	11 c0       	rjmp	.+34     	; 0x124 <DrvButtonIsrCallbackTimer+0x56>
+ 102:	80 91 86 07 	lds	r24, 0x0786	; 0x800786 <MesButtons>
+ 106:	0e 94 0c 01 	call	0x218	; 0x218 <DrvIoGetPinState>
+ 10a:	81 30       	cpi	r24, 0x01	; 1
+ 10c:	59 f4       	brne	.+22     	; 0x124 <DrvButtonIsrCallbackTimer+0x56>
+ 10e:	90 91 88 07 	lds	r25, 0x0788	; 0x800788 <MesButtons+0x2>
+ 112:	9f 5f       	subi	r25, 0xFF	; 255
+ 114:	90 93 88 07 	sts	0x0788, r25	; 0x800788 <MesButtons+0x2>
+ 118:	90 91 88 07 	lds	r25, 0x0788	; 0x800788 <MesButtons+0x2>
+ 11c:	9a 30       	cpi	r25, 0x0A	; 10
+ 11e:	20 f0       	brcs	.+8      	; 0x128 <DrvButtonIsrCallbackTimer+0x5a>
+ 120:	80 93 89 07 	sts	0x0789, r24	; 0x800789 <MesButtons+0x3>
+ 124:	10 92 88 07 	sts	0x0788, r1	; 0x800788 <MesButtons+0x2>
+ 128:	08 95       	ret
+
+0000012a <DrvButtonInit>:
+ 12a:	27 e6       	ldi	r18, 0x67	; 103
+ 12c:	30 e0       	ldi	r19, 0x00	; 0
+ 12e:	41 e0       	ldi	r20, 0x01	; 1
+ 130:	65 e0       	ldi	r22, 0x05	; 5
+ 132:	70 e0       	ldi	r23, 0x00	; 0
+ 134:	80 e0       	ldi	r24, 0x00	; 0
+ 136:	0e 94 b5 02 	call	0x56a	; 0x56a <DrvTimerAddTimer>
+ 13a:	81 e0       	ldi	r24, 0x01	; 1
+ 13c:	08 95       	ret
+
+0000013e <DrvButtonAddButton>:
+ 13e:	81 11       	cpse	r24, r1
+ 140:	11 c0       	rjmp	.+34     	; 0x164 <DrvButtonAddButton+0x26>
+ 142:	80 91 00 01 	lds	r24, 0x0100	; 0x800100 <ButtonsPins>
+ 146:	80 93 86 07 	sts	0x0786, r24	; 0x800786 <MesButtons>
+ 14a:	81 e0       	ldi	r24, 0x01	; 1
+ 14c:	80 93 87 07 	sts	0x0787, r24	; 0x800787 <MesButtons+0x1>
+ 150:	10 92 88 07 	sts	0x0788, r1	; 0x800788 <MesButtons+0x2>
+ 154:	10 92 8a 07 	sts	0x078A, r1	; 0x80078a <MesButtons+0x4>
+ 158:	80 93 89 07 	sts	0x0789, r24	; 0x800789 <MesButtons+0x3>
+ 15c:	80 91 86 07 	lds	r24, 0x0786	; 0x800786 <MesButtons>
+ 160:	0c 94 ec 00 	jmp	0x1d8	; 0x1d8 <DrvIoSetPinInput>
+ 164:	80 e0       	ldi	r24, 0x00	; 0
+ 166:	08 95       	ret
+
+00000168 <DrvEepromIsConfigured>:
+ 168:	80 e0       	ldi	r24, 0x00	; 0
+ 16a:	90 e0       	ldi	r25, 0x00	; 0
+ 16c:	0e 94 9d 06 	call	0xd3a	; 0xd3a <eeprom_read_byte>
+ 170:	91 e0       	ldi	r25, 0x01	; 1
+ 172:	8f 3f       	cpi	r24, 0xFF	; 255
+ 174:	09 f4       	brne	.+2      	; 0x178 <DrvEepromIsConfigured+0x10>
+ 176:	90 e0       	ldi	r25, 0x00	; 0
+ 178:	89 2f       	mov	r24, r25
+ 17a:	08 95       	ret
+
+0000017c <DrvEepromInit>:
+ 17c:	0e 94 b4 00 	call	0x168	; 0x168 <DrvEepromIsConfigured>
+ 180:	81 30       	cpi	r24, 0x01	; 1
+ 182:	51 f0       	breq	.+20     	; 0x198 <DrvEepromInit+0x1c>
+ 184:	60 e1       	ldi	r22, 0x10	; 16
+ 186:	81 e0       	ldi	r24, 0x01	; 1
+ 188:	90 e0       	ldi	r25, 0x00	; 0
+ 18a:	0e 94 a5 06 	call	0xd4a	; 0xd4a <eeprom_write_byte>
+ 18e:	60 e5       	ldi	r22, 0x50	; 80
+ 190:	82 e0       	ldi	r24, 0x02	; 2
+ 192:	90 e0       	ldi	r25, 0x00	; 0
+ 194:	0e 94 a5 06 	call	0xd4a	; 0xd4a <eeprom_write_byte>
+ 198:	81 e0       	ldi	r24, 0x01	; 1
+ 19a:	08 95       	ret
+
+0000019c <DrvEepromSetConfiguration>:
+ 19c:	61 e0       	ldi	r22, 0x01	; 1
+ 19e:	80 e0       	ldi	r24, 0x00	; 0
+ 1a0:	90 e0       	ldi	r25, 0x00	; 0
+ 1a2:	0c 94 a5 06 	jmp	0xd4a	; 0xd4a <eeprom_write_byte>
+
+000001a6 <DrvIoSetPinOutput>:
+ 1a6:	80 32       	cpi	r24, 0x20	; 32
+ 1a8:	a8 f4       	brcc	.+42     	; 0x1d4 <DrvIoSetPinOutput+0x2e>
+ 1aa:	97 e0       	ldi	r25, 0x07	; 7
+ 1ac:	89 9f       	mul	r24, r25
+ 1ae:	f0 01       	movw	r30, r0
+ 1b0:	11 24       	eor	r1, r1
+ 1b2:	e9 5f       	subi	r30, 0xF9	; 249
+ 1b4:	fe 4f       	sbci	r31, 0xFE	; 254
+ 1b6:	a2 81       	ldd	r26, Z+2	; 0x02
+ 1b8:	b3 81       	ldd	r27, Z+3	; 0x03
+ 1ba:	2c 91       	ld	r18, X
+ 1bc:	81 e0       	ldi	r24, 0x01	; 1
+ 1be:	90 e0       	ldi	r25, 0x00	; 0
+ 1c0:	06 80       	ldd	r0, Z+6	; 0x06
+ 1c2:	02 c0       	rjmp	.+4      	; 0x1c8 <DrvIoSetPinOutput+0x22>
+ 1c4:	88 0f       	add	r24, r24
+ 1c6:	99 1f       	adc	r25, r25
+ 1c8:	0a 94       	dec	r0
+ 1ca:	e2 f7       	brpl	.-8      	; 0x1c4 <DrvIoSetPinOutput+0x1e>
+ 1cc:	82 2b       	or	r24, r18
+ 1ce:	8c 93       	st	X, r24
+ 1d0:	81 e0       	ldi	r24, 0x01	; 1
+ 1d2:	08 95       	ret
+ 1d4:	80 e0       	ldi	r24, 0x00	; 0
+ 1d6:	08 95       	ret
+
+000001d8 <DrvIoSetPinInput>:
+ 1d8:	80 32       	cpi	r24, 0x20	; 32
+ 1da:	e0 f4       	brcc	.+56     	; 0x214 <DrvIoSetPinInput+0x3c>
+ 1dc:	97 e0       	ldi	r25, 0x07	; 7
+ 1de:	89 9f       	mul	r24, r25
+ 1e0:	f0 01       	movw	r30, r0
+ 1e2:	11 24       	eor	r1, r1
+ 1e4:	e9 5f       	subi	r30, 0xF9	; 249
+ 1e6:	fe 4f       	sbci	r31, 0xFE	; 254
+ 1e8:	a2 81       	ldd	r26, Z+2	; 0x02
+ 1ea:	b3 81       	ldd	r27, Z+3	; 0x03
+ 1ec:	8c 91       	ld	r24, X
+ 1ee:	21 e0       	ldi	r18, 0x01	; 1
+ 1f0:	30 e0       	ldi	r19, 0x00	; 0
+ 1f2:	06 80       	ldd	r0, Z+6	; 0x06
+ 1f4:	02 c0       	rjmp	.+4      	; 0x1fa <DrvIoSetPinInput+0x22>
+ 1f6:	22 0f       	add	r18, r18
+ 1f8:	33 1f       	adc	r19, r19
+ 1fa:	0a 94       	dec	r0
+ 1fc:	e2 f7       	brpl	.-8      	; 0x1f6 <DrvIoSetPinInput+0x1e>
+ 1fe:	20 95       	com	r18
+ 200:	82 23       	and	r24, r18
+ 202:	8c 93       	st	X, r24
+ 204:	01 90       	ld	r0, Z+
+ 206:	f0 81       	ld	r31, Z
+ 208:	e0 2d       	mov	r30, r0
+ 20a:	80 81       	ld	r24, Z
+ 20c:	28 23       	and	r18, r24
+ 20e:	20 83       	st	Z, r18
+ 210:	81 e0       	ldi	r24, 0x01	; 1
+ 212:	08 95       	ret
+ 214:	80 e0       	ldi	r24, 0x00	; 0
+ 216:	08 95       	ret
+
+00000218 <DrvIoGetPinState>:
+ 218:	27 e0       	ldi	r18, 0x07	; 7
+ 21a:	82 9f       	mul	r24, r18
+ 21c:	c0 01       	movw	r24, r0
+ 21e:	11 24       	eor	r1, r1
+ 220:	fc 01       	movw	r30, r24
+ 222:	e9 5f       	subi	r30, 0xF9	; 249
+ 224:	fe 4f       	sbci	r31, 0xFE	; 254
+ 226:	a4 81       	ldd	r26, Z+4	; 0x04
+ 228:	b5 81       	ldd	r27, Z+5	; 0x05
+ 22a:	8c 91       	ld	r24, X
+ 22c:	90 e0       	ldi	r25, 0x00	; 0
+ 22e:	06 80       	ldd	r0, Z+6	; 0x06
+ 230:	02 c0       	rjmp	.+4      	; 0x236 <DrvIoGetPinState+0x1e>
+ 232:	95 95       	asr	r25
+ 234:	87 95       	ror	r24
+ 236:	0a 94       	dec	r0
+ 238:	e2 f7       	brpl	.-8      	; 0x232 <DrvIoGetPinState+0x1a>
+ 23a:	81 70       	andi	r24, 0x01	; 1
+ 23c:	08 95       	ret
+
+0000023e <DrvIoSetPinState>:
+ 23e:	27 e0       	ldi	r18, 0x07	; 7
+ 240:	82 9f       	mul	r24, r18
+ 242:	c0 01       	movw	r24, r0
+ 244:	11 24       	eor	r1, r1
+ 246:	dc 01       	movw	r26, r24
+ 248:	a9 5f       	subi	r26, 0xF9	; 249
+ 24a:	be 4f       	sbci	r27, 0xFE	; 254
+ 24c:	ed 91       	ld	r30, X+
+ 24e:	fc 91       	ld	r31, X
+ 250:	11 97       	sbiw	r26, 0x01	; 1
+ 252:	80 81       	ld	r24, Z
+ 254:	16 96       	adiw	r26, 0x06	; 6
+ 256:	9c 91       	ld	r25, X
+ 258:	46 2f       	mov	r20, r22
+ 25a:	40 95       	com	r20
+ 25c:	24 2f       	mov	r18, r20
+ 25e:	21 70       	andi	r18, 0x01	; 1
+ 260:	09 2e       	mov	r0, r25
+ 262:	01 c0       	rjmp	.+2      	; 0x266 <DrvIoSetPinState+0x28>
+ 264:	22 0f       	add	r18, r18
+ 266:	0a 94       	dec	r0
+ 268:	ea f7       	brpl	.-6      	; 0x264 <DrvIoSetPinState+0x26>
+ 26a:	20 95       	com	r18
+ 26c:	28 23       	and	r18, r24
+ 26e:	20 83       	st	Z, r18
+ 270:	80 81       	ld	r24, Z
+ 272:	01 c0       	rjmp	.+2      	; 0x276 <DrvIoSetPinState+0x38>
+ 274:	66 0f       	add	r22, r22
+ 276:	9a 95       	dec	r25
+ 278:	ea f7       	brpl	.-6      	; 0x274 <DrvIoSetPinState+0x36>
+ 27a:	68 2b       	or	r22, r24
+ 27c:	60 83       	st	Z, r22
+ 27e:	08 95       	ret
+
+00000280 <DrvLedIsrCallbackTimer>:
+ 280:	ff 92       	push	r15
+ 282:	0f 93       	push	r16
+ 284:	1f 93       	push	r17
+ 286:	cf 93       	push	r28
+ 288:	df 93       	push	r29
+ 28a:	00 e0       	ldi	r16, 0x00	; 0
+ 28c:	10 e0       	ldi	r17, 0x00	; 0
+ 28e:	8b e0       	ldi	r24, 0x0B	; 11
+ 290:	f8 2e       	mov	r15, r24
+ 292:	f0 9e       	mul	r15, r16
+ 294:	e0 01       	movw	r28, r0
+ 296:	f1 9e       	mul	r15, r17
+ 298:	d0 0d       	add	r29, r0
+ 29a:	11 24       	eor	r1, r1
+ 29c:	c5 57       	subi	r28, 0x75	; 117
+ 29e:	d8 4f       	sbci	r29, 0xF8	; 248
+ 2a0:	8a 81       	ldd	r24, Y+2	; 0x02
+ 2a2:	81 30       	cpi	r24, 0x01	; 1
+ 2a4:	99 f5       	brne	.+102    	; 0x30c <DrvLedIsrCallbackTimer+0x8c>
+ 2a6:	99 81       	ldd	r25, Y+1	; 0x01
+ 2a8:	91 11       	cpse	r25, r1
+ 2aa:	13 c0       	rjmp	.+38     	; 0x2d2 <DrvLedIsrCallbackTimer+0x52>
+ 2ac:	2d 81       	ldd	r18, Y+5	; 0x05
+ 2ae:	3e 81       	ldd	r19, Y+6	; 0x06
+ 2b0:	a9 01       	movw	r20, r18
+ 2b2:	4f 5f       	subi	r20, 0xFF	; 255
+ 2b4:	5f 4f       	sbci	r21, 0xFF	; 255
+ 2b6:	5e 83       	std	Y+6, r21	; 0x06
+ 2b8:	4d 83       	std	Y+5, r20	; 0x05
+ 2ba:	4b 81       	ldd	r20, Y+3	; 0x03
+ 2bc:	5c 81       	ldd	r21, Y+4	; 0x04
+ 2be:	42 17       	cp	r20, r18
+ 2c0:	53 07       	cpc	r21, r19
+ 2c2:	38 f4       	brcc	.+14     	; 0x2d2 <DrvLedIsrCallbackTimer+0x52>
+ 2c4:	89 83       	std	Y+1, r24	; 0x01
+ 2c6:	88 81       	ld	r24, Y
+ 2c8:	60 e0       	ldi	r22, 0x00	; 0
+ 2ca:	0e 94 1f 01 	call	0x23e	; 0x23e <DrvIoSetPinState>
+ 2ce:	1e 82       	std	Y+6, r1	; 0x06
+ 2d0:	1d 82       	std	Y+5, r1	; 0x05
+ 2d2:	f0 9e       	mul	r15, r16
+ 2d4:	e0 01       	movw	r28, r0
+ 2d6:	f1 9e       	mul	r15, r17
+ 2d8:	d0 0d       	add	r29, r0
+ 2da:	11 24       	eor	r1, r1
+ 2dc:	c5 57       	subi	r28, 0x75	; 117
+ 2de:	d8 4f       	sbci	r29, 0xF8	; 248
+ 2e0:	89 81       	ldd	r24, Y+1	; 0x01
+ 2e2:	81 30       	cpi	r24, 0x01	; 1
+ 2e4:	99 f4       	brne	.+38     	; 0x30c <DrvLedIsrCallbackTimer+0x8c>
+ 2e6:	8f 81       	ldd	r24, Y+7	; 0x07
+ 2e8:	98 85       	ldd	r25, Y+8	; 0x08
+ 2ea:	9c 01       	movw	r18, r24
+ 2ec:	2f 5f       	subi	r18, 0xFF	; 255
+ 2ee:	3f 4f       	sbci	r19, 0xFF	; 255
+ 2f0:	38 87       	std	Y+8, r19	; 0x08
+ 2f2:	2f 83       	std	Y+7, r18	; 0x07
+ 2f4:	29 85       	ldd	r18, Y+9	; 0x09
+ 2f6:	3a 85       	ldd	r19, Y+10	; 0x0a
+ 2f8:	28 17       	cp	r18, r24
+ 2fa:	39 07       	cpc	r19, r25
+ 2fc:	38 f4       	brcc	.+14     	; 0x30c <DrvLedIsrCallbackTimer+0x8c>
+ 2fe:	19 82       	std	Y+1, r1	; 0x01
+ 300:	88 81       	ld	r24, Y
+ 302:	61 e0       	ldi	r22, 0x01	; 1
+ 304:	0e 94 1f 01 	call	0x23e	; 0x23e <DrvIoSetPinState>
+ 308:	18 86       	std	Y+8, r1	; 0x08
+ 30a:	1f 82       	std	Y+7, r1	; 0x07
+ 30c:	0f 5f       	subi	r16, 0xFF	; 255
+ 30e:	1f 4f       	sbci	r17, 0xFF	; 255
+ 310:	04 30       	cpi	r16, 0x04	; 4
+ 312:	11 05       	cpc	r17, r1
+ 314:	09 f0       	breq	.+2      	; 0x318 <DrvLedIsrCallbackTimer+0x98>
+ 316:	bd cf       	rjmp	.-134    	; 0x292 <DrvLedIsrCallbackTimer+0x12>
+ 318:	df 91       	pop	r29
+ 31a:	cf 91       	pop	r28
+ 31c:	1f 91       	pop	r17
+ 31e:	0f 91       	pop	r16
+ 320:	ff 90       	pop	r15
+ 322:	08 95       	ret
+
+00000324 <DrvLedInit>:
+ 324:	20 e4       	ldi	r18, 0x40	; 64
+ 326:	31 e0       	ldi	r19, 0x01	; 1
+ 328:	41 e0       	ldi	r20, 0x01	; 1
+ 32a:	61 e0       	ldi	r22, 0x01	; 1
+ 32c:	70 e0       	ldi	r23, 0x00	; 0
+ 32e:	81 e0       	ldi	r24, 0x01	; 1
+ 330:	0e 94 b5 02 	call	0x56a	; 0x56a <DrvTimerAddTimer>
+ 334:	81 e0       	ldi	r24, 0x01	; 1
+ 336:	08 95       	ret
+
+00000338 <DrvLedSetPinLed>:
+ 338:	84 30       	cpi	r24, 0x04	; 4
+ 33a:	e0 f4       	brcc	.+56     	; 0x374 <DrvLedSetPinLed+0x3c>
+ 33c:	90 e0       	ldi	r25, 0x00	; 0
+ 33e:	fc 01       	movw	r30, r24
+ 340:	ef 5f       	subi	r30, 0xFF	; 255
+ 342:	fe 4f       	sbci	r31, 0xFE	; 254
+ 344:	20 81       	ld	r18, Z
+ 346:	3b e0       	ldi	r19, 0x0B	; 11
+ 348:	38 9f       	mul	r19, r24
+ 34a:	f0 01       	movw	r30, r0
+ 34c:	39 9f       	mul	r19, r25
+ 34e:	f0 0d       	add	r31, r0
+ 350:	11 24       	eor	r1, r1
+ 352:	e5 57       	subi	r30, 0x75	; 117
+ 354:	f8 4f       	sbci	r31, 0xF8	; 248
+ 356:	20 83       	st	Z, r18
+ 358:	81 e0       	ldi	r24, 0x01	; 1
+ 35a:	81 83       	std	Z+1, r24	; 0x01
+ 35c:	12 82       	std	Z+2, r1	; 0x02
+ 35e:	14 82       	std	Z+4, r1	; 0x04
+ 360:	13 82       	std	Z+3, r1	; 0x03
+ 362:	16 82       	std	Z+6, r1	; 0x06
+ 364:	15 82       	std	Z+5, r1	; 0x05
+ 366:	10 86       	std	Z+8, r1	; 0x08
+ 368:	17 82       	std	Z+7, r1	; 0x07
+ 36a:	12 86       	std	Z+10, r1	; 0x0a
+ 36c:	11 86       	std	Z+9, r1	; 0x09
+ 36e:	80 81       	ld	r24, Z
+ 370:	0c 94 d3 00 	jmp	0x1a6	; 0x1a6 <DrvIoSetPinOutput>
+ 374:	80 e0       	ldi	r24, 0x00	; 0
+ 376:	08 95       	ret
+
+00000378 <DrvLedSetToggle>:
+ 378:	84 30       	cpi	r24, 0x04	; 4
+ 37a:	b8 f4       	brcc	.+46     	; 0x3aa <DrvLedSetToggle+0x32>
+ 37c:	9b e0       	ldi	r25, 0x0B	; 11
+ 37e:	89 9f       	mul	r24, r25
+ 380:	f0 01       	movw	r30, r0
+ 382:	11 24       	eor	r1, r1
+ 384:	e5 57       	subi	r30, 0x75	; 117
+ 386:	f8 4f       	sbci	r31, 0xF8	; 248
+ 388:	12 82       	std	Z+2, r1	; 0x02
+ 38a:	81 81       	ldd	r24, Z+1	; 0x01
+ 38c:	81 11       	cpse	r24, r1
+ 38e:	05 c0       	rjmp	.+10     	; 0x39a <DrvLedSetToggle+0x22>
+ 390:	81 e0       	ldi	r24, 0x01	; 1
+ 392:	81 83       	std	Z+1, r24	; 0x01
+ 394:	80 81       	ld	r24, Z
+ 396:	61 e0       	ldi	r22, 0x01	; 1
+ 398:	06 c0       	rjmp	.+12     	; 0x3a6 <DrvLedSetToggle+0x2e>
+ 39a:	81 81       	ldd	r24, Z+1	; 0x01
+ 39c:	81 30       	cpi	r24, 0x01	; 1
+ 39e:	29 f4       	brne	.+10     	; 0x3aa <DrvLedSetToggle+0x32>
+ 3a0:	11 82       	std	Z+1, r1	; 0x01
+ 3a2:	80 81       	ld	r24, Z
+ 3a4:	60 e0       	ldi	r22, 0x00	; 0
+ 3a6:	0e 94 1f 01 	call	0x23e	; 0x23e <DrvIoSetPinState>
+ 3aa:	80 e0       	ldi	r24, 0x00	; 0
+ 3ac:	08 95       	ret
+
+000003ae <DrvLedSetState>:
+ 3ae:	84 30       	cpi	r24, 0x04	; 4
+ 3b0:	88 f4       	brcc	.+34     	; 0x3d4 <DrvLedSetState+0x26>
+ 3b2:	9b e0       	ldi	r25, 0x0B	; 11
+ 3b4:	89 9f       	mul	r24, r25
+ 3b6:	f0 01       	movw	r30, r0
+ 3b8:	11 24       	eor	r1, r1
+ 3ba:	e5 57       	subi	r30, 0x75	; 117
+ 3bc:	f8 4f       	sbci	r31, 0xF8	; 248
+ 3be:	12 82       	std	Z+2, r1	; 0x02
+ 3c0:	61 11       	cpse	r22, r1
+ 3c2:	02 c0       	rjmp	.+4      	; 0x3c8 <DrvLedSetState+0x1a>
+ 3c4:	11 82       	std	Z+1, r1	; 0x01
+ 3c6:	03 c0       	rjmp	.+6      	; 0x3ce <DrvLedSetState+0x20>
+ 3c8:	61 30       	cpi	r22, 0x01	; 1
+ 3ca:	21 f4       	brne	.+8      	; 0x3d4 <DrvLedSetState+0x26>
+ 3cc:	61 83       	std	Z+1, r22	; 0x01
+ 3ce:	80 81       	ld	r24, Z
+ 3d0:	0e 94 1f 01 	call	0x23e	; 0x23e <DrvIoSetPinState>
+ 3d4:	80 e0       	ldi	r24, 0x00	; 0
+ 3d6:	08 95       	ret
+
+000003d8 <DrvServoSetTarget>:
+ 3d8:	0f 93       	push	r16
+ 3da:	1f 93       	push	r17
+ 3dc:	cf 93       	push	r28
+ 3de:	df 93       	push	r29
+ 3e0:	82 31       	cpi	r24, 0x12	; 18
+ 3e2:	e0 f4       	brcc	.+56     	; 0x41c <__LOCK_REGION_LENGTH__+0x1c>
+ 3e4:	96 e1       	ldi	r25, 0x16	; 22
+ 3e6:	89 9f       	mul	r24, r25
+ 3e8:	e0 01       	movw	r28, r0
+ 3ea:	11 24       	eor	r1, r1
+ 3ec:	c8 51       	subi	r28, 0x18	; 24
+ 3ee:	de 4f       	sbci	r29, 0xFE	; 254
+ 3f0:	8d 81       	ldd	r24, Y+5	; 0x05
+ 3f2:	9e 81       	ldd	r25, Y+6	; 0x06
+ 3f4:	86 17       	cp	r24, r22
+ 3f6:	97 07       	cpc	r25, r23
+ 3f8:	89 f0       	breq	.+34     	; 0x41c <__LOCK_REGION_LENGTH__+0x1c>
+ 3fa:	8a 01       	movw	r16, r20
+ 3fc:	89 81       	ldd	r24, Y+1	; 0x01
+ 3fe:	9a 81       	ldd	r25, Y+2	; 0x02
+ 400:	9c 83       	std	Y+4, r25	; 0x04
+ 402:	8b 83       	std	Y+3, r24	; 0x03
+ 404:	7e 83       	std	Y+6, r23	; 0x06
+ 406:	6d 83       	std	Y+5, r22	; 0x05
+ 408:	0e 94 61 02 	call	0x4c2	; 0x4c2 <DrvTickGetTimeMs>
+ 40c:	6f 83       	std	Y+7, r22	; 0x07
+ 40e:	78 87       	std	Y+8, r23	; 0x08
+ 410:	89 87       	std	Y+9, r24	; 0x09
+ 412:	9a 87       	std	Y+10, r25	; 0x0a
+ 414:	1c 87       	std	Y+12, r17	; 0x0c
+ 416:	0b 87       	std	Y+11, r16	; 0x0b
+ 418:	81 e0       	ldi	r24, 0x01	; 1
+ 41a:	01 c0       	rjmp	.+2      	; 0x41e <__LOCK_REGION_LENGTH__+0x1e>
+ 41c:	80 e0       	ldi	r24, 0x00	; 0
+ 41e:	df 91       	pop	r29
+ 420:	cf 91       	pop	r28
+ 422:	1f 91       	pop	r17
+ 424:	0f 91       	pop	r16
+ 426:	08 95       	ret
+
+00000428 <DrvServoGetStruture>:
+ 428:	82 31       	cpi	r24, 0x12	; 18
+ 42a:	38 f4       	brcc	.+14     	; 0x43a <DrvServoGetStruture+0x12>
+ 42c:	26 e1       	ldi	r18, 0x16	; 22
+ 42e:	82 9f       	mul	r24, r18
+ 430:	c0 01       	movw	r24, r0
+ 432:	11 24       	eor	r1, r1
+ 434:	88 51       	subi	r24, 0x18	; 24
+ 436:	9e 4f       	sbci	r25, 0xFE	; 254
+ 438:	08 95       	ret
+ 43a:	80 e0       	ldi	r24, 0x00	; 0
+ 43c:	90 e0       	ldi	r25, 0x00	; 0
+ 43e:	08 95       	ret
+
+00000440 <DrvTickInit>:
+ 440:	10 92 74 03 	sts	0x0374, r1	; 0x800374 <tickCounter>
+ 444:	10 92 75 03 	sts	0x0375, r1	; 0x800375 <tickCounter+0x1>
+ 448:	10 92 76 03 	sts	0x0376, r1	; 0x800376 <tickCounter+0x2>
+ 44c:	10 92 77 03 	sts	0x0377, r1	; 0x800377 <tickCounter+0x3>
+ 450:	14 bc       	out	0x24, r1	; 36
+ 452:	16 bc       	out	0x26, r1	; 38
+ 454:	84 b5       	in	r24, 0x24	; 36
+ 456:	8e 7f       	andi	r24, 0xFE	; 254
+ 458:	84 bd       	out	0x24, r24	; 36
+ 45a:	84 b5       	in	r24, 0x24	; 36
+ 45c:	8d 7f       	andi	r24, 0xFD	; 253
+ 45e:	84 bd       	out	0x24, r24	; 36
+ 460:	85 b5       	in	r24, 0x25	; 37
+ 462:	87 7f       	andi	r24, 0xF7	; 247
+ 464:	85 bd       	out	0x25, r24	; 37
+ 466:	85 b5       	in	r24, 0x25	; 37
+ 468:	82 60       	ori	r24, 0x02	; 2
+ 46a:	85 bd       	out	0x25, r24	; 37
+ 46c:	85 b5       	in	r24, 0x25	; 37
+ 46e:	8e 7f       	andi	r24, 0xFE	; 254
+ 470:	85 bd       	out	0x25, r24	; 37
+ 472:	ee e6       	ldi	r30, 0x6E	; 110
+ 474:	f0 e0       	ldi	r31, 0x00	; 0
+ 476:	80 81       	ld	r24, Z
+ 478:	81 60       	ori	r24, 0x01	; 1
+ 47a:	80 83       	st	Z, r24
+ 47c:	08 95       	ret
+
+0000047e <DrvTickGetTimeUs>:
+ 47e:	3f b7       	in	r19, 0x3f	; 63
+ 480:	f8 94       	cli
+ 482:	80 91 74 03 	lds	r24, 0x0374	; 0x800374 <tickCounter>
+ 486:	90 91 75 03 	lds	r25, 0x0375	; 0x800375 <tickCounter+0x1>
+ 48a:	a0 91 76 03 	lds	r26, 0x0376	; 0x800376 <tickCounter+0x2>
+ 48e:	b0 91 77 03 	lds	r27, 0x0377	; 0x800377 <tickCounter+0x3>
+ 492:	26 b5       	in	r18, 0x26	; 38
+ 494:	a8 9b       	sbis	0x15, 0	; 21
+ 496:	05 c0       	rjmp	.+10     	; 0x4a2 <DrvTickGetTimeUs+0x24>
+ 498:	2f 3f       	cpi	r18, 0xFF	; 255
+ 49a:	19 f0       	breq	.+6      	; 0x4a2 <DrvTickGetTimeUs+0x24>
+ 49c:	01 96       	adiw	r24, 0x01	; 1
+ 49e:	a1 1d       	adc	r26, r1
+ 4a0:	b1 1d       	adc	r27, r1
+ 4a2:	3f bf       	out	0x3f, r19	; 63
+ 4a4:	ba 2f       	mov	r27, r26
+ 4a6:	a9 2f       	mov	r26, r25
+ 4a8:	98 2f       	mov	r25, r24
+ 4aa:	88 27       	eor	r24, r24
+ 4ac:	82 0f       	add	r24, r18
+ 4ae:	91 1d       	adc	r25, r1
+ 4b0:	a1 1d       	adc	r26, r1
+ 4b2:	b1 1d       	adc	r27, r1
+ 4b4:	bc 01       	movw	r22, r24
+ 4b6:	cd 01       	movw	r24, r26
+ 4b8:	96 95       	lsr	r25
+ 4ba:	87 95       	ror	r24
+ 4bc:	77 95       	ror	r23
+ 4be:	67 95       	ror	r22
+ 4c0:	08 95       	ret
+
+000004c2 <DrvTickGetTimeMs>:
+ 4c2:	0e 94 3f 02 	call	0x47e	; 0x47e <DrvTickGetTimeUs>
+ 4c6:	28 ee       	ldi	r18, 0xE8	; 232
+ 4c8:	33 e0       	ldi	r19, 0x03	; 3
+ 4ca:	40 e0       	ldi	r20, 0x00	; 0
+ 4cc:	50 e0       	ldi	r21, 0x00	; 0
+ 4ce:	0e 94 7b 06 	call	0xcf6	; 0xcf6 <__udivmodsi4>
+ 4d2:	ca 01       	movw	r24, r20
+ 4d4:	b9 01       	movw	r22, r18
+ 4d6:	08 95       	ret
+
+000004d8 <__vector_18>:
+ 4d8:	1f 92       	push	r1
+ 4da:	0f 92       	push	r0
+ 4dc:	0f b6       	in	r0, 0x3f	; 63
+ 4de:	0f 92       	push	r0
+ 4e0:	11 24       	eor	r1, r1
+ 4e2:	8f 93       	push	r24
+ 4e4:	9f 93       	push	r25
+ 4e6:	af 93       	push	r26
+ 4e8:	bf 93       	push	r27
+ 4ea:	80 91 74 03 	lds	r24, 0x0374	; 0x800374 <tickCounter>
+ 4ee:	90 91 75 03 	lds	r25, 0x0375	; 0x800375 <tickCounter+0x1>
+ 4f2:	a0 91 76 03 	lds	r26, 0x0376	; 0x800376 <tickCounter+0x2>
+ 4f6:	b0 91 77 03 	lds	r27, 0x0377	; 0x800377 <tickCounter+0x3>
+ 4fa:	01 96       	adiw	r24, 0x01	; 1
+ 4fc:	a1 1d       	adc	r26, r1
+ 4fe:	b1 1d       	adc	r27, r1
+ 500:	80 93 74 03 	sts	0x0374, r24	; 0x800374 <tickCounter>
+ 504:	90 93 75 03 	sts	0x0375, r25	; 0x800375 <tickCounter+0x1>
+ 508:	a0 93 76 03 	sts	0x0376, r26	; 0x800376 <tickCounter+0x2>
+ 50c:	b0 93 77 03 	sts	0x0377, r27	; 0x800377 <tickCounter+0x3>
+ 510:	bf 91       	pop	r27
+ 512:	af 91       	pop	r26
+ 514:	9f 91       	pop	r25
+ 516:	8f 91       	pop	r24
+ 518:	0f 90       	pop	r0
+ 51a:	0f be       	out	0x3f, r0	; 63
+ 51c:	0f 90       	pop	r0
+ 51e:	1f 90       	pop	r1
+ 520:	18 95       	reti
+
+00000522 <DrvTimerInit>:
+ 522:	e7 eb       	ldi	r30, 0xB7	; 183
+ 524:	f7 e0       	ldi	r31, 0x07	; 7
+ 526:	10 82       	st	Z, r1
+ 528:	10 86       	std	Z+8, r1	; 0x08
+ 52a:	17 82       	std	Z+7, r1	; 0x07
+ 52c:	11 86       	std	Z+9, r1	; 0x09
+ 52e:	11 8a       	std	Z+17, r1	; 0x11
+ 530:	10 8a       	std	Z+16, r1	; 0x10
+ 532:	12 8a       	std	Z+18, r1	; 0x12
+ 534:	12 8e       	std	Z+26, r1	; 0x1a
+ 536:	11 8e       	std	Z+25, r1	; 0x19
+ 538:	13 8e       	std	Z+27, r1	; 0x1b
+ 53a:	13 a2       	std	Z+35, r1	; 0x23
+ 53c:	12 a2       	std	Z+34, r1	; 0x22
+ 53e:	10 92 b0 00 	sts	0x00B0, r1	; 0x8000b0 <__TEXT_REGION_LENGTH__+0x7e00b0>
+ 542:	10 92 b2 00 	sts	0x00B2, r1	; 0x8000b2 <__TEXT_REGION_LENGTH__+0x7e00b2>
+ 546:	e1 eb       	ldi	r30, 0xB1	; 177
+ 548:	f0 e0       	ldi	r31, 0x00	; 0
+ 54a:	80 81       	ld	r24, Z
+ 54c:	81 60       	ori	r24, 0x01	; 1
+ 54e:	80 83       	st	Z, r24
+ 550:	80 81       	ld	r24, Z
+ 552:	84 60       	ori	r24, 0x04	; 4
+ 554:	80 83       	st	Z, r24
+ 556:	8d e7       	ldi	r24, 0x7D	; 125
+ 558:	80 93 b3 00 	sts	0x00B3, r24	; 0x8000b3 <__TEXT_REGION_LENGTH__+0x7e00b3>
+ 55c:	b9 9a       	sbi	0x17, 1	; 23
+ 55e:	e0 e7       	ldi	r30, 0x70	; 112
+ 560:	f0 e0       	ldi	r31, 0x00	; 0
+ 562:	80 81       	ld	r24, Z
+ 564:	82 60       	ori	r24, 0x02	; 2
+ 566:	80 83       	st	Z, r24
+ 568:	08 95       	ret
+
+0000056a <DrvTimerAddTimer>:
+ 56a:	59 e0       	ldi	r21, 0x09	; 9
+ 56c:	85 9f       	mul	r24, r21
+ 56e:	c0 01       	movw	r24, r0
+ 570:	11 24       	eor	r1, r1
+ 572:	fc 01       	movw	r30, r24
+ 574:	e9 54       	subi	r30, 0x49	; 73
+ 576:	f8 4f       	sbci	r31, 0xF8	; 248
+ 578:	72 83       	std	Z+2, r23	; 0x02
+ 57a:	61 83       	std	Z+1, r22	; 0x01
+ 57c:	14 82       	std	Z+4, r1	; 0x04
+ 57e:	13 82       	std	Z+3, r1	; 0x03
+ 580:	45 83       	std	Z+5, r20	; 0x05
+ 582:	30 87       	std	Z+8, r19	; 0x08
+ 584:	27 83       	std	Z+7, r18	; 0x07
+ 586:	81 e0       	ldi	r24, 0x01	; 1
+ 588:	80 83       	st	Z, r24
+ 58a:	08 95       	ret
+
+0000058c <DrvTimerStopTimer>:
+ 58c:	29 e0       	ldi	r18, 0x09	; 9
+ 58e:	82 9f       	mul	r24, r18
+ 590:	c0 01       	movw	r24, r0
+ 592:	11 24       	eor	r1, r1
+ 594:	fc 01       	movw	r30, r24
+ 596:	e9 54       	subi	r30, 0x49	; 73
+ 598:	f8 4f       	sbci	r31, 0xF8	; 248
+ 59a:	10 82       	st	Z, r1
+ 59c:	12 82       	std	Z+2, r1	; 0x02
+ 59e:	11 82       	std	Z+1, r1	; 0x01
+ 5a0:	14 82       	std	Z+4, r1	; 0x04
+ 5a2:	13 82       	std	Z+3, r1	; 0x03
+ 5a4:	82 e0       	ldi	r24, 0x02	; 2
+ 5a6:	85 83       	std	Z+5, r24	; 0x05
+ 5a8:	10 86       	std	Z+8, r1	; 0x08
+ 5aa:	17 82       	std	Z+7, r1	; 0x07
+ 5ac:	08 95       	ret
+
+000005ae <DrvTimerTickReset>:
+ 5ae:	e0 e7       	ldi	r30, 0x70	; 112
+ 5b0:	f0 e0       	ldi	r31, 0x00	; 0
+ 5b2:	80 81       	ld	r24, Z
+ 5b4:	8d 7f       	andi	r24, 0xFD	; 253
+ 5b6:	80 83       	st	Z, r24
+ 5b8:	8d e7       	ldi	r24, 0x7D	; 125
+ 5ba:	80 93 b3 00 	sts	0x00B3, r24	; 0x8000b3 <__TEXT_REGION_LENGTH__+0x7e00b3>
+ 5be:	a7 eb       	ldi	r26, 0xB7	; 183
+ 5c0:	b7 e0       	ldi	r27, 0x07	; 7
+ 5c2:	14 96       	adiw	r26, 0x04	; 4
+ 5c4:	1c 92       	st	X, r1
+ 5c6:	1e 92       	st	-X, r1
+ 5c8:	13 97       	sbiw	r26, 0x03	; 3
+ 5ca:	1d 96       	adiw	r26, 0x0d	; 13
+ 5cc:	1c 92       	st	X, r1
+ 5ce:	1e 92       	st	-X, r1
+ 5d0:	1c 97       	sbiw	r26, 0x0c	; 12
+ 5d2:	56 96       	adiw	r26, 0x16	; 22
+ 5d4:	1c 92       	st	X, r1
+ 5d6:	1e 92       	st	-X, r1
+ 5d8:	55 97       	sbiw	r26, 0x15	; 21
+ 5da:	5f 96       	adiw	r26, 0x1f	; 31
+ 5dc:	1c 92       	st	X, r1
+ 5de:	1e 92       	st	-X, r1
+ 5e0:	5e 97       	sbiw	r26, 0x1e	; 30
+ 5e2:	10 92 b2 00 	sts	0x00B2, r1	; 0x8000b2 <__TEXT_REGION_LENGTH__+0x7e00b2>
+ 5e6:	80 81       	ld	r24, Z
+ 5e8:	82 60       	ori	r24, 0x02	; 2
+ 5ea:	80 83       	st	Z, r24
+ 5ec:	08 95       	ret
+
+000005ee <__vector_9>:
+ 5ee:	1f 92       	push	r1
+ 5f0:	0f 92       	push	r0
+ 5f2:	0f b6       	in	r0, 0x3f	; 63
+ 5f4:	0f 92       	push	r0
+ 5f6:	11 24       	eor	r1, r1
+ 5f8:	0b b6       	in	r0, 0x3b	; 59
+ 5fa:	0f 92       	push	r0
+ 5fc:	ef 92       	push	r14
+ 5fe:	ff 92       	push	r15
+ 600:	0f 93       	push	r16
+ 602:	1f 93       	push	r17
+ 604:	2f 93       	push	r18
+ 606:	3f 93       	push	r19
+ 608:	4f 93       	push	r20
+ 60a:	5f 93       	push	r21
+ 60c:	6f 93       	push	r22
+ 60e:	7f 93       	push	r23
+ 610:	8f 93       	push	r24
+ 612:	9f 93       	push	r25
+ 614:	af 93       	push	r26
+ 616:	bf 93       	push	r27
+ 618:	cf 93       	push	r28
+ 61a:	df 93       	push	r29
+ 61c:	ef 93       	push	r30
+ 61e:	ff 93       	push	r31
+ 620:	10 91 b2 00 	lds	r17, 0x00B2	; 0x8000b2 <__TEXT_REGION_LENGTH__+0x7e00b2>
+ 624:	c0 e0       	ldi	r28, 0x00	; 0
+ 626:	d0 e0       	ldi	r29, 0x00	; 0
+ 628:	09 e0       	ldi	r16, 0x09	; 9
+ 62a:	0c 9f       	mul	r16, r28
+ 62c:	f0 01       	movw	r30, r0
+ 62e:	0d 9f       	mul	r16, r29
+ 630:	f0 0d       	add	r31, r0
+ 632:	11 24       	eor	r1, r1
+ 634:	e9 54       	subi	r30, 0x49	; 73
+ 636:	f8 4f       	sbci	r31, 0xF8	; 248
+ 638:	80 81       	ld	r24, Z
+ 63a:	81 30       	cpi	r24, 0x01	; 1
+ 63c:	31 f5       	brne	.+76     	; 0x68a <__vector_9+0x9c>
+ 63e:	83 81       	ldd	r24, Z+3	; 0x03
+ 640:	94 81       	ldd	r25, Z+4	; 0x04
+ 642:	01 96       	adiw	r24, 0x01	; 1
+ 644:	94 83       	std	Z+4, r25	; 0x04
+ 646:	83 83       	std	Z+3, r24	; 0x03
+ 648:	23 81       	ldd	r18, Z+3	; 0x03
+ 64a:	34 81       	ldd	r19, Z+4	; 0x04
+ 64c:	81 81       	ldd	r24, Z+1	; 0x01
+ 64e:	92 81       	ldd	r25, Z+2	; 0x02
+ 650:	28 17       	cp	r18, r24
+ 652:	39 07       	cpc	r19, r25
+ 654:	d1 f4       	brne	.+52     	; 0x68a <__vector_9+0x9c>
+ 656:	85 81       	ldd	r24, Z+5	; 0x05
+ 658:	82 30       	cpi	r24, 0x02	; 2
+ 65a:	b9 f0       	breq	.+46     	; 0x68a <__vector_9+0x9c>
+ 65c:	14 82       	std	Z+4, r1	; 0x04
+ 65e:	13 82       	std	Z+3, r1	; 0x03
+ 660:	85 81       	ldd	r24, Z+5	; 0x05
+ 662:	81 11       	cpse	r24, r1
+ 664:	0a c0       	rjmp	.+20     	; 0x67a <__vector_9+0x8c>
+ 666:	e7 80       	ldd	r14, Z+7	; 0x07
+ 668:	f0 84       	ldd	r15, Z+8	; 0x08
+ 66a:	8c 2f       	mov	r24, r28
+ 66c:	0e 94 c6 02 	call	0x58c	; 0x58c <DrvTimerStopTimer>
+ 670:	e1 14       	cp	r14, r1
+ 672:	f1 04       	cpc	r15, r1
+ 674:	51 f0       	breq	.+20     	; 0x68a <__vector_9+0x9c>
+ 676:	f7 01       	movw	r30, r14
+ 678:	07 c0       	rjmp	.+14     	; 0x688 <__vector_9+0x9a>
+ 67a:	87 81       	ldd	r24, Z+7	; 0x07
+ 67c:	90 85       	ldd	r25, Z+8	; 0x08
+ 67e:	89 2b       	or	r24, r25
+ 680:	21 f0       	breq	.+8      	; 0x68a <__vector_9+0x9c>
+ 682:	07 80       	ldd	r0, Z+7	; 0x07
+ 684:	f0 85       	ldd	r31, Z+8	; 0x08
+ 686:	e0 2d       	mov	r30, r0
+ 688:	09 95       	icall
+ 68a:	21 96       	adiw	r28, 0x01	; 1
+ 68c:	c4 30       	cpi	r28, 0x04	; 4
+ 68e:	d1 05       	cpc	r29, r1
+ 690:	61 f6       	brne	.-104    	; 0x62a <__vector_9+0x3c>
+ 692:	80 91 b2 00 	lds	r24, 0x00B2	; 0x8000b2 <__TEXT_REGION_LENGTH__+0x7e00b2>
+ 696:	14 58       	subi	r17, 0x84	; 132
+ 698:	10 93 b3 00 	sts	0x00B3, r17	; 0x8000b3 <__TEXT_REGION_LENGTH__+0x7e00b3>
+ 69c:	ff 91       	pop	r31
+ 69e:	ef 91       	pop	r30
+ 6a0:	df 91       	pop	r29
+ 6a2:	cf 91       	pop	r28
+ 6a4:	bf 91       	pop	r27
+ 6a6:	af 91       	pop	r26
+ 6a8:	9f 91       	pop	r25
+ 6aa:	8f 91       	pop	r24
+ 6ac:	7f 91       	pop	r23
+ 6ae:	6f 91       	pop	r22
+ 6b0:	5f 91       	pop	r21
+ 6b2:	4f 91       	pop	r20
+ 6b4:	3f 91       	pop	r19
+ 6b6:	2f 91       	pop	r18
+ 6b8:	1f 91       	pop	r17
+ 6ba:	0f 91       	pop	r16
+ 6bc:	ff 90       	pop	r15
+ 6be:	ef 90       	pop	r14
+ 6c0:	0f 90       	pop	r0
+ 6c2:	0b be       	out	0x3b, r0	; 59
+ 6c4:	0f 90       	pop	r0
+ 6c6:	0f be       	out	0x3f, r0	; 63
+ 6c8:	0f 90       	pop	r0
+ 6ca:	1f 90       	pop	r1
+ 6cc:	18 95       	reti
+
+000006ce <DrvTwiInit>:
+ 6ce:	cf 92       	push	r12
+ 6d0:	df 92       	push	r13
+ 6d2:	ef 92       	push	r14
+ 6d4:	ff 92       	push	r15
+ 6d6:	cf 93       	push	r28
+ 6d8:	df 93       	push	r29
+ 6da:	6b 01       	movw	r12, r22
+ 6dc:	7c 01       	movw	r14, r24
+ 6de:	c5 e0       	ldi	r28, 0x05	; 5
+ 6e0:	d1 e0       	ldi	r29, 0x01	; 1
+ 6e2:	88 81       	ld	r24, Y
+ 6e4:	0e 94 d3 00 	call	0x1a6	; 0x1a6 <DrvIoSetPinOutput>
+ 6e8:	89 81       	ldd	r24, Y+1	; 0x01
+ 6ea:	0e 94 d3 00 	call	0x1a6	; 0x1a6 <DrvIoSetPinOutput>
+ 6ee:	60 e0       	ldi	r22, 0x00	; 0
+ 6f0:	7d e2       	ldi	r23, 0x2D	; 45
+ 6f2:	81 e3       	ldi	r24, 0x31	; 49
+ 6f4:	91 e0       	ldi	r25, 0x01	; 1
+ 6f6:	a7 01       	movw	r20, r14
+ 6f8:	96 01       	movw	r18, r12
+ 6fa:	0e 94 7b 06 	call	0xcf6	; 0xcf6 <__udivmodsi4>
+ 6fe:	20 51       	subi	r18, 0x10	; 16
+ 700:	31 09       	sbc	r19, r1
+ 702:	36 95       	lsr	r19
+ 704:	27 95       	ror	r18
+ 706:	20 93 b8 00 	sts	0x00B8, r18	; 0x8000b8 <__TEXT_REGION_LENGTH__+0x7e00b8>
+ 70a:	10 92 b9 00 	sts	0x00B9, r1	; 0x8000b9 <__TEXT_REGION_LENGTH__+0x7e00b9>
+ 70e:	84 e0       	ldi	r24, 0x04	; 4
+ 710:	80 93 bc 00 	sts	0x00BC, r24	; 0x8000bc <__TEXT_REGION_LENGTH__+0x7e00bc>
+ 714:	10 92 79 03 	sts	0x0379, r1	; 0x800379 <errorsCount+0x1>
+ 718:	10 92 78 03 	sts	0x0378, r1	; 0x800378 <errorsCount>
+ 71c:	81 e0       	ldi	r24, 0x01	; 1
+ 71e:	df 91       	pop	r29
+ 720:	cf 91       	pop	r28
+ 722:	ff 90       	pop	r15
+ 724:	ef 90       	pop	r14
+ 726:	df 90       	pop	r13
+ 728:	cf 90       	pop	r12
+ 72a:	08 95       	ret
+
+0000072c <DrvUartInit>:
+ 72c:	65 30       	cpi	r22, 0x05	; 5
+ 72e:	40 f5       	brcc	.+80     	; 0x780 <DrvUartInit+0x54>
+ 730:	81 11       	cpse	r24, r1
+ 732:	26 c0       	rjmp	.+76     	; 0x780 <DrvUartInit+0x54>
+ 734:	8a e0       	ldi	r24, 0x0A	; 10
+ 736:	90 e0       	ldi	r25, 0x00	; 0
+ 738:	90 93 c5 00 	sts	0x00C5, r25	; 0x8000c5 <__TEXT_REGION_LENGTH__+0x7e00c5>
+ 73c:	80 93 c4 00 	sts	0x00C4, r24	; 0x8000c4 <__TEXT_REGION_LENGTH__+0x7e00c4>
+ 740:	80 91 c1 00 	lds	r24, 0x00C1	; 0x8000c1 <__TEXT_REGION_LENGTH__+0x7e00c1>
+ 744:	80 61       	ori	r24, 0x10	; 16
+ 746:	80 93 c1 00 	sts	0x00C1, r24	; 0x8000c1 <__TEXT_REGION_LENGTH__+0x7e00c1>
+ 74a:	80 91 c1 00 	lds	r24, 0x00C1	; 0x8000c1 <__TEXT_REGION_LENGTH__+0x7e00c1>
+ 74e:	88 60       	ori	r24, 0x08	; 8
+ 750:	80 93 c1 00 	sts	0x00C1, r24	; 0x8000c1 <__TEXT_REGION_LENGTH__+0x7e00c1>
+ 754:	80 91 c2 00 	lds	r24, 0x00C2	; 0x8000c2 <__TEXT_REGION_LENGTH__+0x7e00c2>
+ 758:	82 60       	ori	r24, 0x02	; 2
+ 75a:	80 93 c2 00 	sts	0x00C2, r24	; 0x8000c2 <__TEXT_REGION_LENGTH__+0x7e00c2>
+ 75e:	80 91 c1 00 	lds	r24, 0x00C1	; 0x8000c1 <__TEXT_REGION_LENGTH__+0x7e00c1>
+ 762:	8f 7b       	andi	r24, 0xBF	; 191
+ 764:	80 93 c1 00 	sts	0x00C1, r24	; 0x8000c1 <__TEXT_REGION_LENGTH__+0x7e00c1>
+ 768:	80 91 c1 00 	lds	r24, 0x00C1	; 0x8000c1 <__TEXT_REGION_LENGTH__+0x7e00c1>
+ 76c:	8f 7d       	andi	r24, 0xDF	; 223
+ 76e:	80 93 c1 00 	sts	0x00C1, r24	; 0x8000c1 <__TEXT_REGION_LENGTH__+0x7e00c1>
+ 772:	80 91 c1 00 	lds	r24, 0x00C1	; 0x8000c1 <__TEXT_REGION_LENGTH__+0x7e00c1>
+ 776:	80 68       	ori	r24, 0x80	; 128
+ 778:	80 93 c1 00 	sts	0x00C1, r24	; 0x8000c1 <__TEXT_REGION_LENGTH__+0x7e00c1>
+ 77c:	81 e0       	ldi	r24, 0x01	; 1
+ 77e:	08 95       	ret
+ 780:	80 e0       	ldi	r24, 0x00	; 0
+ 782:	08 95       	ret
+
+00000784 <DrvUartFillTxBuffer>:
+ 784:	48 2f       	mov	r20, r24
+ 786:	50 e0       	ldi	r21, 0x00	; 0
+ 788:	82 e0       	ldi	r24, 0x02	; 2
+ 78a:	92 e0       	ldi	r25, 0x02	; 2
+ 78c:	48 9f       	mul	r20, r24
+ 78e:	f0 01       	movw	r30, r0
+ 790:	49 9f       	mul	r20, r25
+ 792:	f0 0d       	add	r31, r0
+ 794:	58 9f       	mul	r21, r24
+ 796:	f0 0d       	add	r31, r0
+ 798:	11 24       	eor	r1, r1
+ 79a:	e5 58       	subi	r30, 0x85	; 133
+ 79c:	fb 4f       	sbci	r31, 0xFB	; 251
+ 79e:	20 81       	ld	r18, Z
+ 7a0:	30 e0       	ldi	r19, 0x00	; 0
+ 7a2:	2f 5f       	subi	r18, 0xFF	; 255
+ 7a4:	3f 4f       	sbci	r19, 0xFF	; 255
+ 7a6:	2f 3f       	cpi	r18, 0xFF	; 255
+ 7a8:	31 05       	cpc	r19, r1
+ 7aa:	10 f0       	brcs	.+4      	; 0x7b0 <DrvUartFillTxBuffer+0x2c>
+ 7ac:	20 e0       	ldi	r18, 0x00	; 0
+ 7ae:	30 e0       	ldi	r19, 0x00	; 0
+ 7b0:	e2 e0       	ldi	r30, 0x02	; 2
+ 7b2:	f2 e0       	ldi	r31, 0x02	; 2
+ 7b4:	4e 9f       	mul	r20, r30
+ 7b6:	c0 01       	movw	r24, r0
+ 7b8:	4f 9f       	mul	r20, r31
+ 7ba:	90 0d       	add	r25, r0
+ 7bc:	5e 9f       	mul	r21, r30
+ 7be:	90 0d       	add	r25, r0
+ 7c0:	11 24       	eor	r1, r1
+ 7c2:	86 58       	subi	r24, 0x86	; 134
+ 7c4:	9c 4f       	sbci	r25, 0xFC	; 252
+ 7c6:	fc 01       	movw	r30, r24
+ 7c8:	e2 0f       	add	r30, r18
+ 7ca:	f3 1f       	adc	r31, r19
+ 7cc:	ed 5f       	subi	r30, 0xFD	; 253
+ 7ce:	fe 4f       	sbci	r31, 0xFE	; 254
+ 7d0:	60 83       	st	Z, r22
+ 7d2:	fc 01       	movw	r30, r24
+ 7d4:	ef 5f       	subi	r30, 0xFF	; 255
+ 7d6:	fe 4f       	sbci	r31, 0xFE	; 254
+ 7d8:	20 83       	st	Z, r18
+ 7da:	81 e0       	ldi	r24, 0x01	; 1
+ 7dc:	08 95       	ret
+
+000007de <DrvUartSendData>:
+ 7de:	81 11       	cpse	r24, r1
+ 7e0:	07 c0       	rjmp	.+14     	; 0x7f0 <DrvUartSendData+0x12>
+ 7e2:	80 91 c1 00 	lds	r24, 0x00C1	; 0x8000c1 <__TEXT_REGION_LENGTH__+0x7e00c1>
+ 7e6:	80 62       	ori	r24, 0x20	; 32
+ 7e8:	80 93 c1 00 	sts	0x00C1, r24	; 0x8000c1 <__TEXT_REGION_LENGTH__+0x7e00c1>
+ 7ec:	81 e0       	ldi	r24, 0x01	; 1
+ 7ee:	08 95       	ret
+ 7f0:	80 e0       	ldi	r24, 0x00	; 0
+ 7f2:	08 95       	ret
+
+000007f4 <DrvUartReadData>:
+ 7f4:	48 2f       	mov	r20, r24
+ 7f6:	50 e0       	ldi	r21, 0x00	; 0
+ 7f8:	82 e0       	ldi	r24, 0x02	; 2
+ 7fa:	92 e0       	ldi	r25, 0x02	; 2
+ 7fc:	48 9f       	mul	r20, r24
+ 7fe:	f0 01       	movw	r30, r0
+ 800:	49 9f       	mul	r20, r25
+ 802:	f0 0d       	add	r31, r0
+ 804:	58 9f       	mul	r21, r24
+ 806:	f0 0d       	add	r31, r0
+ 808:	11 24       	eor	r1, r1
+ 80a:	e6 58       	subi	r30, 0x86	; 134
+ 80c:	fc 4f       	sbci	r31, 0xFC	; 252
+ 80e:	21 81       	ldd	r18, Z+1	; 0x01
+ 810:	30 e0       	ldi	r19, 0x00	; 0
+ 812:	df 01       	movw	r26, r30
+ 814:	a2 0f       	add	r26, r18
+ 816:	b3 1f       	adc	r27, r19
+ 818:	12 96       	adiw	r26, 0x02	; 2
+ 81a:	8c 91       	ld	r24, X
+ 81c:	60 81       	ld	r22, Z
+ 81e:	70 e0       	ldi	r23, 0x00	; 0
+ 820:	26 17       	cp	r18, r22
+ 822:	37 07       	cpc	r19, r23
+ 824:	99 f0       	breq	.+38     	; 0x84c <DrvUartReadData+0x58>
+ 826:	2f 5f       	subi	r18, 0xFF	; 255
+ 828:	3f 4f       	sbci	r19, 0xFF	; 255
+ 82a:	2f 3f       	cpi	r18, 0xFF	; 255
+ 82c:	31 05       	cpc	r19, r1
+ 82e:	10 f0       	brcs	.+4      	; 0x834 <DrvUartReadData+0x40>
+ 830:	20 e0       	ldi	r18, 0x00	; 0
+ 832:	30 e0       	ldi	r19, 0x00	; 0
+ 834:	62 e0       	ldi	r22, 0x02	; 2
+ 836:	72 e0       	ldi	r23, 0x02	; 2
+ 838:	46 9f       	mul	r20, r22
+ 83a:	f0 01       	movw	r30, r0
+ 83c:	47 9f       	mul	r20, r23
+ 83e:	f0 0d       	add	r31, r0
+ 840:	56 9f       	mul	r21, r22
+ 842:	f0 0d       	add	r31, r0
+ 844:	11 24       	eor	r1, r1
+ 846:	e6 58       	subi	r30, 0x86	; 134
+ 848:	fc 4f       	sbci	r31, 0xFC	; 252
+ 84a:	21 83       	std	Z+1, r18	; 0x01
+ 84c:	08 95       	ret
+
+0000084e <DrvUartDataAvailable>:
+ 84e:	22 e0       	ldi	r18, 0x02	; 2
+ 850:	32 e0       	ldi	r19, 0x02	; 2
+ 852:	48 2f       	mov	r20, r24
+ 854:	42 9f       	mul	r20, r18
+ 856:	c0 01       	movw	r24, r0
+ 858:	43 9f       	mul	r20, r19
+ 85a:	90 0d       	add	r25, r0
+ 85c:	11 24       	eor	r1, r1
+ 85e:	fc 01       	movw	r30, r24
+ 860:	e6 58       	subi	r30, 0x86	; 134
+ 862:	fc 4f       	sbci	r31, 0xFC	; 252
+ 864:	80 81       	ld	r24, Z
+ 866:	91 81       	ldd	r25, Z+1	; 0x01
+ 868:	89 1b       	sub	r24, r25
+ 86a:	91 e0       	ldi	r25, 0x01	; 1
+ 86c:	8f 3f       	cpi	r24, 0xFF	; 255
+ 86e:	08 f4       	brcc	.+2      	; 0x872 <DrvUartDataAvailable+0x24>
+ 870:	90 e0       	ldi	r25, 0x00	; 0
+ 872:	89 0f       	add	r24, r25
+ 874:	08 95       	ret
+
+00000876 <__vector_20>:
+ 876:	1f 92       	push	r1
+ 878:	0f 92       	push	r0
+ 87a:	0f b6       	in	r0, 0x3f	; 63
+ 87c:	0f 92       	push	r0
+ 87e:	11 24       	eor	r1, r1
+ 880:	0b b6       	in	r0, 0x3b	; 59
+ 882:	0f 92       	push	r0
+ 884:	8f 93       	push	r24
+ 886:	9f 93       	push	r25
+ 888:	ef 93       	push	r30
+ 88a:	ff 93       	push	r31
+ 88c:	e0 91 7a 03 	lds	r30, 0x037A	; 0x80037a <uartRingBuffer>
+ 890:	81 e0       	ldi	r24, 0x01	; 1
+ 892:	8e 0f       	add	r24, r30
+ 894:	f0 e0       	ldi	r31, 0x00	; 0
+ 896:	90 91 c6 00 	lds	r25, 0x00C6	; 0x8000c6 <__TEXT_REGION_LENGTH__+0x7e00c6>
+ 89a:	e6 58       	subi	r30, 0x86	; 134
+ 89c:	fc 4f       	sbci	r31, 0xFC	; 252
+ 89e:	92 83       	std	Z+2, r25	; 0x02
+ 8a0:	8f 3f       	cpi	r24, 0xFF	; 255
+ 8a2:	09 f4       	brne	.+2      	; 0x8a6 <__vector_20+0x30>
+ 8a4:	80 e0       	ldi	r24, 0x00	; 0
+ 8a6:	80 93 7a 03 	sts	0x037A, r24	; 0x80037a <uartRingBuffer>
+ 8aa:	ff 91       	pop	r31
+ 8ac:	ef 91       	pop	r30
+ 8ae:	9f 91       	pop	r25
+ 8b0:	8f 91       	pop	r24
+ 8b2:	0f 90       	pop	r0
+ 8b4:	0b be       	out	0x3b, r0	; 59
+ 8b6:	0f 90       	pop	r0
+ 8b8:	0f be       	out	0x3f, r0	; 63
+ 8ba:	0f 90       	pop	r0
+ 8bc:	1f 90       	pop	r1
+ 8be:	18 95       	reti
+
+000008c0 <__vector_21>:
+ 8c0:	1f 92       	push	r1
+ 8c2:	0f 92       	push	r0
+ 8c4:	0f b6       	in	r0, 0x3f	; 63
+ 8c6:	0f 92       	push	r0
+ 8c8:	11 24       	eor	r1, r1
+ 8ca:	0b b6       	in	r0, 0x3b	; 59
+ 8cc:	0f 92       	push	r0
+ 8ce:	8f 93       	push	r24
+ 8d0:	9f 93       	push	r25
+ 8d2:	ef 93       	push	r30
+ 8d4:	ff 93       	push	r31
+ 8d6:	90 91 7c 04 	lds	r25, 0x047C	; 0x80047c <uartRingBuffer+0x102>
+ 8da:	80 91 7b 04 	lds	r24, 0x047B	; 0x80047b <uartRingBuffer+0x101>
+ 8de:	98 17       	cp	r25, r24
+ 8e0:	71 f0       	breq	.+28     	; 0x8fe <__vector_21+0x3e>
+ 8e2:	81 e0       	ldi	r24, 0x01	; 1
+ 8e4:	89 0f       	add	r24, r25
+ 8e6:	8f 3f       	cpi	r24, 0xFF	; 255
+ 8e8:	09 f4       	brne	.+2      	; 0x8ec <__vector_21+0x2c>
+ 8ea:	80 e0       	ldi	r24, 0x00	; 0
+ 8ec:	e8 2f       	mov	r30, r24
+ 8ee:	f0 e0       	ldi	r31, 0x00	; 0
+ 8f0:	e3 58       	subi	r30, 0x83	; 131
+ 8f2:	fb 4f       	sbci	r31, 0xFB	; 251
+ 8f4:	90 81       	ld	r25, Z
+ 8f6:	90 93 c6 00 	sts	0x00C6, r25	; 0x8000c6 <__TEXT_REGION_LENGTH__+0x7e00c6>
+ 8fa:	80 93 7c 04 	sts	0x047C, r24	; 0x80047c <uartRingBuffer+0x102>
+ 8fe:	90 91 7b 04 	lds	r25, 0x047B	; 0x80047b <uartRingBuffer+0x101>
+ 902:	89 13       	cpse	r24, r25
+ 904:	05 c0       	rjmp	.+10     	; 0x910 <__vector_21+0x50>
+ 906:	80 91 c1 00 	lds	r24, 0x00C1	; 0x8000c1 <__TEXT_REGION_LENGTH__+0x7e00c1>
+ 90a:	8f 7d       	andi	r24, 0xDF	; 223
+ 90c:	80 93 c1 00 	sts	0x00C1, r24	; 0x8000c1 <__TEXT_REGION_LENGTH__+0x7e00c1>
+ 910:	ff 91       	pop	r31
+ 912:	ef 91       	pop	r30
+ 914:	9f 91       	pop	r25
+ 916:	8f 91       	pop	r24
+ 918:	0f 90       	pop	r0
+ 91a:	0b be       	out	0x3b, r0	; 59
+ 91c:	0f 90       	pop	r0
+ 91e:	0f be       	out	0x3f, r0	; 63
+ 920:	0f 90       	pop	r0
+ 922:	1f 90       	pop	r1
+ 924:	18 95       	reti
+
+00000926 <__vector_28>:
+ 926:	1f 92       	push	r1
+ 928:	0f 92       	push	r0
+ 92a:	0f b6       	in	r0, 0x3f	; 63
+ 92c:	0f 92       	push	r0
+ 92e:	11 24       	eor	r1, r1
+ 930:	0b b6       	in	r0, 0x3b	; 59
+ 932:	0f 92       	push	r0
+ 934:	8f 93       	push	r24
+ 936:	9f 93       	push	r25
+ 938:	ef 93       	push	r30
+ 93a:	ff 93       	push	r31
+ 93c:	e0 91 7a 03 	lds	r30, 0x037A	; 0x80037a <uartRingBuffer>
+ 940:	81 e0       	ldi	r24, 0x01	; 1
+ 942:	8e 0f       	add	r24, r30
+ 944:	f0 e0       	ldi	r31, 0x00	; 0
+ 946:	90 91 ce 00 	lds	r25, 0x00CE	; 0x8000ce <__TEXT_REGION_LENGTH__+0x7e00ce>
+ 94a:	e6 58       	subi	r30, 0x86	; 134
+ 94c:	fc 4f       	sbci	r31, 0xFC	; 252
+ 94e:	92 83       	std	Z+2, r25	; 0x02
+ 950:	8f 3f       	cpi	r24, 0xFF	; 255
+ 952:	09 f4       	brne	.+2      	; 0x956 <__vector_28+0x30>
+ 954:	80 e0       	ldi	r24, 0x00	; 0
+ 956:	80 93 7a 03 	sts	0x037A, r24	; 0x80037a <uartRingBuffer>
+ 95a:	ff 91       	pop	r31
+ 95c:	ef 91       	pop	r30
+ 95e:	9f 91       	pop	r25
+ 960:	8f 91       	pop	r24
+ 962:	0f 90       	pop	r0
+ 964:	0b be       	out	0x3b, r0	; 59
+ 966:	0f 90       	pop	r0
+ 968:	0f be       	out	0x3f, r0	; 63
+ 96a:	0f 90       	pop	r0
+ 96c:	1f 90       	pop	r1
+ 96e:	18 95       	reti
+
+00000970 <__vector_29>:
+ 970:	1f 92       	push	r1
+ 972:	0f 92       	push	r0
+ 974:	0f b6       	in	r0, 0x3f	; 63
+ 976:	0f 92       	push	r0
+ 978:	11 24       	eor	r1, r1
+ 97a:	0b b6       	in	r0, 0x3b	; 59
+ 97c:	0f 92       	push	r0
+ 97e:	8f 93       	push	r24
+ 980:	9f 93       	push	r25
+ 982:	ef 93       	push	r30
+ 984:	ff 93       	push	r31
+ 986:	90 91 7c 04 	lds	r25, 0x047C	; 0x80047c <uartRingBuffer+0x102>
+ 98a:	80 91 7b 04 	lds	r24, 0x047B	; 0x80047b <uartRingBuffer+0x101>
+ 98e:	98 17       	cp	r25, r24
+ 990:	71 f0       	breq	.+28     	; 0x9ae <__vector_29+0x3e>
+ 992:	81 e0       	ldi	r24, 0x01	; 1
+ 994:	89 0f       	add	r24, r25
+ 996:	8f 3f       	cpi	r24, 0xFF	; 255
+ 998:	09 f4       	brne	.+2      	; 0x99c <__vector_29+0x2c>
+ 99a:	80 e0       	ldi	r24, 0x00	; 0
+ 99c:	e8 2f       	mov	r30, r24
+ 99e:	f0 e0       	ldi	r31, 0x00	; 0
+ 9a0:	e3 58       	subi	r30, 0x83	; 131
+ 9a2:	fb 4f       	sbci	r31, 0xFB	; 251
+ 9a4:	90 81       	ld	r25, Z
+ 9a6:	90 93 ce 00 	sts	0x00CE, r25	; 0x8000ce <__TEXT_REGION_LENGTH__+0x7e00ce>
+ 9aa:	80 93 7c 04 	sts	0x047C, r24	; 0x80047c <uartRingBuffer+0x102>
+ 9ae:	90 91 7b 04 	lds	r25, 0x047B	; 0x80047b <uartRingBuffer+0x101>
+ 9b2:	89 13       	cpse	r24, r25
+ 9b4:	05 c0       	rjmp	.+10     	; 0x9c0 <__vector_29+0x50>
+ 9b6:	80 91 c9 00 	lds	r24, 0x00C9	; 0x8000c9 <__TEXT_REGION_LENGTH__+0x7e00c9>
+ 9ba:	8f 7d       	andi	r24, 0xDF	; 223
+ 9bc:	80 93 c9 00 	sts	0x00C9, r24	; 0x8000c9 <__TEXT_REGION_LENGTH__+0x7e00c9>
+ 9c0:	ff 91       	pop	r31
+ 9c2:	ef 91       	pop	r30
+ 9c4:	9f 91       	pop	r25
+ 9c6:	8f 91       	pop	r24
+ 9c8:	0f 90       	pop	r0
+ 9ca:	0b be       	out	0x3b, r0	; 59
+ 9cc:	0f 90       	pop	r0
+ 9ce:	0f be       	out	0x3f, r0	; 63
+ 9d0:	0f 90       	pop	r0
+ 9d2:	1f 90       	pop	r1
+ 9d4:	18 95       	reti
+
+000009d6 <__vector_30>:
+ 9d6:	1f 92       	push	r1
+ 9d8:	0f 92       	push	r0
+ 9da:	0f b6       	in	r0, 0x3f	; 63
+ 9dc:	0f 92       	push	r0
+ 9de:	11 24       	eor	r1, r1
+ 9e0:	0f 90       	pop	r0
+ 9e2:	0f be       	out	0x3f, r0	; 63
+ 9e4:	0f 90       	pop	r0
+ 9e6:	1f 90       	pop	r1
+ 9e8:	18 95       	reti
+
+000009ea <__vector_22>:
+ 9ea:	1f 92       	push	r1
+ 9ec:	0f 92       	push	r0
+ 9ee:	0f b6       	in	r0, 0x3f	; 63
+ 9f0:	0f 92       	push	r0
+ 9f2:	11 24       	eor	r1, r1
+ 9f4:	0f 90       	pop	r0
+ 9f6:	0f be       	out	0x3f, r0	; 63
+ 9f8:	0f 90       	pop	r0
+ 9fa:	1f 90       	pop	r1
+ 9fc:	18 95       	reti
+
+000009fe <SrvCommExecuteMessage>:
+ 9fe:	cf 93       	push	r28
+ a00:	df 93       	push	r29
+ a02:	80 91 e1 08 	lds	r24, 0x08E1	; 0x8008e1 <inMessage+0x3>
+ a06:	8d 34       	cpi	r24, 0x4D	; 77
+ a08:	09 f0       	breq	.+2      	; 0xa0c <SrvCommExecuteMessage+0xe>
+ a0a:	64 c0       	rjmp	.+200    	; 0xad4 <SrvCommExecuteMessage+0xd6>
+ a0c:	80 91 e2 08 	lds	r24, 0x08E2	; 0x8008e2 <inMessage+0x4>
+ a10:	82 31       	cpi	r24, 0x12	; 18
+ a12:	08 f0       	brcs	.+2      	; 0xa16 <SrvCommExecuteMessage+0x18>
+ a14:	5f c0       	rjmp	.+190    	; 0xad4 <SrvCommExecuteMessage+0xd6>
+ a16:	0e 94 14 02 	call	0x428	; 0x428 <DrvServoGetStruture>
+ a1a:	ec 01       	movw	r28, r24
+ a1c:	80 91 e3 08 	lds	r24, 0x08E3	; 0x8008e3 <inMessage+0x5>
+ a20:	83 35       	cpi	r24, 0x53	; 83
+ a22:	99 f4       	brne	.+38     	; 0xa4a <SrvCommExecuteMessage+0x4c>
+ a24:	40 91 e6 08 	lds	r20, 0x08E6	; 0x8008e6 <inMessage+0x8>
+ a28:	50 e0       	ldi	r21, 0x00	; 0
+ a2a:	54 2f       	mov	r21, r20
+ a2c:	44 27       	eor	r20, r20
+ a2e:	80 91 e7 08 	lds	r24, 0x08E7	; 0x8008e7 <inMessage+0x9>
+ a32:	48 2b       	or	r20, r24
+ a34:	60 91 e4 08 	lds	r22, 0x08E4	; 0x8008e4 <inMessage+0x6>
+ a38:	70 91 e5 08 	lds	r23, 0x08E5	; 0x8008e5 <inMessage+0x7>
+ a3c:	76 27       	eor	r23, r22
+ a3e:	67 27       	eor	r22, r23
+ a40:	76 27       	eor	r23, r22
+ a42:	80 91 e2 08 	lds	r24, 0x08E2	; 0x8008e2 <inMessage+0x4>
+ a46:	0e 94 ec 01 	call	0x3d8	; 0x3d8 <DrvServoSetTarget>
+ a4a:	84 e2       	ldi	r24, 0x24	; 36
+ a4c:	80 93 db 07 	sts	0x07DB, r24	; 0x8007db <outMessage>
+ a50:	8e e3       	ldi	r24, 0x3E	; 62
+ a52:	80 93 dc 07 	sts	0x07DC, r24	; 0x8007dc <outMessage+0x1>
+ a56:	87 e0       	ldi	r24, 0x07	; 7
+ a58:	80 93 dd 07 	sts	0x07DD, r24	; 0x8007dd <outMessage+0x2>
+ a5c:	8d e4       	ldi	r24, 0x4D	; 77
+ a5e:	80 93 de 07 	sts	0x07DE, r24	; 0x8007de <outMessage+0x3>
+ a62:	88 81       	ld	r24, Y
+ a64:	80 93 df 07 	sts	0x07DF, r24	; 0x8007df <outMessage+0x4>
+ a68:	8a 81       	ldd	r24, Y+2	; 0x02
+ a6a:	80 93 e0 07 	sts	0x07E0, r24	; 0x8007e0 <outMessage+0x5>
+ a6e:	89 81       	ldd	r24, Y+1	; 0x01
+ a70:	80 93 e1 07 	sts	0x07E1, r24	; 0x8007e1 <outMessage+0x6>
+ a74:	8e 81       	ldd	r24, Y+6	; 0x06
+ a76:	80 93 e2 07 	sts	0x07E2, r24	; 0x8007e2 <outMessage+0x7>
+ a7a:	8d 81       	ldd	r24, Y+5	; 0x05
+ a7c:	80 93 e3 07 	sts	0x07E3, r24	; 0x8007e3 <outMessage+0x8>
+ a80:	8b 85       	ldd	r24, Y+11	; 0x0b
+ a82:	9c 85       	ldd	r25, Y+12	; 0x0c
+ a84:	90 93 e4 07 	sts	0x07E4, r25	; 0x8007e4 <outMessage+0x9>
+ a88:	80 93 e5 07 	sts	0x07E5, r24	; 0x8007e5 <outMessage+0xa>
+ a8c:	cb ed       	ldi	r28, 0xDB	; 219
+ a8e:	d7 e0       	ldi	r29, 0x07	; 7
+ a90:	80 91 dd 07 	lds	r24, 0x07DD	; 0x8007dd <outMessage+0x2>
+ a94:	90 e0       	ldi	r25, 0x00	; 0
+ a96:	04 96       	adiw	r24, 0x04	; 4
+ a98:	9e 01       	movw	r18, r28
+ a9a:	2b 5d       	subi	r18, 0xDB	; 219
+ a9c:	37 40       	sbci	r19, 0x07	; 7
+ a9e:	28 17       	cp	r18, r24
+ aa0:	39 07       	cpc	r19, r25
+ aa2:	28 f4       	brcc	.+10     	; 0xaae <SrvCommExecuteMessage+0xb0>
+ aa4:	69 91       	ld	r22, Y+
+ aa6:	80 e0       	ldi	r24, 0x00	; 0
+ aa8:	0e 94 c2 03 	call	0x784	; 0x784 <DrvUartFillTxBuffer>
+ aac:	f1 cf       	rjmp	.-30     	; 0xa90 <SrvCommExecuteMessage+0x92>
+ aae:	80 91 e0 08 	lds	r24, 0x08E0	; 0x8008e0 <inMessage+0x2>
+ ab2:	90 e0       	ldi	r25, 0x00	; 0
+ ab4:	ee ed       	ldi	r30, 0xDE	; 222
+ ab6:	f8 e0       	ldi	r31, 0x08	; 8
+ ab8:	04 96       	adiw	r24, 0x04	; 4
+ aba:	9f 01       	movw	r18, r30
+ abc:	2e 5d       	subi	r18, 0xDE	; 222
+ abe:	38 40       	sbci	r19, 0x08	; 8
+ ac0:	28 17       	cp	r18, r24
+ ac2:	39 07       	cpc	r19, r25
+ ac4:	10 f4       	brcc	.+4      	; 0xaca <SrvCommExecuteMessage+0xcc>
+ ac6:	11 92       	st	Z+, r1
+ ac8:	f8 cf       	rjmp	.-16     	; 0xaba <SrvCommExecuteMessage+0xbc>
+ aca:	80 e0       	ldi	r24, 0x00	; 0
+ acc:	df 91       	pop	r29
+ ace:	cf 91       	pop	r28
+ ad0:	0c 94 ef 03 	jmp	0x7de	; 0x7de <DrvUartSendData>
+ ad4:	80 e0       	ldi	r24, 0x00	; 0
+ ad6:	df 91       	pop	r29
+ ad8:	cf 91       	pop	r28
+ ada:	08 95       	ret
+
+00000adc <SrvCommInit>:
+ adc:	64 e0       	ldi	r22, 0x04	; 4
+ ade:	80 e0       	ldi	r24, 0x00	; 0
+ ae0:	0c 94 96 03 	jmp	0x72c	; 0x72c <DrvUartInit>
+
+00000ae4 <SrvCommUpdate>:
+ ae4:	ef 92       	push	r14
+ ae6:	ff 92       	push	r15
+ ae8:	0f 93       	push	r16
+ aea:	1f 93       	push	r17
+ aec:	cf 93       	push	r28
+ aee:	df 93       	push	r29
+ af0:	80 e0       	ldi	r24, 0x00	; 0
+ af2:	0e 94 27 04 	call	0x84e	; 0x84e <DrvUartDataAvailable>
+ af6:	90 e0       	ldi	r25, 0x00	; 0
+ af8:	90 93 81 07 	sts	0x0781, r25	; 0x800781 <nbDataAvailable+0x1>
+ afc:	80 93 80 07 	sts	0x0780, r24	; 0x800780 <nbDataAvailable>
+ b00:	03 97       	sbiw	r24, 0x03	; 3
+ b02:	08 f4       	brcc	.+2      	; 0xb06 <SrvCommUpdate+0x22>
+ b04:	5b c0       	rjmp	.+182    	; 0xbbc <SrvCommUpdate+0xd8>
+ b06:	c0 e0       	ldi	r28, 0x00	; 0
+ b08:	d0 e0       	ldi	r29, 0x00	; 0
+ b0a:	13 e0       	ldi	r17, 0x03	; 3
+ b0c:	04 e0       	ldi	r16, 0x04	; 4
+ b0e:	ff 24       	eor	r15, r15
+ b10:	f3 94       	inc	r15
+ b12:	82 e0       	ldi	r24, 0x02	; 2
+ b14:	e8 2e       	mov	r14, r24
+ b16:	80 91 80 07 	lds	r24, 0x0780	; 0x800780 <nbDataAvailable>
+ b1a:	90 91 81 07 	lds	r25, 0x0781	; 0x800781 <nbDataAvailable+0x1>
+ b1e:	c8 17       	cp	r28, r24
+ b20:	d9 07       	cpc	r29, r25
+ b22:	08 f0       	brcs	.+2      	; 0xb26 <SrvCommUpdate+0x42>
+ b24:	4b c0       	rjmp	.+150    	; 0xbbc <SrvCommUpdate+0xd8>
+ b26:	80 e0       	ldi	r24, 0x00	; 0
+ b28:	0e 94 fa 03 	call	0x7f4	; 0x7f4 <DrvUartReadData>
+ b2c:	90 91 7f 07 	lds	r25, 0x077F	; 0x80077f <status>
+ b30:	92 30       	cpi	r25, 0x02	; 2
+ b32:	c9 f0       	breq	.+50     	; 0xb66 <SrvCommUpdate+0x82>
+ b34:	28 f4       	brcc	.+10     	; 0xb40 <SrvCommUpdate+0x5c>
+ b36:	99 23       	and	r25, r25
+ b38:	41 f0       	breq	.+16     	; 0xb4a <SrvCommUpdate+0x66>
+ b3a:	91 30       	cpi	r25, 0x01	; 1
+ b3c:	69 f0       	breq	.+26     	; 0xb58 <SrvCommUpdate+0x74>
+ b3e:	3c c0       	rjmp	.+120    	; 0xbb8 <SrvCommUpdate+0xd4>
+ b40:	93 30       	cpi	r25, 0x03	; 3
+ b42:	b1 f0       	breq	.+44     	; 0xb70 <SrvCommUpdate+0x8c>
+ b44:	94 30       	cpi	r25, 0x04	; 4
+ b46:	f9 f0       	breq	.+62     	; 0xb86 <SrvCommUpdate+0xa2>
+ b48:	37 c0       	rjmp	.+110    	; 0xbb8 <SrvCommUpdate+0xd4>
+ b4a:	84 32       	cpi	r24, 0x24	; 36
+ b4c:	a9 f5       	brne	.+106    	; 0xbb8 <SrvCommUpdate+0xd4>
+ b4e:	80 93 de 08 	sts	0x08DE, r24	; 0x8008de <inMessage>
+ b52:	f0 92 7f 07 	sts	0x077F, r15	; 0x80077f <status>
+ b56:	30 c0       	rjmp	.+96     	; 0xbb8 <SrvCommUpdate+0xd4>
+ b58:	8c 33       	cpi	r24, 0x3C	; 60
+ b5a:	71 f5       	brne	.+92     	; 0xbb8 <SrvCommUpdate+0xd4>
+ b5c:	80 93 df 08 	sts	0x08DF, r24	; 0x8008df <inMessage+0x1>
+ b60:	e0 92 7f 07 	sts	0x077F, r14	; 0x80077f <status>
+ b64:	29 c0       	rjmp	.+82     	; 0xbb8 <SrvCommUpdate+0xd4>
+ b66:	80 93 e0 08 	sts	0x08E0, r24	; 0x8008e0 <inMessage+0x2>
+ b6a:	10 93 7f 07 	sts	0x077F, r17	; 0x80077f <status>
+ b6e:	24 c0       	rjmp	.+72     	; 0xbb8 <SrvCommUpdate+0xd4>
+ b70:	80 93 e1 08 	sts	0x08E1, r24	; 0x8008e1 <inMessage+0x3>
+ b74:	10 92 7e 07 	sts	0x077E, r1	; 0x80077e <cptDataMessage>
+ b78:	80 91 e0 08 	lds	r24, 0x08E0	; 0x8008e0 <inMessage+0x2>
+ b7c:	88 23       	and	r24, r24
+ b7e:	91 f0       	breq	.+36     	; 0xba4 <SrvCommUpdate+0xc0>
+ b80:	00 93 7f 07 	sts	0x077F, r16	; 0x80077f <status>
+ b84:	19 c0       	rjmp	.+50     	; 0xbb8 <SrvCommUpdate+0xd4>
+ b86:	90 91 7e 07 	lds	r25, 0x077E	; 0x80077e <cptDataMessage>
+ b8a:	e9 2f       	mov	r30, r25
+ b8c:	f0 e0       	ldi	r31, 0x00	; 0
+ b8e:	e2 52       	subi	r30, 0x22	; 34
+ b90:	f7 4f       	sbci	r31, 0xF7	; 247
+ b92:	84 83       	std	Z+4, r24	; 0x04
+ b94:	81 e0       	ldi	r24, 0x01	; 1
+ b96:	89 0f       	add	r24, r25
+ b98:	80 93 7e 07 	sts	0x077E, r24	; 0x80077e <cptDataMessage>
+ b9c:	90 91 e0 08 	lds	r25, 0x08E0	; 0x8008e0 <inMessage+0x2>
+ ba0:	89 13       	cpse	r24, r25
+ ba2:	0a c0       	rjmp	.+20     	; 0xbb8 <SrvCommUpdate+0xd4>
+ ba4:	10 92 7f 07 	sts	0x077F, r1	; 0x80077f <status>
+ ba8:	df 91       	pop	r29
+ baa:	cf 91       	pop	r28
+ bac:	1f 91       	pop	r17
+ bae:	0f 91       	pop	r16
+ bb0:	ff 90       	pop	r15
+ bb2:	ef 90       	pop	r14
+ bb4:	0c 94 ff 04 	jmp	0x9fe	; 0x9fe <SrvCommExecuteMessage>
+ bb8:	21 96       	adiw	r28, 0x01	; 1
+ bba:	ad cf       	rjmp	.-166    	; 0xb16 <SrvCommUpdate+0x32>
+ bbc:	df 91       	pop	r29
+ bbe:	cf 91       	pop	r28
+ bc0:	1f 91       	pop	r17
+ bc2:	0f 91       	pop	r16
+ bc4:	ff 90       	pop	r15
+ bc6:	ef 90       	pop	r14
+ bc8:	08 95       	ret
+
+00000bca <SrvIhmInit>:
+ bca:	0e 94 95 00 	call	0x12a	; 0x12a <DrvButtonInit>
+ bce:	0e 94 92 01 	call	0x324	; 0x324 <DrvLedInit>
+ bd2:	80 e0       	ldi	r24, 0x00	; 0
+ bd4:	0e 94 9f 00 	call	0x13e	; 0x13e <DrvButtonAddButton>
+ bd8:	80 e0       	ldi	r24, 0x00	; 0
+ bda:	0e 94 9c 01 	call	0x338	; 0x338 <DrvLedSetPinLed>
+ bde:	81 e0       	ldi	r24, 0x01	; 1
+ be0:	0e 94 9c 01 	call	0x338	; 0x338 <DrvLedSetPinLed>
+ be4:	82 e0       	ldi	r24, 0x02	; 2
+ be6:	0e 94 9c 01 	call	0x338	; 0x338 <DrvLedSetPinLed>
+ bea:	83 e0       	ldi	r24, 0x03	; 3
+ bec:	0e 94 9c 01 	call	0x338	; 0x338 <DrvLedSetPinLed>
+ bf0:	81 e0       	ldi	r24, 0x01	; 1
+ bf2:	08 95       	ret
+
+00000bf4 <SrvIhmPlatformInitStart>:
+ bf4:	60 e0       	ldi	r22, 0x00	; 0
+ bf6:	80 e0       	ldi	r24, 0x00	; 0
+ bf8:	0e 94 d7 01 	call	0x3ae	; 0x3ae <DrvLedSetState>
+ bfc:	60 e0       	ldi	r22, 0x00	; 0
+ bfe:	81 e0       	ldi	r24, 0x01	; 1
+ c00:	0e 94 d7 01 	call	0x3ae	; 0x3ae <DrvLedSetState>
+ c04:	60 e0       	ldi	r22, 0x00	; 0
+ c06:	82 e0       	ldi	r24, 0x02	; 2
+ c08:	0e 94 d7 01 	call	0x3ae	; 0x3ae <DrvLedSetState>
+ c0c:	60 e0       	ldi	r22, 0x00	; 0
+ c0e:	83 e0       	ldi	r24, 0x03	; 3
+ c10:	0c 94 d7 01 	jmp	0x3ae	; 0x3ae <DrvLedSetState>
+
+00000c14 <SrvIhmPlatformInitDone>:
+ c14:	60 e0       	ldi	r22, 0x00	; 0
+ c16:	80 e0       	ldi	r24, 0x00	; 0
+ c18:	0e 94 d7 01 	call	0x3ae	; 0x3ae <DrvLedSetState>
+ c1c:	61 e0       	ldi	r22, 0x01	; 1
+ c1e:	81 e0       	ldi	r24, 0x01	; 1
+ c20:	0e 94 d7 01 	call	0x3ae	; 0x3ae <DrvLedSetState>
+ c24:	61 e0       	ldi	r22, 0x01	; 1
+ c26:	82 e0       	ldi	r24, 0x02	; 2
+ c28:	0e 94 d7 01 	call	0x3ae	; 0x3ae <DrvLedSetState>
+ c2c:	61 e0       	ldi	r22, 0x01	; 1
+ c2e:	83 e0       	ldi	r24, 0x03	; 3
+ c30:	0c 94 d7 01 	jmp	0x3ae	; 0x3ae <DrvLedSetState>
+
+00000c34 <main>:
+ c34:	14 be       	out	0x34, r1	; 52
+ c36:	85 b7       	in	r24, 0x35	; 53
+ c38:	81 60       	ori	r24, 0x01	; 1
+ c3a:	85 bf       	out	0x35, r24	; 53
+ c3c:	85 b7       	in	r24, 0x35	; 53
+ c3e:	8d 7f       	andi	r24, 0xFD	; 253
+ c40:	85 bf       	out	0x35, r24	; 53
+ c42:	f8 94       	cli
+ c44:	9e e0       	ldi	r25, 0x0E	; 14
+ c46:	88 e1       	ldi	r24, 0x18	; 24
+ c48:	0f b6       	in	r0, 0x3f	; 63
+ c4a:	f8 94       	cli
+ c4c:	a8 95       	wdr
+ c4e:	80 93 60 00 	sts	0x0060, r24	; 0x800060 <__TEXT_REGION_LENGTH__+0x7e0060>
+ c52:	0f be       	out	0x3f, r0	; 63
+ c54:	90 93 60 00 	sts	0x0060, r25	; 0x800060 <__TEXT_REGION_LENGTH__+0x7e0060>
+ c58:	78 94       	sei
+ c5a:	0e 94 20 02 	call	0x440	; 0x440 <DrvTickInit>
+ c5e:	0e 94 91 02 	call	0x522	; 0x522 <DrvTimerInit>
+ c62:	0e 94 be 00 	call	0x17c	; 0x17c <DrvEepromInit>
+ c66:	64 e0       	ldi	r22, 0x04	; 4
+ c68:	80 e0       	ldi	r24, 0x00	; 0
+ c6a:	0e 94 96 03 	call	0x72c	; 0x72c <DrvUartInit>
+ c6e:	60 e8       	ldi	r22, 0x80	; 128
+ c70:	7a e1       	ldi	r23, 0x1A	; 26
+ c72:	86 e0       	ldi	r24, 0x06	; 6
+ c74:	90 e0       	ldi	r25, 0x00	; 0
+ c76:	0e 94 67 03 	call	0x6ce	; 0x6ce <DrvTwiInit>
+ c7a:	0e 94 6e 05 	call	0xadc	; 0xadc <SrvCommInit>
+ c7e:	0e 94 e5 05 	call	0xbca	; 0xbca <SrvIhmInit>
+ c82:	0e 94 fa 05 	call	0xbf4	; 0xbf4 <SrvIhmPlatformInitStart>
+ c86:	0e 94 d7 02 	call	0x5ae	; 0x5ae <DrvTimerTickReset>
+ c8a:	0e 94 3f 02 	call	0x47e	; 0x47e <DrvTickGetTimeUs>
+ c8e:	60 93 82 07 	sts	0x0782, r22	; 0x800782 <lastLoopTime>
+ c92:	70 93 83 07 	sts	0x0783, r23	; 0x800783 <lastLoopTime+0x1>
+ c96:	80 93 84 07 	sts	0x0784, r24	; 0x800784 <lastLoopTime+0x2>
+ c9a:	90 93 85 07 	sts	0x0785, r25	; 0x800785 <lastLoopTime+0x3>
+ c9e:	0e 94 0a 06 	call	0xc14	; 0xc14 <SrvIhmPlatformInitDone>
+ ca2:	0e 94 ce 00 	call	0x19c	; 0x19c <DrvEepromSetConfiguration>
+ ca6:	c8 e1       	ldi	r28, 0x18	; 24
+ ca8:	d8 e0       	ldi	r29, 0x08	; 8
+ caa:	0f b6       	in	r0, 0x3f	; 63
+ cac:	f8 94       	cli
+ cae:	a8 95       	wdr
+ cb0:	c0 93 60 00 	sts	0x0060, r28	; 0x800060 <__TEXT_REGION_LENGTH__+0x7e0060>
+ cb4:	0f be       	out	0x3f, r0	; 63
+ cb6:	d0 93 60 00 	sts	0x0060, r29	; 0x800060 <__TEXT_REGION_LENGTH__+0x7e0060>
+ cba:	80 e0       	ldi	r24, 0x00	; 0
+ cbc:	0e 94 bc 01 	call	0x378	; 0x378 <DrvLedSetToggle>
+ cc0:	0e 94 3f 02 	call	0x47e	; 0x47e <DrvTickGetTimeUs>
+ cc4:	00 91 82 07 	lds	r16, 0x0782	; 0x800782 <lastLoopTime>
+ cc8:	10 91 83 07 	lds	r17, 0x0783	; 0x800783 <lastLoopTime+0x1>
+ ccc:	20 91 84 07 	lds	r18, 0x0784	; 0x800784 <lastLoopTime+0x2>
+ cd0:	30 91 85 07 	lds	r19, 0x0785	; 0x800785 <lastLoopTime+0x3>
+ cd4:	dc 01       	movw	r26, r24
+ cd6:	cb 01       	movw	r24, r22
+ cd8:	80 1b       	sub	r24, r16
+ cda:	91 0b       	sbc	r25, r17
+ cdc:	a2 0b       	sbc	r26, r18
+ cde:	b3 0b       	sbc	r27, r19
+ ce0:	80 93 82 07 	sts	0x0782, r24	; 0x800782 <lastLoopTime>
+ ce4:	90 93 83 07 	sts	0x0783, r25	; 0x800783 <lastLoopTime+0x1>
+ ce8:	a0 93 84 07 	sts	0x0784, r26	; 0x800784 <lastLoopTime+0x2>
+ cec:	b0 93 85 07 	sts	0x0785, r27	; 0x800785 <lastLoopTime+0x3>
+ cf0:	0e 94 72 05 	call	0xae4	; 0xae4 <SrvCommUpdate>
+ cf4:	da cf       	rjmp	.-76     	; 0xcaa <main+0x76>
+
+00000cf6 <__udivmodsi4>:
+ cf6:	a1 e2       	ldi	r26, 0x21	; 33
+ cf8:	1a 2e       	mov	r1, r26
+ cfa:	aa 1b       	sub	r26, r26
+ cfc:	bb 1b       	sub	r27, r27
+ cfe:	fd 01       	movw	r30, r26
+ d00:	0d c0       	rjmp	.+26     	; 0xd1c <__udivmodsi4_ep>
+
+00000d02 <__udivmodsi4_loop>:
+ d02:	aa 1f       	adc	r26, r26
+ d04:	bb 1f       	adc	r27, r27
+ d06:	ee 1f       	adc	r30, r30
+ d08:	ff 1f       	adc	r31, r31
+ d0a:	a2 17       	cp	r26, r18
+ d0c:	b3 07       	cpc	r27, r19
+ d0e:	e4 07       	cpc	r30, r20
+ d10:	f5 07       	cpc	r31, r21
+ d12:	20 f0       	brcs	.+8      	; 0xd1c <__udivmodsi4_ep>
+ d14:	a2 1b       	sub	r26, r18
+ d16:	b3 0b       	sbc	r27, r19
+ d18:	e4 0b       	sbc	r30, r20
+ d1a:	f5 0b       	sbc	r31, r21
+
+00000d1c <__udivmodsi4_ep>:
+ d1c:	66 1f       	adc	r22, r22
+ d1e:	77 1f       	adc	r23, r23
+ d20:	88 1f       	adc	r24, r24
+ d22:	99 1f       	adc	r25, r25
+ d24:	1a 94       	dec	r1
+ d26:	69 f7       	brne	.-38     	; 0xd02 <__udivmodsi4_loop>
+ d28:	60 95       	com	r22
+ d2a:	70 95       	com	r23
+ d2c:	80 95       	com	r24
+ d2e:	90 95       	com	r25
+ d30:	9b 01       	movw	r18, r22
+ d32:	ac 01       	movw	r20, r24
+ d34:	bd 01       	movw	r22, r26
+ d36:	cf 01       	movw	r24, r30
+ d38:	08 95       	ret
+
+00000d3a <eeprom_read_byte>:
+ d3a:	f9 99       	sbic	0x1f, 1	; 31
+ d3c:	fe cf       	rjmp	.-4      	; 0xd3a <eeprom_read_byte>
+ d3e:	92 bd       	out	0x22, r25	; 34
+ d40:	81 bd       	out	0x21, r24	; 33
+ d42:	f8 9a       	sbi	0x1f, 0	; 31
+ d44:	99 27       	eor	r25, r25
+ d46:	80 b5       	in	r24, 0x20	; 32
+ d48:	08 95       	ret
+
+00000d4a <eeprom_write_byte>:
+ d4a:	26 2f       	mov	r18, r22
+
+00000d4c <eeprom_write_r18>:
+ d4c:	f9 99       	sbic	0x1f, 1	; 31
+ d4e:	fe cf       	rjmp	.-4      	; 0xd4c <eeprom_write_r18>
+ d50:	1f ba       	out	0x1f, r1	; 31
+ d52:	92 bd       	out	0x22, r25	; 34
+ d54:	81 bd       	out	0x21, r24	; 33
+ d56:	20 bd       	out	0x20, r18	; 32
+ d58:	0f b6       	in	r0, 0x3f	; 63
+ d5a:	f8 94       	cli
+ d5c:	fa 9a       	sbi	0x1f, 2	; 31
+ d5e:	f9 9a       	sbi	0x1f, 1	; 31
+ d60:	0f be       	out	0x3f, r0	; 63
+ d62:	01 96       	adiw	r24, 0x01	; 1
+ d64:	08 95       	ret
+
+00000d66 <_exit>:
+ d66:	f8 94       	cli
+
+00000d68 <__stop_program>:
+ d68:	ff cf       	rjmp	.-2      	; 0xd68 <__stop_program>
