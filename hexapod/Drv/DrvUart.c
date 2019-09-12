@@ -10,7 +10,7 @@
 #include "DrvUart.h"
 
 ////////////////////////////////////////PRIVATE DEFINES///////////////////////////////////////////
-#define MAX_BUFFER	254U
+#define MAX_BUFFER	255U
 
 ////////////////////////////////////////PRIVATE STRUCTURES////////////////////////////////////////
 typedef struct
@@ -93,7 +93,7 @@ Boolean DrvUartInit( Int8U indexUart, UartBaudRate baudRate )
 //rempli le buffer d'emission
 Boolean DrvUartFillTxBuffer(Int8U indexUart, Int8U datum)
 {
-	Int16U head = uartRingBuffer[indexUart].Tx.Head;
+	Int8U head = uartRingBuffer[indexUart].Tx.Head;
 	if (++head >= MAX_BUFFER)
 	{
 		head = 0U;
@@ -128,7 +128,7 @@ Boolean DrvUartSendData(Int8U indexUart)
 //recoit une donn�e de la liaison s�rie
 Int8U DrvUartReadData(Int8U indexUart)
 {
-	Int16U tail = uartRingBuffer[indexUart].Rx.Tail;
+	Int8U tail = uartRingBuffer[indexUart].Rx.Tail;
 	Int8U datum = uartRingBuffer[indexUart].Rx.Buffer[tail];
 	if (uartRingBuffer[indexUart].Rx.Head != tail)
 	{

@@ -27,7 +27,7 @@
 #define MIN_SERVO_SPEED			0U
 #define MAX_SERVO_SPEED			10U
 
-#define SERVO_DEG_PER_SEC		60U
+#define SERVO_DEG_PER_SEC		50U
 
 typedef enum
 {

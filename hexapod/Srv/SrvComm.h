@@ -27,6 +27,10 @@
 #define COMM_COMMAND_SERVO_MIN_WRITE	'4'   //servomotors write
 #define COMM_COMMAND_SERVO_MAX_READ		'5'   //servomotors read
 #define COMM_COMMAND_SERVO_MAX_WRITE	'6'   //servomotors write
+#define COMM_COMMAND_LEG_WRITE			'7'   //write leg position
+#define COMM_COMMAND_SET_POSITION		'8'   //set position
+#define COMM_COMMAND_SET_WALK			'9'   //set walk
+#define COMM_COMMAND_SET_MOVE			'A'   //set move
 
 ////////////////////////////////////////PUBLIC STRUCTURES/////////////////////////////////////////
 typedef struct

@@ -9,16 +9,18 @@
 #ifndef SRVHEARBEAT_H_
 #define SRVHEARBEAT_H_
 
-#include "Conf/conf_hard.h"
+#include "Conf/ConfHard.h"
 #include "Tools/tools_typedefs.h"
-#include "Drv/DrvEvent.h"
 
 
 //Init du hearbeat
-void SrvHeartbeatInit( void ) ;
+Boolean SrvHeartbeatInit( void ) ;
 
 //dispatcher d'evenements
-void SrvHeartbeatDispatcher (Event_t in_event) ;
+void SrvHeartbeatUpdate (void) ;
 
+void SrvHeartbeatSetPeriod ( uint8_t period );
+void SrvHeartbeatStress ( void );
+void SrvHeartbeatCalm ( void );
 
 #endif /* SRVHEARBEAT_H_ */

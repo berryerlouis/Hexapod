@@ -11,7 +11,6 @@
 
 #include "Tools/tools_typedefs.h"
 
-#include "Drv/DrvSSD1306.h"
 #include "Drv/DrvBitmap.h"
 #include "Drv/DrvFont.h"
 
@@ -28,5 +27,7 @@
 Boolean SrvDisplayInit ( void ) ;
 //Fonction de dispatching d'evenements
 void SrvDisplayUpdate (void) ;
+
+void SrvDisplaySetDirection (EBitmapArrow dir) ;
 
 #endif //SRVDISPLAY_H_

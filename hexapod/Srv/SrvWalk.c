@@ -1,25 +1,30 @@
 ////////////////////////////////////////INCLUDES//////////////////////////////////////////////////
 #include "Conf/ConfHard.h"
 
+#include "Drv/DrvTick.h"
 #include "Drv/DrvLeg.h"
-#include "Srv/SrvWalk.h"
+#include "SrvWalk.h"
 
 ////////////////////////////////////////PRIVATE DEFINES///////////////////////////////////////////
-
+#define NB_STEPS	4U
 ////////////////////////////////////////PRIVATE STRUCTURES////////////////////////////////////////
 
 ////////////////////////////////////////PRIVATE FUNCTIONS/////////////////////////////////////////
-static void SrvWalkPlayingGaits ( Int16U speed );
+
 //Stop gaits
-static Boolean SrvWalkStopGaits ( void );
-static void SrvWalkTripodGaits ( Int16U speed );
-static void SrvWalkWaveGaits ( Int16U speed );
-static void SrvWalkRippleGaits ( Int16U speed );
+static void SrvWalkTripod ( void );
+static void SrvWalkWave ( void );
+static void SrvWalkRipple ( void );
 static void SrvWalkLegsStep( E_LEG movingLeg1, E_LEG movingLeg2, E_LEG movingLeg3,Int16U speed);
+static void SrvWalkStop ( void );
 
 ////////////////////////////////////////PRIVATE VARIABLES/////////////////////////////////////////
-static volatile E_WALK walk;
-E_GAITS gaits;
+
+E_GAIT gaiting;
+E_WALK walking;
+Int16U walkingDelay;
+
+
 Int8U updateLeg		= 0U;
 
 typedef struct
@@ -30,9 +35,11 @@ typedef struct
 
 S_StepLeg stepLeg[NB_LEGS];
 Boolean initStepGaits = FALSE;
-Int16S legsXTab	[]= { -15, -45, 30 };
-Int16S legsYTab	[]= {  50,   0,  0 };
-Int16S legsZTab	[]= { -30,   0,  0 };
+Int16S legsXTab	[]= {  15,  45, -30 };
+Int16S legsYTab	[]= {  -20,   0,  0 };
+Int16S legsZTab	[]= {  30,   0,  0 };
+
+
 
 ////////////////////////////////////////PUBILC FUNCTIONS//////////////////////////////////////////
 
@@ -42,76 +49,85 @@ Int16S legsZTab	[]= { -30,   0,  0 };
 Boolean SrvWalkInit ( void )
 {
     Boolean oSuccess = TRUE;
-	//init the walking status
-	walk = E_WALK_STOP;
-	gaits = E_GAITS_TRIPOD;
-	SrvWalkStopGaits();
-
+	SrvWalkSetWalk(E_WALK_STOP, 0U);
+	SrvWalkSetGait(E_GAITS_TRIPOD, 0U);
     return oSuccess;
 }
 
 //Fonction de dispatching d'evenements
 void SrvWalkUpdate ( void )
 {
-	//if not stop
-	/*if(walk != E_WALK_STOP)
+	//update servos every 15 ms
+	//if ((DrvTickGetTimeMs() - prevMillisWalkUpdate) > 10U)
+	if( walking !=  E_WALK_STOP )
 	{
-		SrvWalkPlayingGaits(500);
+		if( gaiting == E_GAITS_TRIPOD )
+		{
+			SrvWalkTripod();
+		}
+		else if( gaiting == E_GAITS_WAVE )
+		{
+			SrvWalkWave();
+		}
+		else if( gaiting == E_GAITS_RIPPLE )
+		{
+			SrvWalkRipple();
+		}
 	}
 	else
 	{
-		if(SrvWalkStopGaits() == TRUE)
-		{
-			SrvWalkChangeWalk(E_WALK_STEP);
-			SrvWalkChangeGaits(E_GAITS_TRIPOD);
-		}
-	}*/
+		SrvWalkStop();
+	}
+
+//prevMillisWalkUpdate = DrvTickGetTimeMs();
 	//update legs
 	DrvLegUpdate();
 }
 
-//Change the status of the walk
-//return : TRUE si ok
-Boolean SrvWalkChangeWalk ( E_WALK w )
+Boolean SrvWalkSetWalk( E_WALK walk, uint16_t delay )
 {
-	Boolean oSuccess = TRUE;
-	//set the walking status
-	walk = w;
-	return oSuccess;
-}
-
-//Change the status of the walk
-//return : TRUE si ok
-Boolean SrvWalkChangeGaits ( E_GAITS g)
-{
-	Boolean oSuccess = TRUE;
-	//set the walking status
-	gaits = g;
-	initStepGaits = FALSE;
-	return oSuccess;
-}
-
-////////////////////////////////////////PRIVATE FUNCTIONS/////////////////////////////////////////
-//Play gaits
-static void SrvWalkPlayingGaits ( Int16U speed )
-{	
-	if( gaits == E_GAITS_TRIPOD )
+    Boolean oSuccess = FALSE;
+	
+	if(walking != walk)
 	{
-		SrvWalkTripodGaits(speed);
-	}
-	else if( gaits == E_GAITS_WAVE )
-	{
-		SrvWalkWaveGaits(speed);
-	}
-	else if( gaits == E_GAITS_RIPPLE )
-	{
-		SrvWalkRippleGaits(speed);
+		walking = walk;
+		walkingDelay = delay;
+		oSuccess = TRUE;
 	}
 	else
 	{
-
+		walkingDelay = delay;
+		oSuccess = TRUE;
 	}
+    return oSuccess;
 }
+
+Boolean SrvWalkSetGait( E_GAIT gait, uint16_t delay )
+{
+	Boolean oSuccess = FALSE;
+	
+	if(gaiting != gait)
+	{
+		gaiting = gait;
+		walkingDelay = delay;
+		oSuccess = TRUE;
+	}
+	else
+	{
+		walkingDelay = delay;
+		oSuccess = TRUE;
+	}
+	return oSuccess;
+}
+
+
+
+
+
+
+
+
+////////////////////////////////////////PRIVATE FUNCTIONS/////////////////////////////////////////
 
 static void SrvWalkLegsStep( E_LEG movingLeg1, E_LEG movingLeg2, E_LEG movingLeg3,Int16U speed)
 {
@@ -146,26 +162,26 @@ static void SrvWalkLegsStep( E_LEG movingLeg1, E_LEG movingLeg2, E_LEG movingLeg
 	}
 }
 
-static void SrvWalkTripodGaits ( Int16U speed )
+static void SrvWalkTripod ( void )
 {	
 	if(!initStepGaits)
 	{
 		initStepGaits = TRUE;
-		stepLeg[E_LEG_L_F].step = 0;
-		stepLeg[E_LEG_L_M].step = 2;
-		stepLeg[E_LEG_L_R].step = 0;
-		stepLeg[E_LEG_R_F].step = 2;
-		stepLeg[E_LEG_R_M].step = 0;
-		stepLeg[E_LEG_R_R].step = 2;
+		stepLeg[E_LEG_U_L].step = 0;
+		stepLeg[E_LEG_M_L].step = 2;
+		stepLeg[E_LEG_B_L].step = 0;
+		stepLeg[E_LEG_U_R].step = 2;
+		stepLeg[E_LEG_M_R].step = 0;
+		stepLeg[E_LEG_B_R].step = 2;
 	}
 	
-	SrvWalkLegsStep(E_LEG_L_F,E_LEG_R_M,E_LEG_L_R, speed);
-	SrvWalkLegsStep(E_LEG_R_F,E_LEG_L_M,E_LEG_R_R, speed);
+	SrvWalkLegsStep(E_LEG_U_L,E_LEG_M_R,E_LEG_B_L, walkingDelay);
+	SrvWalkLegsStep(E_LEG_U_R,E_LEG_M_L,E_LEG_B_R, walkingDelay);
 }	
 			 
-static void SrvWalkWaveGaits ( Int16U speed )
+static void SrvWalkWave ( void )
 {
-	static E_LEG movingLeg = E_LEG_L_F;
+	static E_LEG movingLeg = E_LEG_U_L;
 	//Int8U gaitsTabWave		[]= {0,0,0,0,0,1, 
 								 //0,0,0,0,1,0,
 								 //0,0,0,1,0,0,
@@ -174,24 +190,24 @@ static void SrvWalkWaveGaits ( Int16U speed )
 								 //1,0,0,0,0,0};				
 	if(updateLeg == 0U)
 	{
-		DrvLegSetXYZ(movingLeg,-15,30,-30,speed/2);
+		DrvLegSetXYZ(movingLeg,-15,30,-30,walkingDelay/2);
 	}
 	else if(updateLeg == 1U)
 	{
-		DrvLegSetXYZ(movingLeg,-45,0,0,speed);
+		DrvLegSetXYZ(movingLeg,-45,0,0,walkingDelay);
 	}
 	else if(updateLeg == 2U)
 	{
-		DrvLegSetXYZ(movingLeg,30,0,0,speed*2);
+		DrvLegSetXYZ(movingLeg,30,0,0,walkingDelay*2);
 	}
 	
 	if(
-		DrvLegCheckTarget(E_LEG_L_F) &&
-		DrvLegCheckTarget(E_LEG_L_M) &&
-		DrvLegCheckTarget(E_LEG_L_R) &&
-		DrvLegCheckTarget(E_LEG_R_F) &&
-		DrvLegCheckTarget(E_LEG_R_M) &&
-		DrvLegCheckTarget(E_LEG_R_R)
+		DrvLegCheckTarget(E_LEG_U_L) &&
+		DrvLegCheckTarget(E_LEG_M_L) &&
+		DrvLegCheckTarget(E_LEG_B_L) &&
+		DrvLegCheckTarget(E_LEG_U_R) &&
+		DrvLegCheckTarget(E_LEG_M_R) &&
+		DrvLegCheckTarget(E_LEG_B_R)
 	)
 	{
 		updateLeg++;
@@ -208,15 +224,15 @@ static void SrvWalkWaveGaits ( Int16U speed )
 }
 	
 Int8U movingLegIndex = 0;
-static void SrvWalkRippleGaits ( Int16U speed )
+static void SrvWalkRipple ( void )
 {
 	E_LEG moveLegs[] = {
-		E_LEG_L_F,
-		E_LEG_R_M,
-		E_LEG_L_R,
-		E_LEG_R_F,
-		E_LEG_L_M,
-		E_LEG_R_R,
+		E_LEG_U_L,
+		E_LEG_M_R,
+		E_LEG_B_L,
+		E_LEG_U_R,
+		E_LEG_M_L,
+		E_LEG_B_R,
 	};
 	//Int8U gaitsTabRipple	[]= {	//1,1,0,0,0,0, 
 									//0,0,0,0,1,1,
@@ -230,7 +246,7 @@ static void SrvWalkRippleGaits ( Int16U speed )
 				legsXTab[stepLeg[moveLegs[movingLegIndex]].step],
 				legsYTab[stepLeg[moveLegs[movingLegIndex]].step],
 				legsZTab[stepLeg[moveLegs[movingLegIndex]].step],
-				speed);
+				walkingDelay);
 	if(DrvLegCheckTarget(moveLegs[movingLegIndex]))
 	{
 		stepLeg[moveLegs[movingLegIndex]].step++;
@@ -242,12 +258,12 @@ static void SrvWalkRippleGaits ( Int16U speed )
 	}
 	
 	if(
-		DrvLegCheckTarget(E_LEG_L_F) &&
-		DrvLegCheckTarget(E_LEG_L_M) &&
-		DrvLegCheckTarget(E_LEG_L_R) &&
-		DrvLegCheckTarget(E_LEG_R_F) &&
-		DrvLegCheckTarget(E_LEG_R_M) &&
-		DrvLegCheckTarget(E_LEG_R_R)
+		DrvLegCheckTarget(E_LEG_U_L) &&
+		DrvLegCheckTarget(E_LEG_M_L) &&
+		DrvLegCheckTarget(E_LEG_B_L) &&
+		DrvLegCheckTarget(E_LEG_U_R) &&
+		DrvLegCheckTarget(E_LEG_M_R) &&
+		DrvLegCheckTarget(E_LEG_B_R)
 	)
 	{
 		updateLeg++;
@@ -262,27 +278,18 @@ static void SrvWalkRippleGaits ( Int16U speed )
 		}
 	}
 }
-
-//Stop gaits
-static Boolean SrvWalkStopGaits ( void )
+//Stop
+static void SrvWalkStop ( void )
 {
-	DrvLegSetXYZ(E_LEG_L_F,0,0,0,100);
-	DrvLegSetXYZ(E_LEG_L_M,0,0,0,100);
-	DrvLegSetXYZ(E_LEG_L_R,0,0,0,100);
-	DrvLegSetXYZ(E_LEG_R_F,0,0,0,100);
-	DrvLegSetXYZ(E_LEG_R_M,0,0,0,100);
-	DrvLegSetXYZ(E_LEG_R_R,0,0,0,100);
-
-	if( 
-		DrvLegCheckTarget(E_LEG_L_F) &&
-		DrvLegCheckTarget(E_LEG_L_M) &&
-		DrvLegCheckTarget(E_LEG_L_R) &&
-		DrvLegCheckTarget(E_LEG_R_F) &&
-		DrvLegCheckTarget(E_LEG_R_M) &&
-		DrvLegCheckTarget(E_LEG_R_R) 
-		)
+	if(DrvLegCheckTarget(E_LEG_U_L) && DrvLegCheckTarget(E_LEG_M_L) && DrvLegCheckTarget(E_LEG_B_L) && 
+	   DrvLegCheckTarget(E_LEG_U_R) && DrvLegCheckTarget(E_LEG_M_R) && DrvLegCheckTarget(E_LEG_B_R)
+	)
 	{
-		return TRUE;
+		DrvLegSetPosition(E_LEG_U_L, LEG_COXA_U_L_MID, LEG_FEMUR_U_L_MAX, LEG_TIBIA_U_L_MAX, 0);
+		DrvLegSetPosition(E_LEG_M_L, LEG_COXA_M_L_MID, LEG_FEMUR_M_L_MAX, LEG_TIBIA_M_L_MAX, 0);
+		DrvLegSetPosition(E_LEG_B_L, LEG_COXA_B_L_MID, LEG_FEMUR_B_L_MAX, LEG_TIBIA_B_L_MAX, 0);
+		DrvLegSetPosition(E_LEG_U_R, LEG_COXA_U_R_MID, LEG_FEMUR_U_R_MIN, LEG_TIBIA_U_R_MIN, 0);
+		DrvLegSetPosition(E_LEG_M_R, LEG_COXA_M_R_MID, LEG_FEMUR_M_R_MIN, LEG_TIBIA_M_R_MIN, 0);
+		DrvLegSetPosition(E_LEG_B_R, LEG_COXA_B_R_MID, LEG_FEMUR_B_R_MIN, LEG_TIBIA_B_R_MIN, 0);
 	}
-	return FALSE;
 }

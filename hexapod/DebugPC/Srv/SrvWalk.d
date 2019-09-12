@@ -23,7 +23,8 @@ Srv/SrvWalk.d Srv/SrvWalk.o: ../Srv/SrvWalk.c ../Conf/ConfHard.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\pgmspace.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\wdt.h \
  ../Conf/../Drv/DrvIo.h ../Conf/../Drv/../Tools/tools_typedefs.h \
- ../Drv/DrvLeg.h ../Drv/DrvServo.h ../Drv/../Tools/tools_typedefs.h \
+ ../Drv/DrvTick.h ../Drv/../Conf/ConfHard.h \
+ ../Drv/../Tools/tools_typedefs.h ../Drv/DrvLeg.h ../Drv/DrvServo.h \
  ../Srv/SrvWalk.h ../Srv/../Conf/ConfHard.h \
  ../Srv/../Tools/tools_typedefs.h
 
@@ -81,11 +82,15 @@ c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\
 
 ../Conf/../Drv/../Tools/tools_typedefs.h:
 
+../Drv/DrvTick.h:
+
+../Drv/../Conf/ConfHard.h:
+
+../Drv/../Tools/tools_typedefs.h:
+
 ../Drv/DrvLeg.h:
 
 ../Drv/DrvServo.h:
-
-../Drv/../Tools/tools_typedefs.h:
 
 ../Srv/SrvWalk.h:
 

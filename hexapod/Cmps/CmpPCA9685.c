@@ -22,19 +22,14 @@
 Boolean CmpPCA9685Init( Int8U addr )
 {
 	Boolean oSuccess = TRUE;
-	
-	DrvTwiInit(TWI_SPEED_400K);
-	
+		
 	CmpPCA9685Reset(addr);
 	return oSuccess;
 }
 
 Boolean CmpPCA9685Reset( Int8U addr )
 {
-	Boolean oSuccess = FALSE;
-	oSuccess = DrvTwiWriteReg(addr,PCA9685_MODE1,0x80);
-	DrvTickDelayUs(200);
-	return oSuccess;
+	return DrvTwiWriteReg( addr, PCA9685_MODE1, 0x80U );
 }
 
 Boolean CmpPCA9685SetPWMFreq(Int8U addr, float freq)
@@ -48,12 +43,13 @@ Boolean CmpPCA9685SetPWMFreq(Int8U addr, float freq)
 	Int8U prescale = floor(prescaleval + 0.5);
 	
 	Int8U oldmode = 0U;
+
 	DrvTwiReadReg(addr,PCA9685_MODE1, &oldmode );
 	Int8U newmode = (oldmode & 0x7FU) | 0x10U; // sleep
 	DrvTwiWriteReg(addr,PCA9685_MODE1, newmode); // go to sleep
 	DrvTwiWriteReg(addr,PCA9685_PRESCALE, prescale); // set the prescaler
 	DrvTwiWriteReg(addr,PCA9685_MODE1, oldmode);
-	DrvTickDelayUs(500U);
+	DrvTickDelayMs(1U);
 	return DrvTwiWriteReg(addr,PCA9685_MODE1, oldmode | 0xA0U);  //  This sets the MODE1 register to turn on auto increment.
 }
 
@@ -61,7 +57,7 @@ Boolean CmpPCA9685SetPWMFreq(Int8U addr, float freq)
 Boolean CmpPCA9685SetPWM(Int8U addr, Int8U num, Int16U on, Int16U off)
 {
 	Int8U buffer [] = {on,on>>8U,off, off>>8U}; 
-	return DrvTwiWriteRegBuf(addr, LED0_ON_L + 4 * num, buffer, 4);
+	return DrvTwiWriteRegBuf(addr, LED0_ON_L + 4 * num, buffer, 4U);
 }
 
 Boolean CmpPCA9685SetPin(Int8U addr, Int8U num, Int16U val, Boolean invert)

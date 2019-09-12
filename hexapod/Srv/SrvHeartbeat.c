@@ -1,86 +1,67 @@
-/*
-* SrvHeartbeat.c
-*
-* Created: 06/07/2012 16:34:50
-*  Author: berryer
-*/
+////////////////////////////////////////INCLUDES//////////////////////////////////////////////////
+#include "Conf/ConfHard.h"
 
-#include "Drv/DrvTimer.h"
+#include "Drv/DrvTick.h"
+#include "Drv/DrvLed.h"
+
 #include "SrvHeartbeat.h"
 
+////////////////////////////////////////PRIVATE DEFINES///////////////////////////////////////////
 
+////////////////////////////////////////PRIVATE STRUCTURES////////////////////////////////////////
 
-////////////////////////////////////////PRIVATE DEFINES/////////////////////////////////////////
-#define HEARTBEAT_LIMIT		15U
+////////////////////////////////////////PRIVATE FUNCTIONS/////////////////////////////////////////
 
-#define HEARTBEAT_RAMP_UP	1U
-#define HEARTBEAT_RAMP_DOWN	2U
+////////////////////////////////////////PRIVATE VARIABLES/////////////////////////////////////////
+uint16_t heartBeatArray[] = {50U, 200U, 25U, 1400U};
+uint8_t heartbeatIndex = 0U;
+uint32_t prevMillisHeartBeat = 0U;
 
-#define HEARTBEAT_STATE_ON	1U
-#define HEARTBEAT_STATE_OFF	2U
+////////////////////////////////////////PUBILC FUNCTIONS//////////////////////////////////////////
 
-
-////////////////////////////////////////PRIVATE FUNCTIONS////////////////////////////////////////
-//fct appele par le timer
-static void HeartbeatIsrCallbackTimer( void ) ;
-
-////////////////////////////////////////PRIVATE VARIABLES///////////////////////////////////////
-Int8U heartbeat_delay = 0U;
-Int8U heartbeat_state = 0U;
-Int8U heartbeat_ramp = 0U;
-
-
-//Init du hearbeat
-void SrvHeartbeatInit( void )
+//Fonction d'initialisation
+Boolean SrvHeartbeatInit ( void )
 {
-	heartbeat_delay = 1U;
-	heartbeat_ramp = HEARTBEAT_RAMP_UP;
-	heartbeat_state = HEARTBEAT_STATE_OFF;
-	
-	//init de la callback
-	DrvTimerAddTimer(CONF_TIMER_HEARTBEAT, HEARTBEAT_LIMIT, E_TIMER_MODE_PERIODIC, HeartbeatIsrCallbackTimer);
+	DrvLedInit();
+	DrvLedSetPinLed(E_LED_0);
+	DrvLedSetToggle(E_LED_0);
+	return TRUE;
 }
-
-//dispatcher d'evenements
-void SrvHeartbeatDispatcher (Event_t in_event)
+//Fonction de dispatching d'evenements
+void SrvHeartbeatUpdate (void)
 {
-	//toutes les 50ms
-	if( DrvEventTestEvent( in_event, CONF_EVENT_TIMER_50MS ) == TRUE)
+	//heartbeat
+	if ((DrvTickGetTimeMs() - prevMillisHeartBeat) > (long)(heartBeatArray[heartbeatIndex]))
 	{
-		if( heartbeat_ramp == HEARTBEAT_RAMP_UP )
+		if (++heartbeatIndex > 3U)
 		{
-			heartbeat_delay +=1U;
-			if( heartbeat_delay > ( HEARTBEAT_LIMIT - 2U ) )
-			{
-				heartbeat_ramp = HEARTBEAT_RAMP_DOWN;
-			}
+			heartbeatIndex = 0U;
 		}
-		else
-		{
-			heartbeat_delay -=1U;
-			if( heartbeat_delay == 2U )
-			{
-				heartbeat_ramp = HEARTBEAT_RAMP_UP;
-			}
-		}
+
+		DrvLedSetToggle(E_LED_0);
+		prevMillisHeartBeat = DrvTickGetTimeMs();
 	}
 }
 
-
-/////////////////////////////////////ISR PRIVATE FUNCTIONS////////////////////////////////////////
-//fct appele par le timer
-void HeartbeatIsrCallbackTimer( void)
+void SrvHeartbeatSetPeriod ( uint8_t period )
 {
-	if(heartbeat_state == HEARTBEAT_STATE_OFF)
-	{
-		LED_VERTE_ON();
-		heartbeat_state = HEARTBEAT_STATE_ON;
-		DrvTimerDelayTimer( CONF_TIMER_HEARTBEAT, heartbeat_delay );
-	}
-	else
-	{
-		LED_VERTE_OFF();
-		heartbeat_state = HEARTBEAT_STATE_OFF;
-		DrvTimerDelayTimer( CONF_TIMER_HEARTBEAT, HEARTBEAT_LIMIT - heartbeat_delay );
-	}
+	//period [0-100]
+	heartBeatArray[2U] = 15U + (period / 10U);
+	heartBeatArray[1U] = 100U + period;
+	heartBeatArray[2U] = 15U + (period / 10U);
+	heartBeatArray[3U] = 200U + (10U * period);
+}
+void SrvHeartbeatStress ( void )
+{
+	heartBeatArray[2U] = 15U;
+	heartBeatArray[1U] = 100U;
+	heartBeatArray[2U] = 15U;
+	heartBeatArray[3U] = 200U;
+}
+void SrvHeartbeatCalm ( void )
+{
+	heartBeatArray[2U] = 25U;
+	heartBeatArray[1U] = 200U;
+	heartBeatArray[2U] = 25U;
+	heartBeatArray[3U] = 1400U;
 }

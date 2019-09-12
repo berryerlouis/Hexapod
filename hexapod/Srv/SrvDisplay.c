@@ -3,25 +3,28 @@
 
 
 #include "Drv/DrvTick.h"
+#include "Cmps/CmpSSD1306.h"
 
 #include "SrvDisplay.h"
 #include "SrvBattery.h"
+#include "SrvUltrason.h"
 ////////////////////////////////////////PRIVATE DEFINES///////////////////////////////////////////
 
 ////////////////////////////////////////PRIVATE STRUCTURES////////////////////////////////////////
 
 ////////////////////////////////////////PRIVATE FUNCTIONS/////////////////////////////////////////
 
-//display string on screen
-Boolean SrvDisplayScreenShowString ( char * data );
-//display line on screen
+Boolean SrvDisplayScreenShowString (uint8_t x, uint8_t y, char *data );
 Boolean SrvDisplayScreenShowProgressBar ( uint8_t percentage ) ;
 Boolean SrvDisplayScreenHideProgressBar ( void );
 void SrvDisplayScreenShowBattery ( uint8_t percentage );
 void SrvDisplayScreenBatteryManagement ( void );
 void SrvDisplayScreenShowArrow ( void );
+void SrvDisplayScreenShowCommunication ( void );
+void SrvDisplayScreenShowUltrason ( void );
 
 ////////////////////////////////////////PRIVATE VARIABLES/////////////////////////////////////////
+uint32_t prevMillisUpdateDisplay = 0U;
 uint32_t prevMillisDisplay = 0U;
 uint8_t tempPercentage = 0U;
 uint8_t batteryLevel = 100U;
@@ -41,7 +44,7 @@ Boolean SrvDisplayInit ( void )
 	toggleBatteryLogo = FALSE;
 	initStepDisplay = 0U;
 	direction = ARROW_CENTER;
-	return DrvSSD1306Init(SSD1306_ADDRESS);
+	return CmpSSD1306Init(SSD1306_ADDRESS);
 }
 
 //Fonction de dispatching d'evenements
@@ -57,7 +60,7 @@ void SrvDisplayUpdate (void)
 			//hide progress bar
 			SrvDisplayScreenHideProgressBar();
 			//show string
-			SrvDisplayScreenShowString("Init done !");
+			SrvDisplayScreenShowString(5U,10U,"Init done !");
 		}
 		
 	}
@@ -68,8 +71,10 @@ void SrvDisplayUpdate (void)
 		{
 			prevMillisDisplay = DrvTickGetTimeMs();
 			//clear buffer
-			DrvSSD1306ClearBuffer();
+			CmpSSD1306ClearBuffer();
 				
+			CmpSSD1306DrawLine(0U,9U,SCREEN_WIDTH,9U,COLOR_WHITE);
+			SrvDisplayScreenShowCommunication();
 			//go to next step 
 			initStepDisplay = 2U;	
 		}
@@ -77,22 +82,65 @@ void SrvDisplayUpdate (void)
 	else if( initStepDisplay == 2U )
 	{
 		SrvDisplayScreenBatteryManagement();
+		//go to next step
+		initStepDisplay = 3U;
+	}
+	else if( initStepDisplay == 3U )
+	{
+		SrvDisplayScreenShowUltrason();
+		//go to next step
+		initStepDisplay = 4U;
+	}
+	else if( initStepDisplay == 4U )
+	{
 		SrvDisplayScreenShowArrow();
-		
-		char tab[5U];
-		itoa (batteryLevel, tab, 10);
-		SrvDisplayScreenShowString(tab);
+		//go to next step
+		initStepDisplay = 2U;
+	}
+	
+	
+	//update every 20ms
+	if ((DrvTickGetTimeMs() - prevMillisUpdateDisplay) > 20U)
+	{
+		prevMillisUpdateDisplay = DrvTickGetTimeMs();
+		CmpSSD1306Update();
 	}
 }
 
+void SrvDisplaySetDirection (EBitmapArrow dir) 
+{
+	direction = dir;
+}
+
+void SrvDisplayScreenShowUltrason ( void )
+{
+	char tabUs0[5U] = {0U};
+	char tabUs1[5U] = {0U};
+	itoa (SrvUltrasonGetDistance(E_US_0), tabUs0, 10);
+	size_t len = strlen(tabUs0);
+	tabUs0[len] = 'c';
+	tabUs0[len + 1U] = 'm';
+	SrvDisplayScreenShowString(5U,11U,tabUs0);
+	itoa (SrvUltrasonGetDistance(E_US_1), tabUs1, 10);
+	len = strlen(tabUs1);
+	tabUs1[len] = 'c';
+	tabUs1[len + 1U] = 'm';
+	SrvDisplayScreenShowString(SCREEN_WIDTH - 26U ,11U,tabUs1);
+}
+
+void SrvDisplayScreenShowCommunication ( void )
+{
+	SBitmap bmp;
+	DrvBitmapGetBitmapCommunication(&bmp);
+	CmpSSD1306DrawBitmap(&bmp,SCREEN_WIDTH - bmp.width - 20U, 0U, COLOR_WHITE);
+}
 
 //display direction on screen
 void SrvDisplayScreenShowArrow ( void )
 {
 	SBitmap bmp;
 	DrvBitmapGetBitmapArrow(&bmp,direction);
-	DrvSSD1306DrawBitmap(&bmp,SCREEN_WIDTH - bmp.width,0,COLOR_WHITE);
-	DrvSSD1306Update();
+	CmpSSD1306DrawBitmap(&bmp,SCREEN_WIDTH - bmp.width,0,COLOR_WHITE);
 }
 
 //display battery on screen
@@ -103,11 +151,7 @@ void SrvDisplayScreenBatteryManagement ( void )
 		prevMillisDisplay = DrvTickGetTimeMs();
 
 		batteryLevel = SrvBatteryGetValue();
-		if( batteryLevel == 0U )
-		{
-			batteryLevel = 100U;
-		}
-		else if( batteryLevel <= 25U )
+		if( batteryLevel <= 25U )
 		{
 			if(toggleBatteryLogo == TRUE)
 			{
@@ -126,6 +170,10 @@ void SrvDisplayScreenBatteryManagement ( void )
 			SrvDisplayScreenShowBattery(batteryLevel);
 		}
 		
+		char tab[5U] = {0U};
+		itoa (batteryLevel, tab, 10);
+		tab[strlen(tab)] = '%';
+		SrvDisplayScreenShowString(18U,0U,tab);
 	}
 }
 
@@ -134,23 +182,19 @@ void SrvDisplayScreenShowBattery ( uint8_t percentage )
 {
 	SBitmap bmp;
 	DrvBitmapGetBitmapBatteryValue(&bmp,percentage);
-	DrvSSD1306DrawBitmap(&bmp,0,0,COLOR_WHITE);
-	DrvSSD1306Update();
+	CmpSSD1306DrawBitmap(&bmp,0,0,COLOR_WHITE);
 }
 
 //display string on screen
-Boolean SrvDisplayScreenShowString ( char * data )
+Boolean SrvDisplayScreenShowString (uint8_t x,uint8_t y, char * data )
 {
-	uint8_t x = 5U;
-	uint8_t y = 10U;
 	
-	DrvSSD1306EraseArea(x,y,CHAR_WIDTH * 10U,CHAR_HEIGHT);
+	CmpSSD1306EraseArea(x,y,CHAR_WIDTH * 10U,CHAR_HEIGHT);
 	while ( *data )
 	{
-		DrvSSD1306DrawChar(*data++, x, y, COLOR_WHITE);
+		CmpSSD1306DrawChar(*data++, x, y, COLOR_WHITE);
 		x += CHAR_WIDTH;
 	}
-	DrvSSD1306Update();
 	return TRUE;
 }
 //display line on screen
@@ -158,7 +202,7 @@ Boolean SrvDisplayScreenHideProgressBar ( void )
 {
 	#define WAITBAR_HEIGHT	5U
 	//rectangle of the contour of progress bar
-	DrvSSD1306DrawRectangle(
+	CmpSSD1306DrawRectangle(
 	0,
 	(SCREEN_HEIGHT / 2U) - WAITBAR_HEIGHT + 4U,
 	SCREEN_WIDTH- 1U,
@@ -169,10 +213,9 @@ Boolean SrvDisplayScreenHideProgressBar ( void )
 	{
 		for( uint8_t loop_y = 0U ; loop_y < WAITBAR_HEIGHT ; loop_y++ )
 		{
-			DrvSSD1306DrawPixel(loop_x, (SCREEN_HEIGHT / 2U) + loop_y, COLOR_BLACK);
+			CmpSSD1306DrawPixel(loop_x, (SCREEN_HEIGHT / 2U) + loop_y, COLOR_BLACK);
 		}
 	}
-	DrvSSD1306Update();
 	return TRUE;
 }
 
@@ -193,19 +236,18 @@ Boolean SrvDisplayScreenShowProgressBar ( uint8_t percentage )
 		else
 		{
 			//rectangle of the contour of progress bar
-			DrvSSD1306DrawRectangle(
+			CmpSSD1306DrawRectangle(
 			0,
 			(SCREEN_HEIGHT / 2U) - WAITBAR_HEIGHT + 4U,
-			SCREEN_WIDTH- 1U,
+			SCREEN_WIDTH - 1U,
 			(SCREEN_HEIGHT / 2U) + WAITBAR_HEIGHT,
 			COLOR_WHITE );
 			//show value
 			for( uint8_t loop_y = 0U ; loop_y < WAITBAR_HEIGHT ; loop_y++ )
 			{
-				DrvSSD1306DrawPixel(tempPercentage, (SCREEN_HEIGHT / 2U) + loop_y, COLOR_WHITE);
+				CmpSSD1306DrawPixel(tempPercentage, (SCREEN_HEIGHT / 2U) + loop_y, COLOR_WHITE);
 			}
 			tempPercentage++;
-			DrvSSD1306Update();
 		}
 	}
 	return FALSE;

@@ -12,7 +12,6 @@
 
 
 #include "Conf/ConfHard.h"
-#include "Snrs/SnrUltraSonic.h"
 
 ////////////////////////////////////////PUBLIC DEFINES/////////////////////////////////////////*
 
@@ -20,10 +19,8 @@
 ////////////////////////////////////////PUBLIC STRUCTURES////////////////////////////////////////
 
 
-//definition de la structure des fonctions de l'ultrason pour le composant SRF04
-extern UltraSonicFunctions srf04;
-//definition de la structure des data de l'ultrason pour le composant SRF04
-extern UltraSonicData srf04Data;
-
 ////////////////////////////////////////PUBLIC FUNCTIONS/////////////////////////////////////////
+Boolean CmpSRF04Init( void );
+Int16U CmpSRF04GetDistance( E_US us );
+Boolean CmpSRF04SendPulse( E_US us );
 #endif /*CMPSRF04_H_*/

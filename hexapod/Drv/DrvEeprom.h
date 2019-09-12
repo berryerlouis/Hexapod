@@ -23,77 +23,31 @@ typedef enum
 ////////////////////////////////////////PUBLIC FUNCTIONS//////////////////////////////////////////
 //Fonction d'initialisation
 Boolean DrvEepromInit ( void ) ;
-
+//Fonction de lecture eeprom
+Int8U DrvEepromReadByte ( const Int8U * addr );
+//Fonction d ecriture eeprom
+void DrvEepromWriteByte ( Int8U * addr, Int8U byte);
+//Fonction de lecture eeprom
+Int16U DrvEepromReadShort( const Int8U * addr );
+//Fonction d ecriture eeprom
+void DrvEepromWriteShort ( Int8U *addr, Int16U byte);
+//Fonction de lecture eeprom
+float DrvEepromReadFloat( const Int8U * addr );
+//enregistre les config du pid
+void DrvEepromWriteFloat ( Int8U *addr, float value);
 //ecrit l'etat de config de l'eeprom
 void DrvEepromDeconfigure ( void ) ;
-
 //retourne l'etat de config de l'eeprom
 Boolean DrvEepromIsConfigured ( void ) ;
-
 //l'eeprom est maintenant configur�e, on place l'octet � une valeur differente de celle par defaut
 void DrvEepromSetConfiguration ( void );
-
 //ecrit l'etat de config de l'eeprom
 void DrvEepromSetRunMode ( eepromRunMode configuration );
-
 //retourne l'etat de config de l'eeprom
 eepromRunMode DrvEepromGetRunMode ( void );
-
 //retourne le numero de version
 void DrvEepromReadVersion ( Int8U *verison );
 
-//retourne les config de l'accelerometre
-void DrvEepromReadAcc ( Int16S calib[ 3U ] );
 
-//enregistre les config de l'accelerometre
-void DrvEepromWriteAcc ( Int16S calib[ 3U ] );
-
-//retourne les config du gyroscope
-void DrvEepromReadGyr ( Int16S calib[ 3U ] );
-
-//enregistre les config du gyroscope
-void DrvEepromWriteGyr ( Int16S calib[ 3U ] );
-
-//retourne les config du magnetometer
-void DrvEepromReadMag ( Int16S calib[ 3U ] );
-
-//enregistre les config du magnetometer
-void DrvEepromWriteMag ( Int16S calib[ 3U ] );
-
-//retourne les config du pid
-void DrvEepromReadPID(Int8U index,float *P, float *I, float *D);
-
-//enregistre les config du pid
-void DrvEepromWritePID (Int8U index,float P, float I, float D);
-
-//retourne les config du altitude
-void DrvEepromReadAltitude( Int16S *altitude);
-
-//enregistre les config du altitude
-void DrvEepromWriteAltitude ( Int16S altitude);
-
-//retourne la valeure startup du moteur
-void DrvEepromReadStartupMotorFrontRight( Int16U *startup);
-
-//retourne la valure startup du moteur
-void DrvEepromWriteStartupMotorFrontRight ( Int16U startup);
-
-//retourne la valeure startup du moteur
-void DrvEepromReadStartupMotorFrontLeft( Int16U *startup);
-
-//retourne la valure startup du moteur
-void DrvEepromWriteStartupMotorFrontLeft ( Int16U startup);
-
-//retourne la valeure startup du moteur
-void DrvEepromReadStartupMotorRearRight( Int16U *startup);
-
-//retourne la valure startup du moteur
-void DrvEepromWriteStartupMotorRearRight ( Int16U startup);
-
-//retourne la valeure startup du moteur
-void DrvEepromReadStartupMotorRearLeft( Int16U *startup);
-
-//retourne la valure startup du moteur
-void DrvEepromWriteStartupMotorRearLeft ( Int16U startup);
 
 #endif /* DRV_EEPROM_H_ */

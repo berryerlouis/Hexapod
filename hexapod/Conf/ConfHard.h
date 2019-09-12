@@ -61,10 +61,14 @@
 	
 /////////////////////////////////////////////PUBLIC US/////////////////////////////////////////////
 //tableau des US actifs
-#define US_PINS						{\
-										EIO_PIN_A_1  /*E_US_1			*/\
+#define US_PINS_PULSE				{\
+										EIO_PIN_A_1, /*E_US_0			*/\
+										EIO_PIN_A_3  /*E_US_1			*/\
 									}
-	
+#define US_PINS_ECHO				{\
+										EIO_PIN_A_2, /*E_US_0			*/\
+										EIO_PIN_A_4  /*E_US_1			*/\
+									}
 /////////////////////////////////////////////PUBLIC UART///////////////////////////////////////////
 //tableau des UART actifs
 #define UART_0_PINS					{\
@@ -97,8 +101,6 @@ typedef enum
 {
 	E_TIMER_BUTTON,
 	E_TIMER_LED,
-	E_TIMER_SERVOS,
-	E_TIMER_STEP,
 	//----------------- Alaways at end -----------------------
 	E_NB_TIMER,
 	E_TIMER_NONE

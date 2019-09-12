@@ -39,7 +39,7 @@ void DrvTimerInitSystemTimer( void ) ;
   
 /////////////////////////////////////////PUBLIC FUNCTIONS/////////////////////////////////////////
 // Init du Drv Timer 
-void DrvTimerInit( void )
+Boolean DrvTimerInit( void )
 {
 	//if timer is needed
 	if( E_NB_TIMER > 0U )
@@ -61,7 +61,9 @@ void DrvTimerInit( void )
 		OCR2A   = TIMER2_OFFSET_COMPA;
 		BIT_HIGH(TIFR2,OCF2A);
 		BIT_HIGH(TIMSK2,OCIE2A);
+		return TRUE;
 	}
+	return FALSE;
 }
 
 	

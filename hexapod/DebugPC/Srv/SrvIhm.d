@@ -1,4 +1,4 @@
-Srv/SrvIhm.d Srv/SrvIhm.o: ../Srv/SrvIhm.c ../Srv/../Conf/ConfHard.h \
+Srv/SrvIhm.d Srv/SrvIhm.o: ../Srv/SrvIhm.c ../Conf/ConfHard.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\io.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\sfr_defs.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\inttypes.h \
@@ -19,16 +19,17 @@ Srv/SrvIhm.d Srv/SrvIhm.o: ../Srv/SrvIhm.c ../Srv/../Conf/ConfHard.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\lib\gcc\avr\5.4.0\include\stdarg.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\string.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\math.h \
- ../Srv/../Conf/ConfBoard.h ../Srv/../Conf/../Tools/tools_typedefs.h \
+ ../Conf/ConfBoard.h ../Conf/../Tools/tools_typedefs.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\pgmspace.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\wdt.h \
- ../Srv/../Conf/../Drv/DrvIo.h \
- ../Srv/../Conf/../Drv/../Tools/tools_typedefs.h ../Srv/../Drv/DrvTick.h \
- ../Srv/../Drv/../Conf/ConfHard.h ../Srv/../Drv/../Tools/tools_typedefs.h \
- ../Srv/../Drv/DrvLed.h ../Srv/../Drv/DrvIo.h ../Srv/../Drv/DrvButton.h \
- ../Srv/SrvIhm.h ../Srv/../Tools/tools_typedefs.h ../Srv/SrvComm.h
+ ../Conf/../Drv/DrvIo.h ../Conf/../Drv/../Tools/tools_typedefs.h \
+ ../Drv/DrvTick.h ../Drv/../Conf/ConfHard.h \
+ ../Drv/../Tools/tools_typedefs.h ../Drv/DrvLed.h ../Drv/DrvIo.h \
+ ../Drv/DrvButton.h ../Srv/SrvIhm.h ../Tools/tools_typedefs.h \
+ ../Srv/SrvComm.h ../Srv/../Conf/ConfHard.h \
+ ../Srv/../Tools/tools_typedefs.h
 
-../Srv/../Conf/ConfHard.h:
+../Conf/ConfHard.h:
 
 c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\io.h:
 
@@ -70,32 +71,36 @@ c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\
 
 c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\math.h:
 
-../Srv/../Conf/ConfBoard.h:
+../Conf/ConfBoard.h:
 
-../Srv/../Conf/../Tools/tools_typedefs.h:
+../Conf/../Tools/tools_typedefs.h:
 
 c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\pgmspace.h:
 
 c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\wdt.h:
 
-../Srv/../Conf/../Drv/DrvIo.h:
+../Conf/../Drv/DrvIo.h:
 
-../Srv/../Conf/../Drv/../Tools/tools_typedefs.h:
+../Conf/../Drv/../Tools/tools_typedefs.h:
 
-../Srv/../Drv/DrvTick.h:
+../Drv/DrvTick.h:
 
-../Srv/../Drv/../Conf/ConfHard.h:
+../Drv/../Conf/ConfHard.h:
 
-../Srv/../Drv/../Tools/tools_typedefs.h:
+../Drv/../Tools/tools_typedefs.h:
 
-../Srv/../Drv/DrvLed.h:
+../Drv/DrvLed.h:
 
-../Srv/../Drv/DrvIo.h:
+../Drv/DrvIo.h:
 
-../Srv/../Drv/DrvButton.h:
+../Drv/DrvButton.h:
 
 ../Srv/SrvIhm.h:
 
-../Srv/../Tools/tools_typedefs.h:
+../Tools/tools_typedefs.h:
 
 ../Srv/SrvComm.h:
+
+../Srv/../Conf/ConfHard.h:
+
+../Srv/../Tools/tools_typedefs.h:

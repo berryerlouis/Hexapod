@@ -1,0 +1,41 @@
+/*
+ * SrvCore.h
+ *
+ * Created: 27/07/2017 16:04:46
+ *  Author: berryer
+ */ 
+
+
+#ifndef SRVCORE_H_
+#define SRVCORE_H_
+
+#include "Conf/ConfHard.h"
+#include "Tools/tools_typedefs.h"
+
+
+////////////////////////////////////////INCLUDES//////////////////////////////////////////////////
+
+////////////////////////////////////////PUBLIC ENUM///////////////////////////////////////////////
+
+////////////////////////////////////////PUBLIC DEFINES////////////////////////////////////////////
+
+////////////////////////////////////////PUBLIC STRUCTURES/////////////////////////////////////////
+typedef Boolean (*ptrfctServiceInit)(void);
+typedef void (*ptrfctServiceUpdate)(void);
+typedef struct
+{
+	ptrfctServiceInit init;
+	ptrfctServiceUpdate update;
+	Int32U updateTime;
+	Int32U updateTimeMax;
+}SServices;
+
+////////////////////////////////////////PUBLIC FUNCTIONS//////////////////////////////////////////
+//Fonction d'initialisation
+Boolean SrvCoreInit ( void ) ;
+
+Boolean SrvCoreLoop ( void ) ;
+
+SServices *SrvCoreGetServices ( void ) ;
+
+#endif //SRVCORE_H_

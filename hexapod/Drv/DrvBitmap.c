@@ -17,14 +17,8 @@
 
 ////////////////////////////////////////PRIVATE FUNCTIONS/////////////////////////////////////////
 
-void DrvBitmapGetBitmapBattery100( SBitmap *bmp );
-void DrvBitmapGetBitmapBattery75( SBitmap *bmp );
-void DrvBitmapGetBitmapBattery50( SBitmap *bmp );
-void DrvBitmapGetBitmapBattery25( SBitmap *bmp );
-void DrvBitmapGetBitmapBattery0( SBitmap *bmp );
-
 /////////////////////////////////////////PUBLIC FUNCTIONS/////////////////////////////////////////
-uint8_t bitmapBattery100[14U] = 
+uint8_t bitmapBattery100[] = 
 {
 	XXXXXXXX,XXXXXXX_,
 	X_______,______X_,
@@ -35,7 +29,7 @@ uint8_t bitmapBattery100[14U] =
 	XXXXXXXX,XXXXXXX_,
 };
 
-uint8_t bitmapBattery75[14U] = 
+uint8_t bitmapBattery75[] = 
 {
 	XXXXXXXX,XXXXXXX_,
 	X_______,______X_,
@@ -46,7 +40,7 @@ uint8_t bitmapBattery75[14U] =
 	XXXXXXXX,XXXXXXX_,
 };
 
-uint8_t bitmapBattery50[14U] = 
+uint8_t bitmapBattery50[] = 
 {
 	XXXXXXXX,XXXXXXX_,
 	X_______,______X_,
@@ -57,7 +51,7 @@ uint8_t bitmapBattery50[14U] =
 	XXXXXXXX,XXXXXXX_,
 };
 
-uint8_t bitmapBattery25[14U] = 
+uint8_t bitmapBattery25[] = 
 {
 	XXXXXXXX,XXXXXXX_,
 	X_______,______X_,
@@ -68,7 +62,7 @@ uint8_t bitmapBattery25[14U] =
 	XXXXXXXX,XXXXXXX_,
 };
 
-uint8_t bitmapBattery0[14U] = 
+uint8_t bitmapBattery0[] = 
 {
 	XXXXXXXX,XXXXXXX_,
 	X_______,______X_,
@@ -80,7 +74,7 @@ uint8_t bitmapBattery0[14U] =
 };
 
 
-uint8_t bitmapArrowRight[12U] = 
+uint8_t bitmapArrowRight[] = 
 {
 	________,___XXX__,
 	________,____XXX_,
@@ -90,7 +84,7 @@ uint8_t bitmapArrowRight[12U] =
 	________,___XXX__,
 };
 
-uint8_t bitmapArrowLeft[12U] = 
+uint8_t bitmapArrowLeft[] = 
 {
 	__XXX___,________,
 	_XXX____,________,
@@ -100,7 +94,7 @@ uint8_t bitmapArrowLeft[12U] =
 	__XXX___,________,
 };
 
-uint8_t bitmapArrowUp[12U] = 
+uint8_t bitmapArrowUp[] = 
 {
 	_______X,X_______,
 	______XX,XX______,
@@ -110,7 +104,7 @@ uint8_t bitmapArrowUp[12U] =
 	_______X,X_______,
 };
 
-uint8_t bitmapArrowDown[12U] = 
+uint8_t bitmapArrowDown[] = 
 {
 	_______X,X_______,
 	_______X,X_______,
@@ -120,14 +114,24 @@ uint8_t bitmapArrowDown[12U] =
 	_______X,X_______,
 };
 
-uint8_t bitmapArrowCenter[12U] = 
+uint8_t bitmapArrowCenter[] = 
 {
 	_______X,X_______,
-	______XX,XX______,
 	_____XXX,XXX_____,
+	____XXXX,XXXX____,
+	____XXXX,XXXX____,
 	_____XXX,XXX_____,
-	______XX,XX______,
 	_______X,X_______,
+};
+
+uint8_t bitmapCommunication[] =
+{
+	_____XXX,X__XX___,
+	____XX__,__XXXX__,
+	___XX___,_XXXXXX_,
+	_XXXXXX_,___XX___,
+	__XXXX__,__XX____,
+	___XX__X,XXX_____,
 };
 
 void DrvBitmapGetBitmapArrow( SBitmap *bmp, EBitmapArrow value )
@@ -150,4 +154,11 @@ void DrvBitmapGetBitmapBatteryValue( SBitmap *bmp, uint8_t value )
 	else bmp->bmp = bitmapBattery0;
 	bmp->width = 8U * 2U;
 	bmp->height = 7U;
+}
+
+void DrvBitmapGetBitmapCommunication( SBitmap *bmp )
+{
+	bmp->bmp = bitmapCommunication;
+	bmp->width = 8U * 2U;
+	bmp->height = 6U;
 }

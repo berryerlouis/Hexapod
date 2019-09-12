@@ -25,7 +25,9 @@ Srv/SrvBody.d Srv/SrvBody.o: ../Srv/SrvBody.c ../Conf/ConfHard.h \
  ../Conf/../Drv/DrvIo.h ../Conf/../Drv/../Tools/tools_typedefs.h \
  ../Drv/DrvServo.h ../Drv/../Tools/tools_typedefs.h ../Drv/DrvLeg.h \
  ../Drv/DrvServo.h ../Srv/SrvBody.h ../Srv/../Conf/ConfHard.h \
- ../Srv/../Tools/tools_typedefs.h ../Srv/../Drv/DrvLeg.h ../Srv/SrvWalk.h
+ ../Srv/../Tools/tools_typedefs.h ../Srv/../Drv/DrvLeg.h ../Srv/SrvWalk.h \
+ ../Srv/SrvWalk.h ../Srv/SrvDisplay.h ../Tools/tools_typedefs.h \
+ ../Drv/DrvBitmap.h ../Drv/DrvFont.h
 
 ../Conf/ConfHard.h:
 
@@ -98,3 +100,13 @@ c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\
 ../Srv/../Drv/DrvLeg.h:
 
 ../Srv/SrvWalk.h:
+
+../Srv/SrvWalk.h:
+
+../Srv/SrvDisplay.h:
+
+../Tools/tools_typedefs.h:
+
+../Drv/DrvBitmap.h:
+
+../Drv/DrvFont.h:

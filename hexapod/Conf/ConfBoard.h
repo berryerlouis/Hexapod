@@ -12,8 +12,8 @@
 
 ////////////////////////////////////////PUBLIC VERSION CODE/////////////////////////////////////////
 //version 1.0
-#define VERSION_SOFTWARE				0x10
-#define VERSION_HARDWARE				0x50
+#define VERSION_SOFTWARE				'1' 
+#define VERSION_HARDWARE				'1'
 
 ////////////////////////////////////////PUBLIC PROCESSOR BOARD////////////////////////////////////
 //set processor 
@@ -24,7 +24,7 @@
 //Set oscillation frequency
 #define	CONF_FOSC_MHZ					20UL
 #define	CONF_FOSC_HZ					CONF_FOSC_MHZ * 1000000UL
-
+#define	F_CPU							CONF_FOSC_HZ
 //enum which permits to get the reset cause at startup
 typedef enum
 {
@@ -66,16 +66,17 @@ typedef enum
 	//Alaways at end
 	E_NB_ADCS,
 	E_ADC_NONE
-}EAdc;
+}E_ADC;
 
 //set output UltraSound used
 typedef enum
 {
 	E_US_0,
+	E_US_1,
 	//Alaways at end
 	E_NB_USS,
 	E_US_NONE
-}EUs;
+}E_US;
 
 //set output Uart used
 typedef enum
@@ -85,7 +86,7 @@ typedef enum
 	//Alaways at end
 	E_NB_UARTS,
 	E_UART_NONE
-}EUart;
+}E_UART;
 
 //set output Uart used
 typedef enum

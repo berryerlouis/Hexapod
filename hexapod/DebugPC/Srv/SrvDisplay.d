@@ -24,9 +24,10 @@ Srv/SrvDisplay.d Srv/SrvDisplay.o: ../Srv/SrvDisplay.c ../Conf/ConfHard.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\wdt.h \
  ../Conf/../Drv/DrvIo.h ../Conf/../Drv/../Tools/tools_typedefs.h \
  ../Drv/DrvTick.h ../Drv/../Conf/ConfHard.h \
- ../Drv/../Tools/tools_typedefs.h ../Srv/SrvDisplay.h \
- ../Tools/tools_typedefs.h ../Drv/DrvSSD1306.h ../Drv/DrvTwi.h \
- ../Drv/DrvFont.h ../Drv/DrvBitmap.h ../Srv/SrvBattery.h
+ ../Drv/../Tools/tools_typedefs.h ../Cmps/CmpSSD1306.h ../Drv/DrvTwi.h \
+ ../Drv/DrvFont.h ../Tools/tools_typedefs.h ../Drv/DrvBitmap.h \
+ ../Srv/SrvDisplay.h ../Srv/SrvBattery.h ../Srv/SrvUltrason.h \
+ ../Cmps/CmpSRF04.h
 
 ../Conf/ConfHard.h:
 
@@ -88,16 +89,20 @@ c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\
 
 ../Drv/../Tools/tools_typedefs.h:
 
-../Srv/SrvDisplay.h:
-
-../Tools/tools_typedefs.h:
-
-../Drv/DrvSSD1306.h:
+../Cmps/CmpSSD1306.h:
 
 ../Drv/DrvTwi.h:
 
 ../Drv/DrvFont.h:
 
+../Tools/tools_typedefs.h:
+
 ../Drv/DrvBitmap.h:
 
+../Srv/SrvDisplay.h:
+
 ../Srv/SrvBattery.h:
+
+../Srv/SrvUltrason.h:
+
+../Cmps/CmpSRF04.h:

@@ -6,6 +6,10 @@ Cmps\CmpNRF24L01.c
 
 Cmps\CmpPCA9685.c
 
+Cmps\CmpSRF04.c
+
+Cmps\CmpSSD1306.c
+
 Drv\DrvAdc.c
 
 Drv\DrvBitmap.c
@@ -26,8 +30,6 @@ Drv\DrvServo.c
 
 Drv\DrvSpi.c
 
-Drv\DrvSSD1306.c
-
 Drv\DrvTick.c
 
 Drv\DrvTimer.c
@@ -44,9 +46,17 @@ Srv\SrvBody.c
 
 Srv\SrvComm.c
 
+Srv\SrvCore.c
+
 Srv\SrvDisplay.c
 
+Srv\SrvFeeling.c
+
+Srv\SrvHeartbeat.c
+
 Srv\SrvIhm.c
+
+Srv\SrvUltrason.c
 
 Srv\SrvWalk.c
 

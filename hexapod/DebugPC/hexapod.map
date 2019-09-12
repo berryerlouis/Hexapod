@@ -75,15 +75,15 @@ c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/..
 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fp_powsodd.o)
                               c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fp_sinus.o) (__fp_powsodd)
 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr51\libgcc.a(_udivmodhi4.o)
-                              Drv/DrvSSD1306.o (__udivmodhi4)
+                              Cmps/CmpSSD1306.o (__udivmodhi4)
 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr51\libgcc.a(_udivmodsi4.o)
-                              Drv/DrvServo.o (__udivmodsi4)
+                              Cmps/CmpSRF04.o (__udivmodsi4)
 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr51\libgcc.a(_exit.o)
                               C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega1284p/avr51/crtatmega1284p.o (exit)
 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr51\libgcc.a(_copy_data.o)
-                              Drv/DrvBitmap.o (__do_copy_data)
+                              Cmps/CmpSRF04.o (__do_copy_data)
 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr51\libgcc.a(_clear_bss.o)
-                              Drv/DrvAdc.o (__do_clear_bss)
+                              Cmps/CmpSRF04.o (__do_clear_bss)
 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr51\libgcc.a(_umulhisi3.o)
                               Drv/DrvServo.o (__umulhisi3)
 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libc.a(itoa_ncheck.o)
@@ -109,17 +109,21 @@ Allocating common symbols
 Common symbol       size              file
 
 MesLeds             0x2c              Drv/DrvLed.o
-gaits               0x1               Srv/SrvWalk.o
+walking             0x1               Srv/SrvWalk.o
 direction           0x1               Srv/SrvDisplay.o
 batteryPercentage   0x2               Srv/SrvBattery.o
 level               0x1               Srv/SrvBattery.o
 adc                 0x2               Drv/DrvAdc.o
 MesButtons          0x5               Drv/DrvButton.o
-Body                0xc               main.o
-bufferScreen        0x200             Drv/DrvSSD1306.o
+walkingDelay        0x2               Srv/SrvWalk.o
+Body                0xc               Srv/SrvBody.o
+bufferScreen        0x200             Cmps/CmpSSD1306.o
+feel                0x1               Srv/SrvFeeling.o
+levelPin            0x2               Cmps/CmpSRF04.o
+gaiting             0x1               Srv/SrvWalk.o
 stepLeg             0x12              Srv/SrvWalk.o
 inMessage           0x15              Srv/SrvComm.o
-MesTimers           0x24              Drv/DrvTimer.o
+MesTimers           0x12              Drv/DrvTimer.o
 
 Discarded input sections
 
@@ -202,17 +206,17 @@ Discarded input sections
  .debug_macro   0x00000000       0xf2 Cmps/CmpNRF24L01.o
  .debug_macro   0x00000000       0x16 Cmps/CmpNRF24L01.o
  .debug_macro   0x00000000      0x160 Cmps/CmpNRF24L01.o
- .debug_macro   0x00000000       0x77 Cmps/CmpNRF24L01.o
+ .debug_macro   0x00000000       0x7d Cmps/CmpNRF24L01.o
  .debug_macro   0x00000000       0x10 Cmps/CmpNRF24L01.o
  .debug_macro   0x00000000      0x175 Cmps/CmpNRF24L01.o
  .debug_macro   0x00000000       0x68 Cmps/CmpNRF24L01.o
  .debug_macro   0x00000000      0x795 Cmps/CmpNRF24L01.o
- .debug_macro   0x00000000       0x40 Cmps/CmpNRF24L01.o
+ .debug_macro   0x00000000       0x46 Cmps/CmpNRF24L01.o
  .debug_macro   0x00000000      0x226 Cmps/CmpNRF24L01.o
  .debug_macro   0x00000000       0x10 Cmps/CmpNRF24L01.o
  .debug_macro   0x00000000       0x10 Cmps/CmpNRF24L01.o
  .debug_line    0x00000000      0x4ac Cmps/CmpNRF24L01.o
- .debug_str     0x00000000     0xd043 Cmps/CmpNRF24L01.o
+ .debug_str     0x00000000     0xd08f Cmps/CmpNRF24L01.o
  .comment       0x00000000       0x31 Cmps/CmpNRF24L01.o
  .debug_frame   0x00000000       0x7c Cmps/CmpNRF24L01.o
  .group         0x00000000        0x8 Cmps/CmpPCA9685.o
@@ -275,13 +279,144 @@ Discarded input sections
  .debug_macro   0x00000000       0xf2 Cmps/CmpPCA9685.o
  .debug_macro   0x00000000       0x16 Cmps/CmpPCA9685.o
  .debug_macro   0x00000000      0x160 Cmps/CmpPCA9685.o
- .debug_macro   0x00000000       0x77 Cmps/CmpPCA9685.o
+ .debug_macro   0x00000000       0x7d Cmps/CmpPCA9685.o
  .debug_macro   0x00000000       0x10 Cmps/CmpPCA9685.o
  .debug_macro   0x00000000      0x175 Cmps/CmpPCA9685.o
  .debug_macro   0x00000000       0x68 Cmps/CmpPCA9685.o
  .debug_macro   0x00000000      0x795 Cmps/CmpPCA9685.o
- .debug_macro   0x00000000       0x40 Cmps/CmpPCA9685.o
+ .debug_macro   0x00000000       0x46 Cmps/CmpPCA9685.o
  .debug_macro   0x00000000       0x10 Cmps/CmpPCA9685.o
+ .group         0x00000000        0x8 Cmps/CmpSRF04.o
+ .group         0x00000000        0x8 Cmps/CmpSRF04.o
+ .group         0x00000000        0x8 Cmps/CmpSRF04.o
+ .group         0x00000000        0x8 Cmps/CmpSRF04.o
+ .group         0x00000000        0x8 Cmps/CmpSRF04.o
+ .group         0x00000000        0x8 Cmps/CmpSRF04.o
+ .group         0x00000000        0x8 Cmps/CmpSRF04.o
+ .group         0x00000000        0x8 Cmps/CmpSRF04.o
+ .group         0x00000000        0x8 Cmps/CmpSRF04.o
+ .group         0x00000000        0x8 Cmps/CmpSRF04.o
+ .group         0x00000000        0x8 Cmps/CmpSRF04.o
+ .group         0x00000000        0x8 Cmps/CmpSRF04.o
+ .group         0x00000000        0x8 Cmps/CmpSRF04.o
+ .group         0x00000000        0x8 Cmps/CmpSRF04.o
+ .group         0x00000000        0x8 Cmps/CmpSRF04.o
+ .group         0x00000000        0x8 Cmps/CmpSRF04.o
+ .group         0x00000000        0x8 Cmps/CmpSRF04.o
+ .group         0x00000000        0x8 Cmps/CmpSRF04.o
+ .group         0x00000000        0x8 Cmps/CmpSRF04.o
+ .group         0x00000000        0x8 Cmps/CmpSRF04.o
+ .group         0x00000000        0x8 Cmps/CmpSRF04.o
+ .group         0x00000000        0x8 Cmps/CmpSRF04.o
+ .group         0x00000000        0x8 Cmps/CmpSRF04.o
+ .group         0x00000000        0x8 Cmps/CmpSRF04.o
+ .group         0x00000000        0x8 Cmps/CmpSRF04.o
+ .group         0x00000000        0x8 Cmps/CmpSRF04.o
+ .group         0x00000000        0x8 Cmps/CmpSRF04.o
+ .group         0x00000000        0x8 Cmps/CmpSRF04.o
+ .group         0x00000000        0x8 Cmps/CmpSRF04.o
+ .text          0x00000000        0x0 Cmps/CmpSRF04.o
+ .data          0x00000000        0x0 Cmps/CmpSRF04.o
+ .bss           0x00000000        0x0 Cmps/CmpSRF04.o
+ .debug_macro   0x00000000      0xa66 Cmps/CmpSRF04.o
+ .debug_macro   0x00000000       0x10 Cmps/CmpSRF04.o
+ .debug_macro   0x00000000      0x1c9 Cmps/CmpSRF04.o
+ .debug_macro   0x00000000      0x2fc Cmps/CmpSRF04.o
+ .debug_macro   0x00000000       0x9e Cmps/CmpSRF04.o
+ .debug_macro   0x00000000     0x1a9a Cmps/CmpSRF04.o
+ .debug_macro   0x00000000      0x171 Cmps/CmpSRF04.o
+ .debug_macro   0x00000000       0xcb Cmps/CmpSRF04.o
+ .debug_macro   0x00000000       0x34 Cmps/CmpSRF04.o
+ .debug_macro   0x00000000       0x18 Cmps/CmpSRF04.o
+ .debug_macro   0x00000000       0x6c Cmps/CmpSRF04.o
+ .debug_macro   0x00000000      0x174 Cmps/CmpSRF04.o
+ .debug_macro   0x00000000       0x39 Cmps/CmpSRF04.o
+ .debug_macro   0x00000000       0x69 Cmps/CmpSRF04.o
+ .debug_macro   0x00000000       0x2e Cmps/CmpSRF04.o
+ .debug_macro   0x00000000       0x1c Cmps/CmpSRF04.o
+ .debug_macro   0x00000000       0x35 Cmps/CmpSRF04.o
+ .debug_macro   0x00000000       0x60 Cmps/CmpSRF04.o
+ .debug_macro   0x00000000       0x58 Cmps/CmpSRF04.o
+ .debug_macro   0x00000000       0x10 Cmps/CmpSRF04.o
+ .debug_macro   0x00000000       0xf2 Cmps/CmpSRF04.o
+ .debug_macro   0x00000000       0x16 Cmps/CmpSRF04.o
+ .debug_macro   0x00000000      0x160 Cmps/CmpSRF04.o
+ .debug_macro   0x00000000       0x7d Cmps/CmpSRF04.o
+ .debug_macro   0x00000000       0x10 Cmps/CmpSRF04.o
+ .debug_macro   0x00000000      0x175 Cmps/CmpSRF04.o
+ .debug_macro   0x00000000       0x68 Cmps/CmpSRF04.o
+ .debug_macro   0x00000000      0x795 Cmps/CmpSRF04.o
+ .debug_macro   0x00000000       0x46 Cmps/CmpSRF04.o
+ .group         0x00000000        0x8 Cmps/CmpSSD1306.o
+ .group         0x00000000        0x8 Cmps/CmpSSD1306.o
+ .group         0x00000000        0x8 Cmps/CmpSSD1306.o
+ .group         0x00000000        0x8 Cmps/CmpSSD1306.o
+ .group         0x00000000        0x8 Cmps/CmpSSD1306.o
+ .group         0x00000000        0x8 Cmps/CmpSSD1306.o
+ .group         0x00000000        0x8 Cmps/CmpSSD1306.o
+ .group         0x00000000        0x8 Cmps/CmpSSD1306.o
+ .group         0x00000000        0x8 Cmps/CmpSSD1306.o
+ .group         0x00000000        0x8 Cmps/CmpSSD1306.o
+ .group         0x00000000        0x8 Cmps/CmpSSD1306.o
+ .group         0x00000000        0x8 Cmps/CmpSSD1306.o
+ .group         0x00000000        0x8 Cmps/CmpSSD1306.o
+ .group         0x00000000        0x8 Cmps/CmpSSD1306.o
+ .group         0x00000000        0x8 Cmps/CmpSSD1306.o
+ .group         0x00000000        0x8 Cmps/CmpSSD1306.o
+ .group         0x00000000        0x8 Cmps/CmpSSD1306.o
+ .group         0x00000000        0x8 Cmps/CmpSSD1306.o
+ .group         0x00000000        0x8 Cmps/CmpSSD1306.o
+ .group         0x00000000        0x8 Cmps/CmpSSD1306.o
+ .group         0x00000000        0x8 Cmps/CmpSSD1306.o
+ .group         0x00000000        0x8 Cmps/CmpSSD1306.o
+ .group         0x00000000        0x8 Cmps/CmpSSD1306.o
+ .group         0x00000000        0x8 Cmps/CmpSSD1306.o
+ .group         0x00000000        0x8 Cmps/CmpSSD1306.o
+ .group         0x00000000        0x8 Cmps/CmpSSD1306.o
+ .group         0x00000000        0x8 Cmps/CmpSSD1306.o
+ .group         0x00000000        0x8 Cmps/CmpSSD1306.o
+ .group         0x00000000        0x8 Cmps/CmpSSD1306.o
+ .group         0x00000000        0x8 Cmps/CmpSSD1306.o
+ .group         0x00000000        0x8 Cmps/CmpSSD1306.o
+ .group         0x00000000        0x8 Cmps/CmpSSD1306.o
+ .group         0x00000000        0x8 Cmps/CmpSSD1306.o
+ .text          0x00000000        0x0 Cmps/CmpSSD1306.o
+ .data          0x00000000        0x0 Cmps/CmpSSD1306.o
+ .bss           0x00000000        0x0 Cmps/CmpSSD1306.o
+ .text.CmpSSD1306DrawCircle
+                0x00000000      0x138 Cmps/CmpSSD1306.o
+ .text.CmpSSD1306DrawString
+                0x00000000       0x48 Cmps/CmpSSD1306.o
+ .debug_macro   0x00000000      0xa66 Cmps/CmpSSD1306.o
+ .debug_macro   0x00000000       0x10 Cmps/CmpSSD1306.o
+ .debug_macro   0x00000000      0x1c9 Cmps/CmpSSD1306.o
+ .debug_macro   0x00000000      0x2fc Cmps/CmpSSD1306.o
+ .debug_macro   0x00000000       0x9e Cmps/CmpSSD1306.o
+ .debug_macro   0x00000000     0x1a9a Cmps/CmpSSD1306.o
+ .debug_macro   0x00000000      0x171 Cmps/CmpSSD1306.o
+ .debug_macro   0x00000000       0xcb Cmps/CmpSSD1306.o
+ .debug_macro   0x00000000       0x34 Cmps/CmpSSD1306.o
+ .debug_macro   0x00000000       0x18 Cmps/CmpSSD1306.o
+ .debug_macro   0x00000000       0x6c Cmps/CmpSSD1306.o
+ .debug_macro   0x00000000      0x174 Cmps/CmpSSD1306.o
+ .debug_macro   0x00000000       0x39 Cmps/CmpSSD1306.o
+ .debug_macro   0x00000000       0x69 Cmps/CmpSSD1306.o
+ .debug_macro   0x00000000       0x2e Cmps/CmpSSD1306.o
+ .debug_macro   0x00000000       0x1c Cmps/CmpSSD1306.o
+ .debug_macro   0x00000000       0x35 Cmps/CmpSSD1306.o
+ .debug_macro   0x00000000       0x60 Cmps/CmpSSD1306.o
+ .debug_macro   0x00000000       0x58 Cmps/CmpSSD1306.o
+ .debug_macro   0x00000000       0x10 Cmps/CmpSSD1306.o
+ .debug_macro   0x00000000       0xf2 Cmps/CmpSSD1306.o
+ .debug_macro   0x00000000       0x16 Cmps/CmpSSD1306.o
+ .debug_macro   0x00000000      0x160 Cmps/CmpSSD1306.o
+ .debug_macro   0x00000000       0x7d Cmps/CmpSSD1306.o
+ .debug_macro   0x00000000       0x10 Cmps/CmpSSD1306.o
+ .debug_macro   0x00000000      0x175 Cmps/CmpSSD1306.o
+ .debug_macro   0x00000000       0x68 Cmps/CmpSSD1306.o
+ .debug_macro   0x00000000      0x795 Cmps/CmpSSD1306.o
+ .debug_macro   0x00000000       0x46 Cmps/CmpSSD1306.o
+ .debug_macro   0x00000000       0x10 Cmps/CmpSSD1306.o
  .group         0x00000000        0x8 Drv/DrvAdc.o
  .group         0x00000000        0x8 Drv/DrvAdc.o
  .group         0x00000000        0x8 Drv/DrvAdc.o
@@ -337,12 +472,12 @@ Discarded input sections
  .debug_macro   0x00000000       0xf2 Drv/DrvAdc.o
  .debug_macro   0x00000000       0x16 Drv/DrvAdc.o
  .debug_macro   0x00000000      0x160 Drv/DrvAdc.o
- .debug_macro   0x00000000       0x77 Drv/DrvAdc.o
+ .debug_macro   0x00000000       0x7d Drv/DrvAdc.o
  .debug_macro   0x00000000       0x10 Drv/DrvAdc.o
  .debug_macro   0x00000000      0x175 Drv/DrvAdc.o
  .debug_macro   0x00000000       0x68 Drv/DrvAdc.o
  .debug_macro   0x00000000      0x795 Drv/DrvAdc.o
- .debug_macro   0x00000000       0x40 Drv/DrvAdc.o
+ .debug_macro   0x00000000       0x46 Drv/DrvAdc.o
  .group         0x00000000        0x8 Drv/DrvBitmap.o
  .group         0x00000000        0x8 Drv/DrvBitmap.o
  .group         0x00000000        0x8 Drv/DrvBitmap.o
@@ -399,12 +534,12 @@ Discarded input sections
  .debug_macro   0x00000000       0xf2 Drv/DrvBitmap.o
  .debug_macro   0x00000000       0x16 Drv/DrvBitmap.o
  .debug_macro   0x00000000      0x160 Drv/DrvBitmap.o
- .debug_macro   0x00000000       0x77 Drv/DrvBitmap.o
+ .debug_macro   0x00000000       0x7d Drv/DrvBitmap.o
  .debug_macro   0x00000000       0x10 Drv/DrvBitmap.o
  .debug_macro   0x00000000      0x175 Drv/DrvBitmap.o
  .debug_macro   0x00000000       0x68 Drv/DrvBitmap.o
  .debug_macro   0x00000000      0x795 Drv/DrvBitmap.o
- .debug_macro   0x00000000       0x40 Drv/DrvBitmap.o
+ .debug_macro   0x00000000       0x46 Drv/DrvBitmap.o
  .group         0x00000000        0x8 Drv/DrvButton.o
  .group         0x00000000        0x8 Drv/DrvButton.o
  .group         0x00000000        0x8 Drv/DrvButton.o
@@ -462,12 +597,12 @@ Discarded input sections
  .debug_macro   0x00000000       0xf2 Drv/DrvButton.o
  .debug_macro   0x00000000       0x16 Drv/DrvButton.o
  .debug_macro   0x00000000      0x160 Drv/DrvButton.o
- .debug_macro   0x00000000       0x77 Drv/DrvButton.o
+ .debug_macro   0x00000000       0x7d Drv/DrvButton.o
  .debug_macro   0x00000000       0x10 Drv/DrvButton.o
  .debug_macro   0x00000000      0x175 Drv/DrvButton.o
  .debug_macro   0x00000000       0x68 Drv/DrvButton.o
  .debug_macro   0x00000000      0x795 Drv/DrvButton.o
- .debug_macro   0x00000000       0x40 Drv/DrvButton.o
+ .debug_macro   0x00000000       0x46 Drv/DrvButton.o
  .group         0x00000000        0x8 Drv/DrvEeprom.o
  .group         0x00000000        0x8 Drv/DrvEeprom.o
  .group         0x00000000        0x8 Drv/DrvEeprom.o
@@ -500,54 +635,28 @@ Discarded input sections
  .text          0x00000000        0x0 Drv/DrvEeprom.o
  .data          0x00000000        0x0 Drv/DrvEeprom.o
  .bss           0x00000000        0x0 Drv/DrvEeprom.o
- .text.DrvEepromWriteShort
-                0x00000000       0x22 Drv/DrvEeprom.o
- .text.DrvEepromReadShort
-                0x00000000       0x2e Drv/DrvEeprom.o
  .text.DrvEepromDeconfigure
                 0x00000000        0xc Drv/DrvEeprom.o
  .text.DrvEepromSetRunMode
                 0x00000000        0xc Drv/DrvEeprom.o
  .text.DrvEepromGetRunMode
                 0x00000000        0xa Drv/DrvEeprom.o
+ .text.DrvEepromSetConfiguration
+                0x00000000        0xc Drv/DrvEeprom.o
  .text.DrvEepromReadVersion
                 0x00000000       0x16 Drv/DrvEeprom.o
- .text.DrvEepromReadAcc
-                0x00000000       0x30 Drv/DrvEeprom.o
- .text.DrvEepromWriteAcc
-                0x00000000       0x30 Drv/DrvEeprom.o
- .text.DrvEepromReadGyr
-                0x00000000       0x30 Drv/DrvEeprom.o
- .text.DrvEepromWriteGyr
-                0x00000000       0x30 Drv/DrvEeprom.o
- .text.DrvEepromReadMag
-                0x00000000       0x30 Drv/DrvEeprom.o
- .text.DrvEepromWriteMag
-                0x00000000       0x30 Drv/DrvEeprom.o
- .text.DrvEepromReadPID
-                0x00000000      0x106 Drv/DrvEeprom.o
- .text.DrvEepromWritePID
-                0x00000000       0xc4 Drv/DrvEeprom.o
- .text.DrvEepromReadAltitude
-                0x00000000       0x18 Drv/DrvEeprom.o
- .text.DrvEepromWriteAltitude
-                0x00000000        0xc Drv/DrvEeprom.o
- .text.DrvEepromReadStartupMotorFrontRight
-                0x00000000       0x18 Drv/DrvEeprom.o
- .text.DrvEepromWriteStartupMotorFrontRight
-                0x00000000        0xc Drv/DrvEeprom.o
- .text.DrvEepromReadStartupMotorFrontLeft
-                0x00000000       0x18 Drv/DrvEeprom.o
- .text.DrvEepromWriteStartupMotorFrontLeft
-                0x00000000        0xc Drv/DrvEeprom.o
- .text.DrvEepromReadStartupMotorRearRight
-                0x00000000       0x18 Drv/DrvEeprom.o
- .text.DrvEepromWriteStartupMotorRearRight
-                0x00000000        0xc Drv/DrvEeprom.o
- .text.DrvEepromReadStartupMotorRearLeft
-                0x00000000       0x18 Drv/DrvEeprom.o
- .text.DrvEepromWriteStartupMotorRearLeft
-                0x00000000        0xc Drv/DrvEeprom.o
+ .text.DrvEepromReadByte
+                0x00000000        0x6 Drv/DrvEeprom.o
+ .text.DrvEepromWriteByte
+                0x00000000        0x6 Drv/DrvEeprom.o
+ .text.DrvEepromReadShort
+                0x00000000       0x2e Drv/DrvEeprom.o
+ .text.DrvEepromWriteShort
+                0x00000000       0x22 Drv/DrvEeprom.o
+ .text.DrvEepromReadFloat
+                0x00000000        0x6 Drv/DrvEeprom.o
+ .text.DrvEepromWriteFloat
+                0x00000000        0x6 Drv/DrvEeprom.o
  .debug_macro   0x00000000      0xa66 Drv/DrvEeprom.o
  .debug_macro   0x00000000       0x10 Drv/DrvEeprom.o
  .debug_macro   0x00000000      0x1c9 Drv/DrvEeprom.o
@@ -571,12 +680,12 @@ Discarded input sections
  .debug_macro   0x00000000       0xf2 Drv/DrvEeprom.o
  .debug_macro   0x00000000       0x16 Drv/DrvEeprom.o
  .debug_macro   0x00000000      0x160 Drv/DrvEeprom.o
- .debug_macro   0x00000000       0x77 Drv/DrvEeprom.o
+ .debug_macro   0x00000000       0x7d Drv/DrvEeprom.o
  .debug_macro   0x00000000       0x10 Drv/DrvEeprom.o
  .debug_macro   0x00000000      0x175 Drv/DrvEeprom.o
  .debug_macro   0x00000000       0x68 Drv/DrvEeprom.o
  .debug_macro   0x00000000      0x795 Drv/DrvEeprom.o
- .debug_macro   0x00000000       0x40 Drv/DrvEeprom.o
+ .debug_macro   0x00000000       0x46 Drv/DrvEeprom.o
  .group         0x00000000        0x8 Drv/DrvFont.o
  .group         0x00000000        0x8 Drv/DrvFont.o
  .group         0x00000000        0x8 Drv/DrvFont.o
@@ -633,12 +742,13 @@ Discarded input sections
  .debug_macro   0x00000000       0xf2 Drv/DrvFont.o
  .debug_macro   0x00000000       0x16 Drv/DrvFont.o
  .debug_macro   0x00000000      0x160 Drv/DrvFont.o
- .debug_macro   0x00000000       0x77 Drv/DrvFont.o
+ .debug_macro   0x00000000       0x7d Drv/DrvFont.o
  .debug_macro   0x00000000       0x10 Drv/DrvFont.o
  .debug_macro   0x00000000      0x175 Drv/DrvFont.o
  .debug_macro   0x00000000       0x68 Drv/DrvFont.o
  .debug_macro   0x00000000      0x795 Drv/DrvFont.o
- .debug_macro   0x00000000       0x40 Drv/DrvFont.o
+ .debug_macro   0x00000000       0x46 Drv/DrvFont.o
+ .debug_macro   0x00000000       0x10 Drv/DrvFont.o
  .group         0x00000000        0x8 Drv/DrvIo.o
  .group         0x00000000        0x8 Drv/DrvIo.o
  .group         0x00000000        0x8 Drv/DrvIo.o
@@ -673,8 +783,6 @@ Discarded input sections
  .bss           0x00000000        0x0 Drv/DrvIo.o
  .text.DrvIoTogglePinState
                 0x00000000       0x2a Drv/DrvIo.o
- .text.DrvIoSetInterruptPin
-                0x00000000       0xd8 Drv/DrvIo.o
  .text.DrvIoResetInterruptPin
                 0x00000000       0xe0 Drv/DrvIo.o
  .debug_macro   0x00000000      0xa66 Drv/DrvIo.o
@@ -700,12 +808,12 @@ Discarded input sections
  .debug_macro   0x00000000       0xf2 Drv/DrvIo.o
  .debug_macro   0x00000000       0x16 Drv/DrvIo.o
  .debug_macro   0x00000000      0x160 Drv/DrvIo.o
- .debug_macro   0x00000000       0x77 Drv/DrvIo.o
+ .debug_macro   0x00000000       0x7d Drv/DrvIo.o
  .debug_macro   0x00000000       0x10 Drv/DrvIo.o
  .debug_macro   0x00000000      0x175 Drv/DrvIo.o
  .debug_macro   0x00000000       0x68 Drv/DrvIo.o
  .debug_macro   0x00000000      0x795 Drv/DrvIo.o
- .debug_macro   0x00000000       0x40 Drv/DrvIo.o
+ .debug_macro   0x00000000       0x46 Drv/DrvIo.o
  .group         0x00000000        0x8 Drv/DrvLed.o
  .group         0x00000000        0x8 Drv/DrvLed.o
  .group         0x00000000        0x8 Drv/DrvLed.o
@@ -771,12 +879,12 @@ Discarded input sections
  .debug_macro   0x00000000       0xf2 Drv/DrvLed.o
  .debug_macro   0x00000000       0x16 Drv/DrvLed.o
  .debug_macro   0x00000000      0x160 Drv/DrvLed.o
- .debug_macro   0x00000000       0x77 Drv/DrvLed.o
+ .debug_macro   0x00000000       0x7d Drv/DrvLed.o
  .debug_macro   0x00000000       0x10 Drv/DrvLed.o
  .debug_macro   0x00000000      0x175 Drv/DrvLed.o
  .debug_macro   0x00000000       0x68 Drv/DrvLed.o
  .debug_macro   0x00000000      0x795 Drv/DrvLed.o
- .debug_macro   0x00000000       0x40 Drv/DrvLed.o
+ .debug_macro   0x00000000       0x46 Drv/DrvLed.o
  .group         0x00000000        0x8 Drv/DrvLeg.o
  .group         0x00000000        0x8 Drv/DrvLeg.o
  .group         0x00000000        0x8 Drv/DrvLeg.o
@@ -834,12 +942,12 @@ Discarded input sections
  .debug_macro   0x00000000       0xf2 Drv/DrvLeg.o
  .debug_macro   0x00000000       0x16 Drv/DrvLeg.o
  .debug_macro   0x00000000      0x160 Drv/DrvLeg.o
- .debug_macro   0x00000000       0x77 Drv/DrvLeg.o
+ .debug_macro   0x00000000       0x7d Drv/DrvLeg.o
  .debug_macro   0x00000000       0x10 Drv/DrvLeg.o
  .debug_macro   0x00000000      0x175 Drv/DrvLeg.o
  .debug_macro   0x00000000       0x68 Drv/DrvLeg.o
  .debug_macro   0x00000000      0x795 Drv/DrvLeg.o
- .debug_macro   0x00000000       0x40 Drv/DrvLeg.o
+ .debug_macro   0x00000000       0x46 Drv/DrvLeg.o
  .group         0x00000000        0x8 Drv/DrvServo.o
  .group         0x00000000        0x8 Drv/DrvServo.o
  .group         0x00000000        0x8 Drv/DrvServo.o
@@ -901,12 +1009,12 @@ Discarded input sections
  .debug_macro   0x00000000       0xf2 Drv/DrvServo.o
  .debug_macro   0x00000000       0x16 Drv/DrvServo.o
  .debug_macro   0x00000000      0x160 Drv/DrvServo.o
- .debug_macro   0x00000000       0x77 Drv/DrvServo.o
+ .debug_macro   0x00000000       0x7d Drv/DrvServo.o
  .debug_macro   0x00000000       0x10 Drv/DrvServo.o
  .debug_macro   0x00000000      0x175 Drv/DrvServo.o
  .debug_macro   0x00000000       0x68 Drv/DrvServo.o
  .debug_macro   0x00000000      0x795 Drv/DrvServo.o
- .debug_macro   0x00000000       0x40 Drv/DrvServo.o
+ .debug_macro   0x00000000       0x46 Drv/DrvServo.o
  .debug_macro   0x00000000       0x5e Drv/DrvServo.o
  .group         0x00000000        0x8 Drv/DrvSpi.o
  .group         0x00000000        0x8 Drv/DrvSpi.o
@@ -970,83 +1078,12 @@ Discarded input sections
  .debug_macro   0x00000000       0xf2 Drv/DrvSpi.o
  .debug_macro   0x00000000       0x16 Drv/DrvSpi.o
  .debug_macro   0x00000000      0x160 Drv/DrvSpi.o
- .debug_macro   0x00000000       0x77 Drv/DrvSpi.o
+ .debug_macro   0x00000000       0x7d Drv/DrvSpi.o
  .debug_macro   0x00000000       0x10 Drv/DrvSpi.o
  .debug_macro   0x00000000      0x175 Drv/DrvSpi.o
  .debug_macro   0x00000000       0x68 Drv/DrvSpi.o
  .debug_macro   0x00000000      0x795 Drv/DrvSpi.o
- .debug_macro   0x00000000       0x40 Drv/DrvSpi.o
- .group         0x00000000        0x8 Drv/DrvSSD1306.o
- .group         0x00000000        0x8 Drv/DrvSSD1306.o
- .group         0x00000000        0x8 Drv/DrvSSD1306.o
- .group         0x00000000        0x8 Drv/DrvSSD1306.o
- .group         0x00000000        0x8 Drv/DrvSSD1306.o
- .group         0x00000000        0x8 Drv/DrvSSD1306.o
- .group         0x00000000        0x8 Drv/DrvSSD1306.o
- .group         0x00000000        0x8 Drv/DrvSSD1306.o
- .group         0x00000000        0x8 Drv/DrvSSD1306.o
- .group         0x00000000        0x8 Drv/DrvSSD1306.o
- .group         0x00000000        0x8 Drv/DrvSSD1306.o
- .group         0x00000000        0x8 Drv/DrvSSD1306.o
- .group         0x00000000        0x8 Drv/DrvSSD1306.o
- .group         0x00000000        0x8 Drv/DrvSSD1306.o
- .group         0x00000000        0x8 Drv/DrvSSD1306.o
- .group         0x00000000        0x8 Drv/DrvSSD1306.o
- .group         0x00000000        0x8 Drv/DrvSSD1306.o
- .group         0x00000000        0x8 Drv/DrvSSD1306.o
- .group         0x00000000        0x8 Drv/DrvSSD1306.o
- .group         0x00000000        0x8 Drv/DrvSSD1306.o
- .group         0x00000000        0x8 Drv/DrvSSD1306.o
- .group         0x00000000        0x8 Drv/DrvSSD1306.o
- .group         0x00000000        0x8 Drv/DrvSSD1306.o
- .group         0x00000000        0x8 Drv/DrvSSD1306.o
- .group         0x00000000        0x8 Drv/DrvSSD1306.o
- .group         0x00000000        0x8 Drv/DrvSSD1306.o
- .group         0x00000000        0x8 Drv/DrvSSD1306.o
- .group         0x00000000        0x8 Drv/DrvSSD1306.o
- .group         0x00000000        0x8 Drv/DrvSSD1306.o
- .group         0x00000000        0x8 Drv/DrvSSD1306.o
- .group         0x00000000        0x8 Drv/DrvSSD1306.o
- .group         0x00000000        0x8 Drv/DrvSSD1306.o
- .group         0x00000000        0x8 Drv/DrvSSD1306.o
- .text          0x00000000        0x0 Drv/DrvSSD1306.o
- .data          0x00000000        0x0 Drv/DrvSSD1306.o
- .bss           0x00000000        0x0 Drv/DrvSSD1306.o
- .text.DrvSSD1306DrawCircle
-                0x00000000      0x138 Drv/DrvSSD1306.o
- .text.DrvSSD1306DrawString
-                0x00000000       0x48 Drv/DrvSSD1306.o
- .debug_macro   0x00000000      0xa66 Drv/DrvSSD1306.o
- .debug_macro   0x00000000       0x10 Drv/DrvSSD1306.o
- .debug_macro   0x00000000      0x1c9 Drv/DrvSSD1306.o
- .debug_macro   0x00000000      0x2fc Drv/DrvSSD1306.o
- .debug_macro   0x00000000       0x9e Drv/DrvSSD1306.o
- .debug_macro   0x00000000     0x1a9a Drv/DrvSSD1306.o
- .debug_macro   0x00000000      0x171 Drv/DrvSSD1306.o
- .debug_macro   0x00000000       0xcb Drv/DrvSSD1306.o
- .debug_macro   0x00000000       0x34 Drv/DrvSSD1306.o
- .debug_macro   0x00000000       0x18 Drv/DrvSSD1306.o
- .debug_macro   0x00000000       0x6c Drv/DrvSSD1306.o
- .debug_macro   0x00000000      0x174 Drv/DrvSSD1306.o
- .debug_macro   0x00000000       0x39 Drv/DrvSSD1306.o
- .debug_macro   0x00000000       0x69 Drv/DrvSSD1306.o
- .debug_macro   0x00000000       0x2e Drv/DrvSSD1306.o
- .debug_macro   0x00000000       0x1c Drv/DrvSSD1306.o
- .debug_macro   0x00000000       0x35 Drv/DrvSSD1306.o
- .debug_macro   0x00000000       0x60 Drv/DrvSSD1306.o
- .debug_macro   0x00000000       0x58 Drv/DrvSSD1306.o
- .debug_macro   0x00000000       0x10 Drv/DrvSSD1306.o
- .debug_macro   0x00000000       0xf2 Drv/DrvSSD1306.o
- .debug_macro   0x00000000       0x16 Drv/DrvSSD1306.o
- .debug_macro   0x00000000      0x160 Drv/DrvSSD1306.o
- .debug_macro   0x00000000       0x77 Drv/DrvSSD1306.o
- .debug_macro   0x00000000       0x10 Drv/DrvSSD1306.o
- .debug_macro   0x00000000      0x175 Drv/DrvSSD1306.o
- .debug_macro   0x00000000       0x68 Drv/DrvSSD1306.o
- .debug_macro   0x00000000      0x795 Drv/DrvSSD1306.o
- .debug_macro   0x00000000       0x40 Drv/DrvSSD1306.o
- .debug_macro   0x00000000       0x10 Drv/DrvSSD1306.o
- .debug_macro   0x00000000       0x10 Drv/DrvSSD1306.o
+ .debug_macro   0x00000000       0x46 Drv/DrvSpi.o
  .group         0x00000000        0x8 Drv/DrvTick.o
  .group         0x00000000        0x8 Drv/DrvTick.o
  .group         0x00000000        0x8 Drv/DrvTick.o
@@ -1081,8 +1118,6 @@ Discarded input sections
  .bss           0x00000000        0x0 Drv/DrvTick.o
  .text.DrvTickGetTimeSec
                 0x00000000       0x16 Drv/DrvTick.o
- .text.DrvTickDelayMs
-                0x00000000       0x10 Drv/DrvTick.o
  .debug_macro   0x00000000      0xa66 Drv/DrvTick.o
  .debug_macro   0x00000000       0x10 Drv/DrvTick.o
  .debug_macro   0x00000000      0x1c9 Drv/DrvTick.o
@@ -1106,12 +1141,12 @@ Discarded input sections
  .debug_macro   0x00000000       0xf2 Drv/DrvTick.o
  .debug_macro   0x00000000       0x16 Drv/DrvTick.o
  .debug_macro   0x00000000      0x160 Drv/DrvTick.o
- .debug_macro   0x00000000       0x77 Drv/DrvTick.o
+ .debug_macro   0x00000000       0x7d Drv/DrvTick.o
  .debug_macro   0x00000000       0x10 Drv/DrvTick.o
  .debug_macro   0x00000000      0x175 Drv/DrvTick.o
  .debug_macro   0x00000000       0x68 Drv/DrvTick.o
  .debug_macro   0x00000000      0x795 Drv/DrvTick.o
- .debug_macro   0x00000000       0x40 Drv/DrvTick.o
+ .debug_macro   0x00000000       0x46 Drv/DrvTick.o
  .group         0x00000000        0x8 Drv/DrvTimer.o
  .group         0x00000000        0x8 Drv/DrvTimer.o
  .group         0x00000000        0x8 Drv/DrvTimer.o
@@ -1173,12 +1208,12 @@ Discarded input sections
  .debug_macro   0x00000000       0xf2 Drv/DrvTimer.o
  .debug_macro   0x00000000       0x16 Drv/DrvTimer.o
  .debug_macro   0x00000000      0x160 Drv/DrvTimer.o
- .debug_macro   0x00000000       0x77 Drv/DrvTimer.o
+ .debug_macro   0x00000000       0x7d Drv/DrvTimer.o
  .debug_macro   0x00000000       0x10 Drv/DrvTimer.o
  .debug_macro   0x00000000      0x175 Drv/DrvTimer.o
  .debug_macro   0x00000000       0x68 Drv/DrvTimer.o
  .debug_macro   0x00000000      0x795 Drv/DrvTimer.o
- .debug_macro   0x00000000       0x40 Drv/DrvTimer.o
+ .debug_macro   0x00000000       0x46 Drv/DrvTimer.o
  .group         0x00000000        0x8 Drv/DrvTwi.o
  .group         0x00000000        0x8 Drv/DrvTwi.o
  .group         0x00000000        0x8 Drv/DrvTwi.o
@@ -1240,12 +1275,12 @@ Discarded input sections
  .debug_macro   0x00000000       0xf2 Drv/DrvTwi.o
  .debug_macro   0x00000000       0x16 Drv/DrvTwi.o
  .debug_macro   0x00000000      0x160 Drv/DrvTwi.o
- .debug_macro   0x00000000       0x77 Drv/DrvTwi.o
+ .debug_macro   0x00000000       0x7d Drv/DrvTwi.o
  .debug_macro   0x00000000       0x10 Drv/DrvTwi.o
  .debug_macro   0x00000000      0x175 Drv/DrvTwi.o
  .debug_macro   0x00000000       0x68 Drv/DrvTwi.o
  .debug_macro   0x00000000      0x795 Drv/DrvTwi.o
- .debug_macro   0x00000000       0x40 Drv/DrvTwi.o
+ .debug_macro   0x00000000       0x46 Drv/DrvTwi.o
  .debug_macro   0x00000000       0x10 Drv/DrvTwi.o
  .group         0x00000000        0x8 Drv/DrvUart.o
  .group         0x00000000        0x8 Drv/DrvUart.o
@@ -1281,7 +1316,7 @@ Discarded input sections
  .data          0x00000000        0x0 Drv/DrvUart.o
  .bss           0x00000000        0x0 Drv/DrvUart.o
  .text.DrvUartDataUsedTXBuff
-                0x00000000       0x28 Drv/DrvUart.o
+                0x00000000       0x30 Drv/DrvUart.o
  .debug_macro   0x00000000      0xa66 Drv/DrvUart.o
  .debug_macro   0x00000000       0x10 Drv/DrvUart.o
  .debug_macro   0x00000000      0x1c9 Drv/DrvUart.o
@@ -1305,23 +1340,12 @@ Discarded input sections
  .debug_macro   0x00000000       0xf2 Drv/DrvUart.o
  .debug_macro   0x00000000       0x16 Drv/DrvUart.o
  .debug_macro   0x00000000      0x160 Drv/DrvUart.o
- .debug_macro   0x00000000       0x77 Drv/DrvUart.o
+ .debug_macro   0x00000000       0x7d Drv/DrvUart.o
  .debug_macro   0x00000000       0x10 Drv/DrvUart.o
  .debug_macro   0x00000000      0x175 Drv/DrvUart.o
  .debug_macro   0x00000000       0x68 Drv/DrvUart.o
  .debug_macro   0x00000000      0x795 Drv/DrvUart.o
- .debug_macro   0x00000000       0x40 Drv/DrvUart.o
- .group         0x00000000        0x8 main.o
- .group         0x00000000        0x8 main.o
- .group         0x00000000        0x8 main.o
- .group         0x00000000        0x8 main.o
- .group         0x00000000        0x8 main.o
- .group         0x00000000        0x8 main.o
- .group         0x00000000        0x8 main.o
- .group         0x00000000        0x8 main.o
- .group         0x00000000        0x8 main.o
- .group         0x00000000        0x8 main.o
- .group         0x00000000        0x8 main.o
+ .debug_macro   0x00000000       0x46 Drv/DrvUart.o
  .group         0x00000000        0x8 main.o
  .group         0x00000000        0x8 main.o
  .group         0x00000000        0x8 main.o
@@ -1377,18 +1401,12 @@ Discarded input sections
  .debug_macro   0x00000000       0xf2 main.o
  .debug_macro   0x00000000       0x16 main.o
  .debug_macro   0x00000000      0x160 main.o
- .debug_macro   0x00000000       0x77 main.o
+ .debug_macro   0x00000000       0x7d main.o
  .debug_macro   0x00000000       0x10 main.o
  .debug_macro   0x00000000      0x175 main.o
  .debug_macro   0x00000000       0x68 main.o
  .debug_macro   0x00000000      0x795 main.o
- .debug_macro   0x00000000       0x40 main.o
- .debug_macro   0x00000000       0x10 main.o
- .debug_macro   0x00000000       0x1c main.o
  .debug_macro   0x00000000       0x46 main.o
- .debug_macro   0x00000000       0x28 main.o
- .debug_macro   0x00000000       0x16 main.o
- .debug_macro   0x00000000       0xe8 main.o
  .group         0x00000000        0x8 Srv/SrvBattery.o
  .group         0x00000000        0x8 Srv/SrvBattery.o
  .group         0x00000000        0x8 Srv/SrvBattery.o
@@ -1446,12 +1464,14 @@ Discarded input sections
  .debug_macro   0x00000000       0xf2 Srv/SrvBattery.o
  .debug_macro   0x00000000       0x16 Srv/SrvBattery.o
  .debug_macro   0x00000000      0x160 Srv/SrvBattery.o
- .debug_macro   0x00000000       0x77 Srv/SrvBattery.o
+ .debug_macro   0x00000000       0x7d Srv/SrvBattery.o
  .debug_macro   0x00000000       0x10 Srv/SrvBattery.o
  .debug_macro   0x00000000      0x175 Srv/SrvBattery.o
  .debug_macro   0x00000000       0x68 Srv/SrvBattery.o
  .debug_macro   0x00000000      0x795 Srv/SrvBattery.o
- .debug_macro   0x00000000       0x40 Srv/SrvBattery.o
+ .debug_macro   0x00000000       0x46 Srv/SrvBattery.o
+ .group         0x00000000        0x8 Srv/SrvBody.o
+ .group         0x00000000        0x8 Srv/SrvBody.o
  .group         0x00000000        0x8 Srv/SrvBody.o
  .group         0x00000000        0x8 Srv/SrvBody.o
  .group         0x00000000        0x8 Srv/SrvBody.o
@@ -1510,15 +1530,16 @@ Discarded input sections
  .debug_macro   0x00000000       0xf2 Srv/SrvBody.o
  .debug_macro   0x00000000       0x16 Srv/SrvBody.o
  .debug_macro   0x00000000      0x160 Srv/SrvBody.o
- .debug_macro   0x00000000       0x77 Srv/SrvBody.o
+ .debug_macro   0x00000000       0x7d Srv/SrvBody.o
  .debug_macro   0x00000000       0x10 Srv/SrvBody.o
  .debug_macro   0x00000000      0x175 Srv/SrvBody.o
  .debug_macro   0x00000000       0x68 Srv/SrvBody.o
  .debug_macro   0x00000000      0x795 Srv/SrvBody.o
- .debug_macro   0x00000000       0x40 Srv/SrvBody.o
  .debug_macro   0x00000000       0x46 Srv/SrvBody.o
- .debug_macro   0x00000000       0x28 Srv/SrvBody.o
- .debug_macro   0x00000000       0x1c Srv/SrvBody.o
+ .debug_macro   0x00000000       0x46 Srv/SrvBody.o
+ .debug_macro   0x00000000      0x17e Srv/SrvBody.o
+ .debug_macro   0x00000000       0x16 Srv/SrvBody.o
+ .group         0x00000000        0x8 Srv/SrvComm.o
  .group         0x00000000        0x8 Srv/SrvComm.o
  .group         0x00000000        0x8 Srv/SrvComm.o
  .group         0x00000000        0x8 Srv/SrvComm.o
@@ -1578,14 +1599,96 @@ Discarded input sections
  .debug_macro   0x00000000       0xf2 Srv/SrvComm.o
  .debug_macro   0x00000000       0x16 Srv/SrvComm.o
  .debug_macro   0x00000000      0x160 Srv/SrvComm.o
- .debug_macro   0x00000000       0x77 Srv/SrvComm.o
+ .debug_macro   0x00000000       0x7d Srv/SrvComm.o
  .debug_macro   0x00000000       0x10 Srv/SrvComm.o
  .debug_macro   0x00000000      0x175 Srv/SrvComm.o
  .debug_macro   0x00000000       0x68 Srv/SrvComm.o
  .debug_macro   0x00000000      0x795 Srv/SrvComm.o
- .debug_macro   0x00000000       0x40 Srv/SrvComm.o
  .debug_macro   0x00000000       0x46 Srv/SrvComm.o
- .debug_macro   0x00000000       0x28 Srv/SrvComm.o
+ .debug_macro   0x00000000       0x46 Srv/SrvComm.o
+ .debug_macro   0x00000000      0x17e Srv/SrvComm.o
+ .debug_macro   0x00000000       0x1c Srv/SrvComm.o
+ .group         0x00000000        0x8 Srv/SrvCore.o
+ .group         0x00000000        0x8 Srv/SrvCore.o
+ .group         0x00000000        0x8 Srv/SrvCore.o
+ .group         0x00000000        0x8 Srv/SrvCore.o
+ .group         0x00000000        0x8 Srv/SrvCore.o
+ .group         0x00000000        0x8 Srv/SrvCore.o
+ .group         0x00000000        0x8 Srv/SrvCore.o
+ .group         0x00000000        0x8 Srv/SrvCore.o
+ .group         0x00000000        0x8 Srv/SrvCore.o
+ .group         0x00000000        0x8 Srv/SrvCore.o
+ .group         0x00000000        0x8 Srv/SrvCore.o
+ .group         0x00000000        0x8 Srv/SrvCore.o
+ .group         0x00000000        0x8 Srv/SrvCore.o
+ .group         0x00000000        0x8 Srv/SrvCore.o
+ .group         0x00000000        0x8 Srv/SrvCore.o
+ .group         0x00000000        0x8 Srv/SrvCore.o
+ .group         0x00000000        0x8 Srv/SrvCore.o
+ .group         0x00000000        0x8 Srv/SrvCore.o
+ .group         0x00000000        0x8 Srv/SrvCore.o
+ .group         0x00000000        0x8 Srv/SrvCore.o
+ .group         0x00000000        0x8 Srv/SrvCore.o
+ .group         0x00000000        0x8 Srv/SrvCore.o
+ .group         0x00000000        0x8 Srv/SrvCore.o
+ .group         0x00000000        0x8 Srv/SrvCore.o
+ .group         0x00000000        0x8 Srv/SrvCore.o
+ .group         0x00000000        0x8 Srv/SrvCore.o
+ .group         0x00000000        0x8 Srv/SrvCore.o
+ .group         0x00000000        0x8 Srv/SrvCore.o
+ .group         0x00000000        0x8 Srv/SrvCore.o
+ .group         0x00000000        0x8 Srv/SrvCore.o
+ .group         0x00000000        0x8 Srv/SrvCore.o
+ .group         0x00000000        0x8 Srv/SrvCore.o
+ .group         0x00000000        0x8 Srv/SrvCore.o
+ .group         0x00000000        0x8 Srv/SrvCore.o
+ .group         0x00000000        0x8 Srv/SrvCore.o
+ .group         0x00000000        0x8 Srv/SrvCore.o
+ .group         0x00000000        0x8 Srv/SrvCore.o
+ .group         0x00000000        0x8 Srv/SrvCore.o
+ .group         0x00000000        0x8 Srv/SrvCore.o
+ .text          0x00000000        0x0 Srv/SrvCore.o
+ .data          0x00000000        0x0 Srv/SrvCore.o
+ .bss           0x00000000        0x0 Srv/SrvCore.o
+ .text.SrvCoreGetServices
+                0x00000000        0x6 Srv/SrvCore.o
+ .bss.lastLoopTime
+                0x00000000        0x4 Srv/SrvCore.o
+ .debug_macro   0x00000000      0xa66 Srv/SrvCore.o
+ .debug_macro   0x00000000       0x10 Srv/SrvCore.o
+ .debug_macro   0x00000000      0x1c9 Srv/SrvCore.o
+ .debug_macro   0x00000000      0x2fc Srv/SrvCore.o
+ .debug_macro   0x00000000       0x9e Srv/SrvCore.o
+ .debug_macro   0x00000000     0x1a9a Srv/SrvCore.o
+ .debug_macro   0x00000000      0x171 Srv/SrvCore.o
+ .debug_macro   0x00000000       0xcb Srv/SrvCore.o
+ .debug_macro   0x00000000       0x34 Srv/SrvCore.o
+ .debug_macro   0x00000000       0x18 Srv/SrvCore.o
+ .debug_macro   0x00000000       0x6c Srv/SrvCore.o
+ .debug_macro   0x00000000      0x174 Srv/SrvCore.o
+ .debug_macro   0x00000000       0x39 Srv/SrvCore.o
+ .debug_macro   0x00000000       0x69 Srv/SrvCore.o
+ .debug_macro   0x00000000       0x2e Srv/SrvCore.o
+ .debug_macro   0x00000000       0x1c Srv/SrvCore.o
+ .debug_macro   0x00000000       0x35 Srv/SrvCore.o
+ .debug_macro   0x00000000       0x60 Srv/SrvCore.o
+ .debug_macro   0x00000000       0x58 Srv/SrvCore.o
+ .debug_macro   0x00000000       0x10 Srv/SrvCore.o
+ .debug_macro   0x00000000       0xf2 Srv/SrvCore.o
+ .debug_macro   0x00000000       0x16 Srv/SrvCore.o
+ .debug_macro   0x00000000      0x160 Srv/SrvCore.o
+ .debug_macro   0x00000000       0x7d Srv/SrvCore.o
+ .debug_macro   0x00000000       0x10 Srv/SrvCore.o
+ .debug_macro   0x00000000      0x175 Srv/SrvCore.o
+ .debug_macro   0x00000000       0x68 Srv/SrvCore.o
+ .debug_macro   0x00000000      0x795 Srv/SrvCore.o
+ .debug_macro   0x00000000       0x46 Srv/SrvCore.o
+ .debug_macro   0x00000000       0x10 Srv/SrvCore.o
+ .debug_macro   0x00000000       0x1c Srv/SrvCore.o
+ .debug_macro   0x00000000       0x46 Srv/SrvCore.o
+ .debug_macro   0x00000000      0x17e Srv/SrvCore.o
+ .debug_macro   0x00000000       0x16 Srv/SrvCore.o
+ .debug_macro   0x00000000       0x16 Srv/SrvCore.o
  .group         0x00000000        0x8 Srv/SrvDisplay.o
  .group         0x00000000        0x8 Srv/SrvDisplay.o
  .group         0x00000000        0x8 Srv/SrvDisplay.o
@@ -1645,16 +1748,140 @@ Discarded input sections
  .debug_macro   0x00000000       0xf2 Srv/SrvDisplay.o
  .debug_macro   0x00000000       0x16 Srv/SrvDisplay.o
  .debug_macro   0x00000000      0x160 Srv/SrvDisplay.o
- .debug_macro   0x00000000       0x77 Srv/SrvDisplay.o
+ .debug_macro   0x00000000       0x7d Srv/SrvDisplay.o
  .debug_macro   0x00000000       0x10 Srv/SrvDisplay.o
  .debug_macro   0x00000000      0x175 Srv/SrvDisplay.o
  .debug_macro   0x00000000       0x68 Srv/SrvDisplay.o
  .debug_macro   0x00000000      0x795 Srv/SrvDisplay.o
- .debug_macro   0x00000000       0x40 Srv/SrvDisplay.o
+ .debug_macro   0x00000000       0x46 Srv/SrvDisplay.o
  .debug_macro   0x00000000       0x16 Srv/SrvDisplay.o
- .debug_macro   0x00000000       0x16 Srv/SrvDisplay.o
+ .debug_macro   0x00000000       0x10 Srv/SrvDisplay.o
  .debug_macro   0x00000000       0x16 Srv/SrvDisplay.o
  .debug_macro   0x00000000       0xe8 Srv/SrvDisplay.o
+ .group         0x00000000        0x8 Srv/SrvFeeling.o
+ .group         0x00000000        0x8 Srv/SrvFeeling.o
+ .group         0x00000000        0x8 Srv/SrvFeeling.o
+ .group         0x00000000        0x8 Srv/SrvFeeling.o
+ .group         0x00000000        0x8 Srv/SrvFeeling.o
+ .group         0x00000000        0x8 Srv/SrvFeeling.o
+ .group         0x00000000        0x8 Srv/SrvFeeling.o
+ .group         0x00000000        0x8 Srv/SrvFeeling.o
+ .group         0x00000000        0x8 Srv/SrvFeeling.o
+ .group         0x00000000        0x8 Srv/SrvFeeling.o
+ .group         0x00000000        0x8 Srv/SrvFeeling.o
+ .group         0x00000000        0x8 Srv/SrvFeeling.o
+ .group         0x00000000        0x8 Srv/SrvFeeling.o
+ .group         0x00000000        0x8 Srv/SrvFeeling.o
+ .group         0x00000000        0x8 Srv/SrvFeeling.o
+ .group         0x00000000        0x8 Srv/SrvFeeling.o
+ .group         0x00000000        0x8 Srv/SrvFeeling.o
+ .group         0x00000000        0x8 Srv/SrvFeeling.o
+ .group         0x00000000        0x8 Srv/SrvFeeling.o
+ .group         0x00000000        0x8 Srv/SrvFeeling.o
+ .group         0x00000000        0x8 Srv/SrvFeeling.o
+ .group         0x00000000        0x8 Srv/SrvFeeling.o
+ .group         0x00000000        0x8 Srv/SrvFeeling.o
+ .group         0x00000000        0x8 Srv/SrvFeeling.o
+ .group         0x00000000        0x8 Srv/SrvFeeling.o
+ .group         0x00000000        0x8 Srv/SrvFeeling.o
+ .group         0x00000000        0x8 Srv/SrvFeeling.o
+ .group         0x00000000        0x8 Srv/SrvFeeling.o
+ .group         0x00000000        0x8 Srv/SrvFeeling.o
+ .text          0x00000000        0x0 Srv/SrvFeeling.o
+ .data          0x00000000        0x0 Srv/SrvFeeling.o
+ .bss           0x00000000        0x0 Srv/SrvFeeling.o
+ .debug_macro   0x00000000      0xa66 Srv/SrvFeeling.o
+ .debug_macro   0x00000000       0x10 Srv/SrvFeeling.o
+ .debug_macro   0x00000000      0x1c9 Srv/SrvFeeling.o
+ .debug_macro   0x00000000      0x2fc Srv/SrvFeeling.o
+ .debug_macro   0x00000000       0x9e Srv/SrvFeeling.o
+ .debug_macro   0x00000000     0x1a9a Srv/SrvFeeling.o
+ .debug_macro   0x00000000      0x171 Srv/SrvFeeling.o
+ .debug_macro   0x00000000       0xcb Srv/SrvFeeling.o
+ .debug_macro   0x00000000       0x34 Srv/SrvFeeling.o
+ .debug_macro   0x00000000       0x18 Srv/SrvFeeling.o
+ .debug_macro   0x00000000       0x6c Srv/SrvFeeling.o
+ .debug_macro   0x00000000      0x174 Srv/SrvFeeling.o
+ .debug_macro   0x00000000       0x39 Srv/SrvFeeling.o
+ .debug_macro   0x00000000       0x69 Srv/SrvFeeling.o
+ .debug_macro   0x00000000       0x2e Srv/SrvFeeling.o
+ .debug_macro   0x00000000       0x1c Srv/SrvFeeling.o
+ .debug_macro   0x00000000       0x35 Srv/SrvFeeling.o
+ .debug_macro   0x00000000       0x60 Srv/SrvFeeling.o
+ .debug_macro   0x00000000       0x58 Srv/SrvFeeling.o
+ .debug_macro   0x00000000       0x10 Srv/SrvFeeling.o
+ .debug_macro   0x00000000       0xf2 Srv/SrvFeeling.o
+ .debug_macro   0x00000000       0x16 Srv/SrvFeeling.o
+ .debug_macro   0x00000000      0x160 Srv/SrvFeeling.o
+ .debug_macro   0x00000000       0x7d Srv/SrvFeeling.o
+ .debug_macro   0x00000000       0x10 Srv/SrvFeeling.o
+ .debug_macro   0x00000000      0x175 Srv/SrvFeeling.o
+ .debug_macro   0x00000000       0x68 Srv/SrvFeeling.o
+ .debug_macro   0x00000000      0x795 Srv/SrvFeeling.o
+ .debug_macro   0x00000000       0x46 Srv/SrvFeeling.o
+ .group         0x00000000        0x8 Srv/SrvHeartbeat.o
+ .group         0x00000000        0x8 Srv/SrvHeartbeat.o
+ .group         0x00000000        0x8 Srv/SrvHeartbeat.o
+ .group         0x00000000        0x8 Srv/SrvHeartbeat.o
+ .group         0x00000000        0x8 Srv/SrvHeartbeat.o
+ .group         0x00000000        0x8 Srv/SrvHeartbeat.o
+ .group         0x00000000        0x8 Srv/SrvHeartbeat.o
+ .group         0x00000000        0x8 Srv/SrvHeartbeat.o
+ .group         0x00000000        0x8 Srv/SrvHeartbeat.o
+ .group         0x00000000        0x8 Srv/SrvHeartbeat.o
+ .group         0x00000000        0x8 Srv/SrvHeartbeat.o
+ .group         0x00000000        0x8 Srv/SrvHeartbeat.o
+ .group         0x00000000        0x8 Srv/SrvHeartbeat.o
+ .group         0x00000000        0x8 Srv/SrvHeartbeat.o
+ .group         0x00000000        0x8 Srv/SrvHeartbeat.o
+ .group         0x00000000        0x8 Srv/SrvHeartbeat.o
+ .group         0x00000000        0x8 Srv/SrvHeartbeat.o
+ .group         0x00000000        0x8 Srv/SrvHeartbeat.o
+ .group         0x00000000        0x8 Srv/SrvHeartbeat.o
+ .group         0x00000000        0x8 Srv/SrvHeartbeat.o
+ .group         0x00000000        0x8 Srv/SrvHeartbeat.o
+ .group         0x00000000        0x8 Srv/SrvHeartbeat.o
+ .group         0x00000000        0x8 Srv/SrvHeartbeat.o
+ .group         0x00000000        0x8 Srv/SrvHeartbeat.o
+ .group         0x00000000        0x8 Srv/SrvHeartbeat.o
+ .group         0x00000000        0x8 Srv/SrvHeartbeat.o
+ .group         0x00000000        0x8 Srv/SrvHeartbeat.o
+ .group         0x00000000        0x8 Srv/SrvHeartbeat.o
+ .group         0x00000000        0x8 Srv/SrvHeartbeat.o
+ .text          0x00000000        0x0 Srv/SrvHeartbeat.o
+ .data          0x00000000        0x0 Srv/SrvHeartbeat.o
+ .bss           0x00000000        0x0 Srv/SrvHeartbeat.o
+ .text.SrvHeartbeatStress
+                0x00000000       0x1e Srv/SrvHeartbeat.o
+ .debug_macro   0x00000000      0xa66 Srv/SrvHeartbeat.o
+ .debug_macro   0x00000000       0x10 Srv/SrvHeartbeat.o
+ .debug_macro   0x00000000      0x1c9 Srv/SrvHeartbeat.o
+ .debug_macro   0x00000000      0x2fc Srv/SrvHeartbeat.o
+ .debug_macro   0x00000000       0x9e Srv/SrvHeartbeat.o
+ .debug_macro   0x00000000     0x1a9a Srv/SrvHeartbeat.o
+ .debug_macro   0x00000000      0x171 Srv/SrvHeartbeat.o
+ .debug_macro   0x00000000       0xcb Srv/SrvHeartbeat.o
+ .debug_macro   0x00000000       0x34 Srv/SrvHeartbeat.o
+ .debug_macro   0x00000000       0x18 Srv/SrvHeartbeat.o
+ .debug_macro   0x00000000       0x6c Srv/SrvHeartbeat.o
+ .debug_macro   0x00000000      0x174 Srv/SrvHeartbeat.o
+ .debug_macro   0x00000000       0x39 Srv/SrvHeartbeat.o
+ .debug_macro   0x00000000       0x69 Srv/SrvHeartbeat.o
+ .debug_macro   0x00000000       0x2e Srv/SrvHeartbeat.o
+ .debug_macro   0x00000000       0x1c Srv/SrvHeartbeat.o
+ .debug_macro   0x00000000       0x35 Srv/SrvHeartbeat.o
+ .debug_macro   0x00000000       0x60 Srv/SrvHeartbeat.o
+ .debug_macro   0x00000000       0x58 Srv/SrvHeartbeat.o
+ .debug_macro   0x00000000       0x10 Srv/SrvHeartbeat.o
+ .debug_macro   0x00000000       0xf2 Srv/SrvHeartbeat.o
+ .debug_macro   0x00000000       0x16 Srv/SrvHeartbeat.o
+ .debug_macro   0x00000000      0x160 Srv/SrvHeartbeat.o
+ .debug_macro   0x00000000       0x7d Srv/SrvHeartbeat.o
+ .debug_macro   0x00000000       0x10 Srv/SrvHeartbeat.o
+ .debug_macro   0x00000000      0x175 Srv/SrvHeartbeat.o
+ .debug_macro   0x00000000       0x68 Srv/SrvHeartbeat.o
+ .debug_macro   0x00000000      0x795 Srv/SrvHeartbeat.o
+ .debug_macro   0x00000000       0x46 Srv/SrvHeartbeat.o
  .group         0x00000000        0x8 Srv/SrvIhm.o
  .group         0x00000000        0x8 Srv/SrvIhm.o
  .group         0x00000000        0x8 Srv/SrvIhm.o
@@ -1688,12 +1915,6 @@ Discarded input sections
  .text          0x00000000        0x0 Srv/SrvIhm.o
  .data          0x00000000        0x0 Srv/SrvIhm.o
  .bss           0x00000000        0x0 Srv/SrvIhm.o
- .text.SrvIhmPlatformArm
-                0x00000000       0x18 Srv/SrvIhm.o
- .text.SrvIhmPlatformDisarm
-                0x00000000       0x12 Srv/SrvIhm.o
- .text.SrvIhmPlatformError
-                0x00000000       0x3a Srv/SrvIhm.o
  .debug_macro   0x00000000      0xa66 Srv/SrvIhm.o
  .debug_macro   0x00000000       0x10 Srv/SrvIhm.o
  .debug_macro   0x00000000      0x1c9 Srv/SrvIhm.o
@@ -1717,13 +1938,74 @@ Discarded input sections
  .debug_macro   0x00000000       0xf2 Srv/SrvIhm.o
  .debug_macro   0x00000000       0x16 Srv/SrvIhm.o
  .debug_macro   0x00000000      0x160 Srv/SrvIhm.o
- .debug_macro   0x00000000       0x77 Srv/SrvIhm.o
+ .debug_macro   0x00000000       0x7d Srv/SrvIhm.o
  .debug_macro   0x00000000       0x10 Srv/SrvIhm.o
  .debug_macro   0x00000000      0x175 Srv/SrvIhm.o
  .debug_macro   0x00000000       0x68 Srv/SrvIhm.o
  .debug_macro   0x00000000      0x795 Srv/SrvIhm.o
- .debug_macro   0x00000000       0x40 Srv/SrvIhm.o
  .debug_macro   0x00000000       0x46 Srv/SrvIhm.o
+ .debug_macro   0x00000000       0x58 Srv/SrvIhm.o
+ .group         0x00000000        0x8 Srv/SrvUltrason.o
+ .group         0x00000000        0x8 Srv/SrvUltrason.o
+ .group         0x00000000        0x8 Srv/SrvUltrason.o
+ .group         0x00000000        0x8 Srv/SrvUltrason.o
+ .group         0x00000000        0x8 Srv/SrvUltrason.o
+ .group         0x00000000        0x8 Srv/SrvUltrason.o
+ .group         0x00000000        0x8 Srv/SrvUltrason.o
+ .group         0x00000000        0x8 Srv/SrvUltrason.o
+ .group         0x00000000        0x8 Srv/SrvUltrason.o
+ .group         0x00000000        0x8 Srv/SrvUltrason.o
+ .group         0x00000000        0x8 Srv/SrvUltrason.o
+ .group         0x00000000        0x8 Srv/SrvUltrason.o
+ .group         0x00000000        0x8 Srv/SrvUltrason.o
+ .group         0x00000000        0x8 Srv/SrvUltrason.o
+ .group         0x00000000        0x8 Srv/SrvUltrason.o
+ .group         0x00000000        0x8 Srv/SrvUltrason.o
+ .group         0x00000000        0x8 Srv/SrvUltrason.o
+ .group         0x00000000        0x8 Srv/SrvUltrason.o
+ .group         0x00000000        0x8 Srv/SrvUltrason.o
+ .group         0x00000000        0x8 Srv/SrvUltrason.o
+ .group         0x00000000        0x8 Srv/SrvUltrason.o
+ .group         0x00000000        0x8 Srv/SrvUltrason.o
+ .group         0x00000000        0x8 Srv/SrvUltrason.o
+ .group         0x00000000        0x8 Srv/SrvUltrason.o
+ .group         0x00000000        0x8 Srv/SrvUltrason.o
+ .group         0x00000000        0x8 Srv/SrvUltrason.o
+ .group         0x00000000        0x8 Srv/SrvUltrason.o
+ .group         0x00000000        0x8 Srv/SrvUltrason.o
+ .group         0x00000000        0x8 Srv/SrvUltrason.o
+ .text          0x00000000        0x0 Srv/SrvUltrason.o
+ .data          0x00000000        0x0 Srv/SrvUltrason.o
+ .bss           0x00000000        0x0 Srv/SrvUltrason.o
+ .debug_macro   0x00000000      0xa66 Srv/SrvUltrason.o
+ .debug_macro   0x00000000       0x10 Srv/SrvUltrason.o
+ .debug_macro   0x00000000      0x1c9 Srv/SrvUltrason.o
+ .debug_macro   0x00000000      0x2fc Srv/SrvUltrason.o
+ .debug_macro   0x00000000       0x9e Srv/SrvUltrason.o
+ .debug_macro   0x00000000     0x1a9a Srv/SrvUltrason.o
+ .debug_macro   0x00000000      0x171 Srv/SrvUltrason.o
+ .debug_macro   0x00000000       0xcb Srv/SrvUltrason.o
+ .debug_macro   0x00000000       0x34 Srv/SrvUltrason.o
+ .debug_macro   0x00000000       0x18 Srv/SrvUltrason.o
+ .debug_macro   0x00000000       0x6c Srv/SrvUltrason.o
+ .debug_macro   0x00000000      0x174 Srv/SrvUltrason.o
+ .debug_macro   0x00000000       0x39 Srv/SrvUltrason.o
+ .debug_macro   0x00000000       0x69 Srv/SrvUltrason.o
+ .debug_macro   0x00000000       0x2e Srv/SrvUltrason.o
+ .debug_macro   0x00000000       0x1c Srv/SrvUltrason.o
+ .debug_macro   0x00000000       0x35 Srv/SrvUltrason.o
+ .debug_macro   0x00000000       0x60 Srv/SrvUltrason.o
+ .debug_macro   0x00000000       0x58 Srv/SrvUltrason.o
+ .debug_macro   0x00000000       0x10 Srv/SrvUltrason.o
+ .debug_macro   0x00000000       0xf2 Srv/SrvUltrason.o
+ .debug_macro   0x00000000       0x16 Srv/SrvUltrason.o
+ .debug_macro   0x00000000      0x160 Srv/SrvUltrason.o
+ .debug_macro   0x00000000       0x7d Srv/SrvUltrason.o
+ .debug_macro   0x00000000       0x10 Srv/SrvUltrason.o
+ .debug_macro   0x00000000      0x175 Srv/SrvUltrason.o
+ .debug_macro   0x00000000       0x68 Srv/SrvUltrason.o
+ .debug_macro   0x00000000      0x795 Srv/SrvUltrason.o
+ .debug_macro   0x00000000       0x46 Srv/SrvUltrason.o
  .group         0x00000000        0x8 Srv/SrvWalk.o
  .group         0x00000000        0x8 Srv/SrvWalk.o
  .group         0x00000000        0x8 Srv/SrvWalk.o
@@ -1759,22 +2041,6 @@ Discarded input sections
  .text          0x00000000        0x0 Srv/SrvWalk.o
  .data          0x00000000        0x0 Srv/SrvWalk.o
  .bss           0x00000000        0x0 Srv/SrvWalk.o
- .text.SrvWalkChangeWalk
-                0x00000000        0x8 Srv/SrvWalk.o
- .text.SrvWalkChangeGaits
-                0x00000000        0xc Srv/SrvWalk.o
- .bss.movingLegIndex
-                0x00000000        0x1 Srv/SrvWalk.o
- .data.legsZTab
-                0x00000000        0x6 Srv/SrvWalk.o
- .data.legsYTab
-                0x00000000        0x6 Srv/SrvWalk.o
- .data.legsXTab
-                0x00000000        0x6 Srv/SrvWalk.o
- .bss.initStepGaits
-                0x00000000        0x1 Srv/SrvWalk.o
- .bss.updateLeg
-                0x00000000        0x1 Srv/SrvWalk.o
  .debug_macro   0x00000000      0xa66 Srv/SrvWalk.o
  .debug_macro   0x00000000       0x10 Srv/SrvWalk.o
  .debug_macro   0x00000000      0x1c9 Srv/SrvWalk.o
@@ -1798,14 +2064,15 @@ Discarded input sections
  .debug_macro   0x00000000       0xf2 Srv/SrvWalk.o
  .debug_macro   0x00000000       0x16 Srv/SrvWalk.o
  .debug_macro   0x00000000      0x160 Srv/SrvWalk.o
- .debug_macro   0x00000000       0x77 Srv/SrvWalk.o
+ .debug_macro   0x00000000       0x7d Srv/SrvWalk.o
  .debug_macro   0x00000000       0x10 Srv/SrvWalk.o
  .debug_macro   0x00000000      0x175 Srv/SrvWalk.o
  .debug_macro   0x00000000       0x68 Srv/SrvWalk.o
  .debug_macro   0x00000000      0x795 Srv/SrvWalk.o
- .debug_macro   0x00000000       0x40 Srv/SrvWalk.o
  .debug_macro   0x00000000       0x46 Srv/SrvWalk.o
- .debug_macro   0x00000000       0x28 Srv/SrvWalk.o
+ .debug_macro   0x00000000       0x4c Srv/SrvWalk.o
+ .debug_macro   0x00000000      0x17e Srv/SrvWalk.o
+ .debug_macro   0x00000000       0x16 Srv/SrvWalk.o
  .text          0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(acos.o)
  .data          0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(acos.o)
  .bss           0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(acos.o)
@@ -2081,6 +2348,8 @@ Address of section .data set to 0x800100
 LOAD C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega1284p/avr51/crtatmega1284p.o
 LOAD Cmps/CmpNRF24L01.o
 LOAD Cmps/CmpPCA9685.o
+LOAD Cmps/CmpSRF04.o
+LOAD Cmps/CmpSSD1306.o
 LOAD Drv/DrvAdc.o
 LOAD Drv/DrvBitmap.o
 LOAD Drv/DrvButton.o
@@ -2091,7 +2360,6 @@ LOAD Drv/DrvLed.o
 LOAD Drv/DrvLeg.o
 LOAD Drv/DrvServo.o
 LOAD Drv/DrvSpi.o
-LOAD Drv/DrvSSD1306.o
 LOAD Drv/DrvTick.o
 LOAD Drv/DrvTimer.o
 LOAD Drv/DrvTwi.o
@@ -2100,8 +2368,12 @@ LOAD main.o
 LOAD Srv/SrvBattery.o
 LOAD Srv/SrvBody.o
 LOAD Srv/SrvComm.o
+LOAD Srv/SrvCore.o
 LOAD Srv/SrvDisplay.o
+LOAD Srv/SrvFeeling.o
+LOAD Srv/SrvHeartbeat.o
 LOAD Srv/SrvIhm.o
+LOAD Srv/SrvUltrason.o
 LOAD Srv/SrvWalk.o
 START GROUP
 LOAD c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a
@@ -2210,7 +2482,7 @@ END GROUP
 .rela.plt
  *(.rela.plt)
 
-.text           0x00000000     0x388c
+.text           0x00000000     0x479a
  *(.vectors)
  .vectors       0x00000000       0x8c C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega1284p/avr51/crtatmega1284p.o
                 0x00000000                __vector_default
@@ -2294,7 +2566,6 @@ END GROUP
                 0x0000013e                __vector_27
                 0x0000013e                __vector_5
                 0x0000013e                __vector_33
-                0x0000013e                __vector_4
                 0x0000013e                __vector_2
                 0x0000013e                __vector_15
                 0x0000013e                __vector_8
@@ -2305,451 +2576,534 @@ END GROUP
                 0x00000140                . = ALIGN (0x2)
  *(.text.*)
  .text.CmpPCA9685Reset
-                0x00000140       0x1e Cmps/CmpPCA9685.o
+                0x00000140        0xa Cmps/CmpPCA9685.o
                 0x00000140                CmpPCA9685Reset
  .text.CmpPCA9685Init
-                0x0000015e       0x1a Cmps/CmpPCA9685.o
-                0x0000015e                CmpPCA9685Init
+                0x0000014a        0x6 Cmps/CmpPCA9685.o
+                0x0000014a                CmpPCA9685Init
  .text.CmpPCA9685SetPWMFreq
-                0x00000178       0xba Cmps/CmpPCA9685.o
-                0x00000178                CmpPCA9685SetPWMFreq
+                0x00000150       0xb6 Cmps/CmpPCA9685.o
+                0x00000150                CmpPCA9685SetPWMFreq
  .text.CmpPCA9685SetPWM
-                0x00000232       0x34 Cmps/CmpPCA9685.o
-                0x00000232                CmpPCA9685SetPWM
+                0x00000206       0x34 Cmps/CmpPCA9685.o
+                0x00000206                CmpPCA9685SetPWM
+ .text.CmpSRF04Init
+                0x0000023a       0x8e Cmps/CmpSRF04.o
+                0x0000023a                CmpSRF04Init
+ .text.CmpSRF04SendPulse
+                0x000002c8       0x8a Cmps/CmpSRF04.o
+                0x000002c8                CmpSRF04SendPulse
+ .text.CmpSRF04GetDistance
+                0x00000352       0x12 Cmps/CmpSRF04.o
+                0x00000352                CmpSRF04GetDistance
+ .text.__vector_4
+                0x00000364      0x16e Cmps/CmpSRF04.o
+                0x00000364                __vector_4
+ .text.CmpSSD1306ClearBuffer
+                0x000004d2       0x18 Cmps/CmpSSD1306.o
+                0x000004d2                CmpSSD1306ClearBuffer
+ .text.CmpSSD1306DrawPixel
+                0x000004ea       0xd6 Cmps/CmpSSD1306.o
+                0x000004ea                CmpSSD1306DrawPixel
+ .text.CmpSSD1306EraseArea
+                0x000005c0       0x8e Cmps/CmpSSD1306.o
+                0x000005c0                CmpSSD1306EraseArea
+ .text.CmpSSD1306DrawLine
+                0x0000064e       0xc4 Cmps/CmpSSD1306.o
+                0x0000064e                CmpSSD1306DrawLine
+ .text.CmpSSD1306DrawRectangle
+                0x00000712       0x74 Cmps/CmpSSD1306.o
+                0x00000712                CmpSSD1306DrawRectangle
+ .text.CmpSSD1306DrawChar
+                0x00000786      0x104 Cmps/CmpSSD1306.o
+                0x00000786                CmpSSD1306DrawChar
+ .text.CmpSSD1306DrawBitmap
+                0x0000088a      0x170 Cmps/CmpSSD1306.o
+                0x0000088a                CmpSSD1306DrawBitmap
+ .text.CmpSSD1306SendData
+                0x000009fa       0x10 Cmps/CmpSSD1306.o
+                0x000009fa                CmpSSD1306SendData
+ .text.CmpSSD1306SendDatum
+                0x00000a0a        0xe Cmps/CmpSSD1306.o
+                0x00000a0a                CmpSSD1306SendDatum
+ .text.CmpSSD1306ClearDisplay
+                0x00000a18       0x2e Cmps/CmpSSD1306.o
+                0x00000a18                CmpSSD1306ClearDisplay
+ .text.CmpSSD1306Update
+                0x00000a46       0x3e Cmps/CmpSSD1306.o
+                0x00000a46                CmpSSD1306Update
+ .text.CmpSSD1306Init
+                0x00000a84       0x76 Cmps/CmpSSD1306.o
+                0x00000a84                CmpSSD1306Init
  .text.DrvAdcInit
-                0x00000266       0x64 Drv/DrvAdc.o
-                0x00000266                DrvAdcInit
+                0x00000afa       0x64 Drv/DrvAdc.o
+                0x00000afa                DrvAdcInit
  .text.DrvAdcRead
-                0x000002ca       0x54 Drv/DrvAdc.o
-                0x000002ca                DrvAdcRead
+                0x00000b5e       0x54 Drv/DrvAdc.o
+                0x00000b5e                DrvAdcRead
  .text.DrvBitmapGetBitmapArrow
-                0x0000031e       0x58 Drv/DrvBitmap.o
-                0x0000031e                DrvBitmapGetBitmapArrow
+                0x00000bb2       0x58 Drv/DrvBitmap.o
+                0x00000bb2                DrvBitmapGetBitmapArrow
  .text.DrvBitmapGetBitmapBatteryValue
-                0x00000376       0x54 Drv/DrvBitmap.o
-                0x00000376                DrvBitmapGetBitmapBatteryValue
+                0x00000c0a       0x54 Drv/DrvBitmap.o
+                0x00000c0a                DrvBitmapGetBitmapBatteryValue
+ .text.DrvBitmapGetBitmapCommunication
+                0x00000c5e       0x1c Drv/DrvBitmap.o
+                0x00000c5e                DrvBitmapGetBitmapCommunication
  .text.DrvButtonIsrCallbackTimer
-                0x000003ca       0x5e Drv/DrvButton.o
+                0x00000c7a       0x5e Drv/DrvButton.o
  .text.DrvButtonInit
-                0x00000428       0x14 Drv/DrvButton.o
-                0x00000428                DrvButtonInit
+                0x00000cd8       0x14 Drv/DrvButton.o
+                0x00000cd8                DrvButtonInit
  .text.DrvButtonAddButton
-                0x0000043c       0x22 Drv/DrvButton.o
-                0x0000043c                DrvButtonAddButton
+                0x00000cec       0x22 Drv/DrvButton.o
+                0x00000cec                DrvButtonAddButton
  .text.DrvButtonPushed
-                0x0000045e       0x6a Drv/DrvButton.o
-                0x0000045e                DrvButtonPushed
+                0x00000d0e       0x6a Drv/DrvButton.o
+                0x00000d0e                DrvButtonPushed
  .text.DrvEepromIsConfigured
-                0x000004c8       0x14 Drv/DrvEeprom.o
-                0x000004c8                DrvEepromIsConfigured
+                0x00000d78       0x14 Drv/DrvEeprom.o
+                0x00000d78                DrvEepromIsConfigured
  .text.DrvEepromInit
-                0x000004dc       0x1e Drv/DrvEeprom.o
-                0x000004dc                DrvEepromInit
- .text.DrvEepromSetConfiguration
-                0x000004fa        0xc Drv/DrvEeprom.o
-                0x000004fa                DrvEepromSetConfiguration
+                0x00000d8c       0x1e Drv/DrvEeprom.o
+                0x00000d8c                DrvEepromInit
  .text.DrvIoSetPinOutput
-                0x00000506       0x32 Drv/DrvIo.o
-                0x00000506                DrvIoSetPinOutput
+                0x00000daa       0x32 Drv/DrvIo.o
+                0x00000daa                DrvIoSetPinOutput
  .text.DrvIoSetPinInput
-                0x00000538       0x42 Drv/DrvIo.o
-                0x00000538                DrvIoSetPinInput
+                0x00000ddc       0x42 Drv/DrvIo.o
+                0x00000ddc                DrvIoSetPinInput
  .text.DrvIoGetPinState
-                0x0000057a       0x26 Drv/DrvIo.o
-                0x0000057a                DrvIoGetPinState
+                0x00000e1e       0x26 Drv/DrvIo.o
+                0x00000e1e                DrvIoGetPinState
  .text.DrvIoSetPinState
-                0x000005a0       0x4a Drv/DrvIo.o
-                0x000005a0                DrvIoSetPinState
+                0x00000e44       0x4a Drv/DrvIo.o
+                0x00000e44                DrvIoSetPinState
+ .text.DrvIoSetInterruptPin
+                0x00000e8e       0xd8 Drv/DrvIo.o
+                0x00000e8e                DrvIoSetInterruptPin
  .text.DrvLedIsrCallbackTimer
-                0x000005ea       0xdc Drv/DrvLed.o
+                0x00000f66       0xdc Drv/DrvLed.o
  .text.DrvLedInit
-                0x000006c6       0x14 Drv/DrvLed.o
-                0x000006c6                DrvLedInit
+                0x00001042       0x14 Drv/DrvLed.o
+                0x00001042                DrvLedInit
  .text.DrvLedSetPinLed
-                0x000006da       0x40 Drv/DrvLed.o
-                0x000006da                DrvLedSetPinLed
+                0x00001056       0x40 Drv/DrvLed.o
+                0x00001056                DrvLedSetPinLed
  .text.DrvLedSetToggle
-                0x0000071a       0x6a Drv/DrvLed.o
-                0x0000071a                DrvLedSetToggle
+                0x00001096       0x6a Drv/DrvLed.o
+                0x00001096                DrvLedSetToggle
  .text.DrvLedSetState
-                0x00000784       0x52 Drv/DrvLed.o
-                0x00000784                DrvLedSetState
+                0x00001100       0x52 Drv/DrvLed.o
+                0x00001100                DrvLedSetState
  .text.DrvLegInit
-                0x000007d6      0x34a Drv/DrvLeg.o
-                0x000007d6                DrvLegInit
+                0x00001152      0x4c0 Drv/DrvLeg.o
+                0x00001152                DrvLegInit
  .text.DrvLegGetLeg
-                0x00000b20        0xe Drv/DrvLeg.o
-                0x00000b20                DrvLegGetLeg
+                0x00001612        0xe Drv/DrvLeg.o
+                0x00001612                DrvLegGetLeg
  .text.DrvLegCheckTarget
-                0x00000b2e       0x32 Drv/DrvLeg.o
-                0x00000b2e                DrvLegCheckTarget
+                0x00001620       0x32 Drv/DrvLeg.o
+                0x00001620                DrvLegCheckTarget
  .text.DrvLegSetXYZ
-                0x00000b60      0x566 Drv/DrvLeg.o
-                0x00000b60                DrvLegSetXYZ
+                0x00001652      0x566 Drv/DrvLeg.o
+                0x00001652                DrvLegSetXYZ
+ .text.DrvLegSetPosition
+                0x00001bb8       0x4c Drv/DrvLeg.o
+                0x00001bb8                DrvLegSetPosition
  .text.DrvLegUpdate
-                0x000010c6        0x6 Drv/DrvLeg.o
-                0x000010c6                DrvLegUpdate
+                0x00001c04       0x18 Drv/DrvLeg.o
+                0x00001c04                DrvLegUpdate
  .text.DrvServoInit
-                0x000010cc       0x68 Drv/DrvServo.o
-                0x000010cc                DrvServoInit
+                0x00001c1c       0x6e Drv/DrvServo.o
+                0x00001c1c                DrvServoInit
  .text.DrvServoSetTarget
-                0x00001134      0x100 Drv/DrvServo.o
-                0x00001134                DrvServoSetTarget
+                0x00001c8a       0x8a Drv/DrvServo.o
+                0x00001c8a                DrvServoSetTarget
  .text.DrvServoCheckPosition
-                0x00001234       0x22 Drv/DrvServo.o
-                0x00001234                DrvServoCheckPosition
+                0x00001d14       0x22 Drv/DrvServo.o
+                0x00001d14                DrvServoCheckPosition
  .text.DrvServoUpdate
-                0x00001256      0x2f8 Drv/DrvServo.o
-                0x00001256                DrvServoUpdate
+                0x00001d36      0x2f2 Drv/DrvServo.o
+                0x00001d36                DrvServoUpdate
  .text.DrvServoGetStruture
-                0x0000154e       0x18 Drv/DrvServo.o
-                0x0000154e                DrvServoGetStruture
+                0x00002028       0x18 Drv/DrvServo.o
+                0x00002028                DrvServoGetStruture
  .text.__vector_19
-                0x00001566       0x1e Drv/DrvSpi.o
-                0x00001566                __vector_19
- .text.DrvSSD1306ClearBuffer
-                0x00001584       0x18 Drv/DrvSSD1306.o
-                0x00001584                DrvSSD1306ClearBuffer
- .text.DrvSSD1306DrawPixel
-                0x0000159c       0xd6 Drv/DrvSSD1306.o
-                0x0000159c                DrvSSD1306DrawPixel
- .text.DrvSSD1306EraseArea
-                0x00001672       0x8e Drv/DrvSSD1306.o
-                0x00001672                DrvSSD1306EraseArea
- .text.DrvSSD1306DrawLine
-                0x00001700       0xc4 Drv/DrvSSD1306.o
-                0x00001700                DrvSSD1306DrawLine
- .text.DrvSSD1306DrawRectangle
-                0x000017c4       0x74 Drv/DrvSSD1306.o
-                0x000017c4                DrvSSD1306DrawRectangle
- .text.DrvSSD1306DrawChar
-                0x00001838      0x104 Drv/DrvSSD1306.o
-                0x00001838                DrvSSD1306DrawChar
- .text.DrvSSD1306DrawBitmap
-                0x0000193c      0x170 Drv/DrvSSD1306.o
-                0x0000193c                DrvSSD1306DrawBitmap
- .text.DrvSSD1306SendData
-                0x00001aac        0xe Drv/DrvSSD1306.o
-                0x00001aac                DrvSSD1306SendData
- .text.DrvSSD1306SendDatum
-                0x00001aba        0xc Drv/DrvSSD1306.o
-                0x00001aba                DrvSSD1306SendDatum
- .text.DrvSSD1306ClearDisplay
-                0x00001ac6       0x2c Drv/DrvSSD1306.o
-                0x00001ac6                DrvSSD1306ClearDisplay
- .text.DrvSSD1306Update
-                0x00001af2       0x3c Drv/DrvSSD1306.o
-                0x00001af2                DrvSSD1306Update
- .text.DrvSSD1306Init
-                0x00001b2e       0x76 Drv/DrvSSD1306.o
-                0x00001b2e                DrvSSD1306Init
+                0x00002040       0x1e Drv/DrvSpi.o
+                0x00002040                __vector_19
  .text.DrvTickInit
-                0x00001ba4       0x3e Drv/DrvTick.o
-                0x00001ba4                DrvTickInit
+                0x0000205e       0x40 Drv/DrvTick.o
+                0x0000205e                DrvTickInit
  .text.DrvTickGetTimeUs
-                0x00001be2       0x44 Drv/DrvTick.o
-                0x00001be2                DrvTickGetTimeUs
+                0x0000209e       0x44 Drv/DrvTick.o
+                0x0000209e                DrvTickGetTimeUs
  .text.DrvTickGetTimeMs
-                0x00001c26       0x14 Drv/DrvTick.o
-                0x00001c26                DrvTickGetTimeMs
+                0x000020e2       0x14 Drv/DrvTick.o
+                0x000020e2                DrvTickGetTimeMs
  .text.DrvTickDelayUs
-                0x00001c3a       0x2c Drv/DrvTick.o
-                0x00001c3a                DrvTickDelayUs
+                0x000020f6       0x2c Drv/DrvTick.o
+                0x000020f6                DrvTickDelayUs
+ .text.DrvTickDelayMs
+                0x00002122        0xe Drv/DrvTick.o
+                0x00002122                DrvTickDelayMs
  .text.__vector_18
-                0x00001c66       0x4a Drv/DrvTick.o
-                0x00001c66                __vector_18
+                0x00002130       0x4a Drv/DrvTick.o
+                0x00002130                __vector_18
  .text.DrvTimerInit
-                0x00001cb0       0x48 Drv/DrvTimer.o
-                0x00001cb0                DrvTimerInit
+                0x0000217a       0x3e Drv/DrvTimer.o
+                0x0000217a                DrvTimerInit
  .text.DrvTimerAddTimer
-                0x00001cf8       0x2e Drv/DrvTimer.o
-                0x00001cf8                DrvTimerAddTimer
+                0x000021b8       0x2e Drv/DrvTimer.o
+                0x000021b8                DrvTimerAddTimer
  .text.DrvTimerStopTimer
-                0x00001d26       0x2e Drv/DrvTimer.o
-                0x00001d26                DrvTimerStopTimer
+                0x000021e6       0x2e Drv/DrvTimer.o
+                0x000021e6                DrvTimerStopTimer
  .text.DrvTimerTickReset
-                0x00001d54       0x40 Drv/DrvTimer.o
-                0x00001d54                DrvTimerTickReset
+                0x00002214       0x30 Drv/DrvTimer.o
+                0x00002214                DrvTimerTickReset
  .text.__vector_9
-                0x00001d94      0x176 Drv/DrvTimer.o
-                0x00001d94                __vector_9
+                0x00002244      0x176 Drv/DrvTimer.o
+                0x00002244                __vector_9
  .text.DrvTwiWaitTransmission
-                0x00001f0a       0x2c Drv/DrvTwi.o
+                0x000023ba       0x2c Drv/DrvTwi.o
  .text.DrvTwiInit
-                0x00001f36       0x5e Drv/DrvTwi.o
-                0x00001f36                DrvTwiInit
+                0x000023e6       0x5e Drv/DrvTwi.o
+                0x000023e6                DrvTwiInit
  .text.DrvTwiReadReg
-                0x00001f94       0xde Drv/DrvTwi.o
-                0x00001f94                DrvTwiReadReg
+                0x00002444       0xde Drv/DrvTwi.o
+                0x00002444                DrvTwiReadReg
  .text.DrvTwiWriteReg
-                0x00002072       0xa0 Drv/DrvTwi.o
-                0x00002072                DrvTwiWriteReg
+                0x00002522       0xa0 Drv/DrvTwi.o
+                0x00002522                DrvTwiWriteReg
  .text.DrvTwiWriteRegBuf
-                0x00002112       0xfc Drv/DrvTwi.o
-                0x00002112                DrvTwiWriteRegBuf
+                0x000025c2       0xfc Drv/DrvTwi.o
+                0x000025c2                DrvTwiWriteRegBuf
  .text.DrvTwiFillRegBuf
-                0x0000220e       0xe4 Drv/DrvTwi.o
-                0x0000220e                DrvTwiFillRegBuf
+                0x000026be       0xe4 Drv/DrvTwi.o
+                0x000026be                DrvTwiFillRegBuf
  .text.DrvUartInit
-                0x000022f2       0x4c Drv/DrvUart.o
-                0x000022f2                DrvUartInit
+                0x000027a2       0x4c Drv/DrvUart.o
+                0x000027a2                DrvUartInit
  .text.DrvUartFillTxBuffer
-                0x0000233e       0x40 Drv/DrvUart.o
-                0x0000233e                DrvUartFillTxBuffer
+                0x000027ee       0x52 Drv/DrvUart.o
+                0x000027ee                DrvUartFillTxBuffer
  .text.DrvUartSendData
-                0x0000237e       0x16 Drv/DrvUart.o
-                0x0000237e                DrvUartSendData
+                0x00002840       0x16 Drv/DrvUart.o
+                0x00002840                DrvUartSendData
  .text.DrvUartReadData
-                0x00002394       0x46 Drv/DrvUart.o
-                0x00002394                DrvUartReadData
+                0x00002856       0x4e Drv/DrvUart.o
+                0x00002856                DrvUartReadData
  .text.DrvUartDataAvailable
-                0x000023da       0x22 Drv/DrvUart.o
-                0x000023da                DrvUartDataAvailable
+                0x000028a4       0x28 Drv/DrvUart.o
+                0x000028a4                DrvUartDataAvailable
  .text.__vector_20
-                0x000023fc       0x4a Drv/DrvUart.o
-                0x000023fc                __vector_20
+                0x000028cc       0x4a Drv/DrvUart.o
+                0x000028cc                __vector_20
  .text.__vector_21
-                0x00002446       0x66 Drv/DrvUart.o
-                0x00002446                __vector_21
+                0x00002916       0x66 Drv/DrvUart.o
+                0x00002916                __vector_21
  .text.__vector_22
-                0x000024ac       0x14 Drv/DrvUart.o
-                0x000024ac                __vector_22
+                0x0000297c       0x14 Drv/DrvUart.o
+                0x0000297c                __vector_22
  .text.__vector_28
-                0x000024c0       0x4a Drv/DrvUart.o
-                0x000024c0                __vector_28
+                0x00002990       0x4a Drv/DrvUart.o
+                0x00002990                __vector_28
  .text.__vector_29
-                0x0000250a       0x66 Drv/DrvUart.o
-                0x0000250a                __vector_29
+                0x000029da       0x66 Drv/DrvUart.o
+                0x000029da                __vector_29
  .text.__vector_30
-                0x00002570       0x14 Drv/DrvUart.o
-                0x00002570                __vector_30
- .text.main     0x00002584       0xb2 main.o
-                0x00002584                main
+                0x00002a40       0x14 Drv/DrvUart.o
+                0x00002a40                __vector_30
+ .text.main     0x00002a54       0x40 main.o
+                0x00002a54                main
  .text.SrvBatteryInit
-                0x00002636       0x14 Srv/SrvBattery.o
-                0x00002636                SrvBatteryInit
+                0x00002a94       0x14 Srv/SrvBattery.o
+                0x00002a94                SrvBatteryInit
  .text.SrvBatteryUpdate
-                0x0000264a       0x68 Srv/SrvBattery.o
-                0x0000264a                SrvBatteryUpdate
+                0x00002aa8       0x4a Srv/SrvBattery.o
+                0x00002aa8                SrvBatteryUpdate
  .text.SrvBatteryGetValue
-                0x000026b2        0x6 Srv/SrvBattery.o
-                0x000026b2                SrvBatteryGetValue
+                0x00002af2        0x6 Srv/SrvBattery.o
+                0x00002af2                SrvBatteryGetValue
  .text.SrvBodyInit
-                0x000026b8       0x34 Srv/SrvBody.o
-                0x000026b8                SrvBodyInit
+                0x00002af8       0x2e Srv/SrvBody.o
+                0x00002af8                SrvBodyInit
  .text.SrvBodyUpdate
-                0x000026ec        0x4 Srv/SrvBody.o
-                0x000026ec                SrvBodyUpdate
+                0x00002b26        0x6 Srv/SrvBody.o
+                0x00002b26                SrvBodyUpdate
+ .text.SrvBodySetPosition
+                0x00002b2c        0x4 Srv/SrvBody.o
+                0x00002b2c                SrvBodySetPosition
+ .text.SrvBodySetWalk
+                0x00002b30       0x2e Srv/SrvBody.o
+                0x00002b30                SrvBodySetWalk
+ .text.SrvBodySetGait
+                0x00002b5e        0x6 Srv/SrvBody.o
+                0x00002b5e                SrvBodySetGait
  .text.formatMessageMinMax
-                0x000026f0       0x7e Srv/SrvComm.o
+                0x00002b64       0x7e Srv/SrvComm.o
  .text.SrvCommWriteMessage
-                0x0000276e       0x42 Srv/SrvComm.o
+                0x00002be2       0x42 Srv/SrvComm.o
  .text.SrvCommInit
-                0x000027b0        0x8 Srv/SrvComm.o
-                0x000027b0                SrvCommInit
+                0x00002c24       0x16 Srv/SrvComm.o
+                0x00002c24                SrvCommInit
  .text.SrvCommUpdate
-                0x000027b8      0x352 Srv/SrvComm.o
-                0x000027b8                SrvCommUpdate
+                0x00002c3a      0x4b0 Srv/SrvComm.o
+                0x00002c3a                SrvCommUpdate
+ .text.SrvCoreInit
+                0x000030ea       0x7a Srv/SrvCore.o
+                0x000030ea                SrvCoreInit
+ .text.SrvCoreLoop
+                0x00003164       0x74 Srv/SrvCore.o
+                0x00003164                SrvCoreLoop
  .text.SrvDisplayInit
-                0x00002b0a       0x30 Srv/SrvDisplay.o
-                0x00002b0a                SrvDisplayInit
+                0x000031d8       0x30 Srv/SrvDisplay.o
+                0x000031d8                SrvDisplayInit
+ .text.SrvDisplaySetDirection
+                0x00003208        0x6 Srv/SrvDisplay.o
+                0x00003208                SrvDisplaySetDirection
+ .text.SrvDisplayScreenShowCommunication
+                0x0000320e       0x42 Srv/SrvDisplay.o
+                0x0000320e                SrvDisplayScreenShowCommunication
  .text.SrvDisplayScreenShowArrow
-                0x00002b3a       0x4a Srv/SrvDisplay.o
-                0x00002b3a                SrvDisplayScreenShowArrow
+                0x00003250       0x46 Srv/SrvDisplay.o
+                0x00003250                SrvDisplayScreenShowArrow
  .text.SrvDisplayScreenShowBattery
-                0x00002b84       0x40 Srv/SrvDisplay.o
-                0x00002b84                SrvDisplayScreenShowBattery
- .text.SrvDisplayScreenBatteryManagement
-                0x00002bc4       0x78 Srv/SrvDisplay.o
-                0x00002bc4                SrvDisplayScreenBatteryManagement
+                0x00003296       0x3c Srv/SrvDisplay.o
+                0x00003296                SrvDisplayScreenShowBattery
  .text.SrvDisplayScreenShowString
-                0x00002c3c       0x56 Srv/SrvDisplay.o
-                0x00002c3c                SrvDisplayScreenShowString
+                0x000032d2       0x54 Srv/SrvDisplay.o
+                0x000032d2                SrvDisplayScreenShowString
+ .text.SrvDisplayScreenShowUltrason
+                0x00003326       0xcc Srv/SrvDisplay.o
+                0x00003326                SrvDisplayScreenShowUltrason
+ .text.SrvDisplayScreenBatteryManagement
+                0x000033f2       0xc0 Srv/SrvDisplay.o
+                0x000033f2                SrvDisplayScreenBatteryManagement
  .text.SrvDisplayScreenHideProgressBar
-                0x00002c92       0x56 Srv/SrvDisplay.o
-                0x00002c92                SrvDisplayScreenHideProgressBar
+                0x000034b2       0x52 Srv/SrvDisplay.o
+                0x000034b2                SrvDisplayScreenHideProgressBar
  .text.SrvDisplayScreenShowProgressBar
-                0x00002ce8       0xba Srv/SrvDisplay.o
-                0x00002ce8                SrvDisplayScreenShowProgressBar
+                0x00003504       0xb8 Srv/SrvDisplay.o
+                0x00003504                SrvDisplayScreenShowProgressBar
  .text.SrvDisplayUpdate
-                0x00002da2       0xb4 Srv/SrvDisplay.o
-                0x00002da2                SrvDisplayUpdate
- .text.SrvIhmInit
-                0x00002e56       0x2a Srv/SrvIhm.o
-                0x00002e56                SrvIhmInit
- .text.SrvIhmHeartbeat
-                0x00002e80       0x88 Srv/SrvIhm.o
-                0x00002e80                SrvIhmHeartbeat
- .text.SrvIhmDispatcher
-                0x00002f08        0xa Srv/SrvIhm.o
-                0x00002f08                SrvIhmDispatcher
- .text.SrvIhmPlatformInitStart
-                0x00002f12       0x22 Srv/SrvIhm.o
-                0x00002f12                SrvIhmPlatformInitStart
+                0x000035bc      0x100 Srv/SrvDisplay.o
+                0x000035bc                SrvDisplayUpdate
+ .text.SrvFeelingInit
+                0x000036bc        0xc Srv/SrvFeeling.o
+                0x000036bc                SrvFeelingInit
+ .text.SrvFeelingUpdate
+                0x000036c8       0x98 Srv/SrvFeeling.o
+                0x000036c8                SrvFeelingUpdate
+ .text.SrvFeelingSetFeeling
+                0x00003760       0x2a Srv/SrvFeeling.o
+                0x00003760                SrvFeelingSetFeeling
+ .text.SrvHeartbeatInit
+                0x0000378a       0x14 Srv/SrvHeartbeat.o
+                0x0000378a                SrvHeartbeatInit
+ .text.SrvHeartbeatUpdate
+                0x0000379e       0x88 Srv/SrvHeartbeat.o
+                0x0000379e                SrvHeartbeatUpdate
+ .text.SrvHeartbeatSetPeriod
+                0x00003826       0x48 Srv/SrvHeartbeat.o
+                0x00003826                SrvHeartbeatSetPeriod
+ .text.SrvHeartbeatCalm
+                0x0000386e       0x1e Srv/SrvHeartbeat.o
+                0x0000386e                SrvHeartbeatCalm
+ .text.SrvIhmUpdate
+                0x0000388c        0x8 Srv/SrvIhm.o
+                0x0000388c                SrvIhmUpdate
  .text.SrvIhmPlatformInitDone
-                0x00002f34       0x22 Srv/SrvIhm.o
-                0x00002f34                SrvIhmPlatformInitDone
- .text.SrvWalkInit
-                0x00002f56       0xbc Srv/SrvWalk.o
-                0x00002f56                SrvWalkInit
+                0x00003894       0x1a Srv/SrvIhm.o
+                0x00003894                SrvIhmPlatformInitDone
+ .text.SrvIhmInit
+                0x000038ae       0x26 Srv/SrvIhm.o
+                0x000038ae                SrvIhmInit
+ .text.SrvIhmPlatformLedLeft
+                0x000038d4        0xa Srv/SrvIhm.o
+                0x000038d4                SrvIhmPlatformLedLeft
+ .text.SrvIhmPlatformLedRight
+                0x000038de        0xa Srv/SrvIhm.o
+                0x000038de                SrvIhmPlatformLedRight
+ .text.SrvUltrasonInit
+                0x000038e8        0xa Srv/SrvUltrason.o
+                0x000038e8                SrvUltrasonInit
+ .text.SrvUltrasonUpdate
+                0x000038f2       0x9e Srv/SrvUltrason.o
+                0x000038f2                SrvUltrasonUpdate
+ .text.SrvUltrasonGetDistance
+                0x00003990        0x6 Srv/SrvUltrason.o
+                0x00003990                SrvUltrasonGetDistance
+ .text.SrvWalkLegsStep
+                0x00003996      0x1d8 Srv/SrvWalk.o
  .text.SrvWalkUpdate
-                0x00003012        0x6 Srv/SrvWalk.o
-                0x00003012                SrvWalkUpdate
+                0x00003b6e      0x360 Srv/SrvWalk.o
+                0x00003b6e                SrvWalkUpdate
+ .text.SrvWalkSetWalk
+                0x00003ece       0x22 Srv/SrvWalk.o
+                0x00003ece                SrvWalkSetWalk
+ .text.SrvWalkSetGait
+                0x00003ef0       0x22 Srv/SrvWalk.o
+                0x00003ef0                SrvWalkSetGait
+ .text.SrvWalkInit
+                0x00003f12       0x14 Srv/SrvWalk.o
+                0x00003f12                SrvWalkInit
  .text.avr-libc.fplib
-                0x00003018       0x1c c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(acos.o)
-                0x00003018                acos
+                0x00003f26       0x1c c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(acos.o)
+                0x00003f26                acos
  .text.avr-libc.fplib
-                0x00003034        0xa c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(addsf3.o)
-                0x00003034                __subsf3
-                0x00003036                __addsf3
+                0x00003f42        0xa c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(addsf3.o)
+                0x00003f42                __subsf3
+                0x00003f44                __addsf3
  .text.avr-libc.fplib
-                0x0000303e       0xc0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(addsf3x.o)
-                0x00003058                __addsf3x
+                0x00003f4c       0xc0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(addsf3x.o)
+                0x00003f66                __addsf3x
  .text.avr-libc.fplib
-                0x000030fe       0x50 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(atan.o)
-                0x000030fe                atan
+                0x0000400c       0x50 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(atan.o)
+                0x0000400c                atan
  .text.avr-libc.fplib
-                0x0000314e        0x8 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(cmpsf2.o)
-                0x0000314e                __nesf2
-                0x0000314e                __eqsf2
-                0x0000314e                __cmpsf2
-                0x0000314e                __ltsf2
-                0x0000314e                __lesf2
+                0x0000405c        0x8 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(cmpsf2.o)
+                0x0000405c                __nesf2
+                0x0000405c                __eqsf2
+                0x0000405c                __cmpsf2
+                0x0000405c                __ltsf2
+                0x0000405c                __lesf2
  .text.avr-libc.fplib
-                0x00003156        0x6 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(cos.o)
-                0x00003156                cos
+                0x00004064        0x6 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(cos.o)
+                0x00004064                cos
  .text.avr-libc.fplib
-                0x0000315c        0x4 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(divsf3.o)
-                0x0000315c                __divsf3
+                0x0000406a        0x4 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(divsf3.o)
+                0x0000406a                __divsf3
  .text.avr-libc.fplib
-                0x00003160       0xcc c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(divsf3x.o)
-                0x00003176                __divsf3x
-                0x0000317a                __divsf3_pse
+                0x0000406e       0xcc c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(divsf3x.o)
+                0x00004084                __divsf3x
+                0x00004088                __divsf3_pse
  .text.avr-libc.fplib
-                0x0000322c        0xa c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fixsfsi.o)
-                0x0000322c                __fixsfsi
+                0x0000413a        0xa c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fixsfsi.o)
+                0x0000413a                __fixsfsi
  .text.avr-libc.fplib
-                0x00003236       0x58 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fixunssfsi.o)
-                0x00003236                __fixunssfsi
+                0x00004144       0x58 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fixunssfsi.o)
+                0x00004144                __fixunssfsi
  .text.avr-libc.fplib
-                0x0000328e       0x7a c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(floatsisf.o)
-                0x0000328e                __floatunsisf
-                0x00003292                __floatsisf
+                0x0000419c       0x7a c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(floatsisf.o)
+                0x0000419c                __floatunsisf
+                0x000041a0                __floatsisf
  .text.avr-libc.fplib
-                0x00003308       0x26 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(floor.o)
-                0x00003308                floor
+                0x00004216       0x26 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(floor.o)
+                0x00004216                floor
  .text.avr-libc.fplib
-                0x0000332e       0x36 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fp_arccos.o)
-                0x0000332e                __fp_arccos
+                0x0000423c       0x36 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fp_arccos.o)
+                0x0000423c                __fp_arccos
  .text.avr-libc.fplib
-                0x00003364       0x48 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fp_cmp.o)
-                0x00003364                __fp_cmp
+                0x00004272       0x48 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fp_cmp.o)
+                0x00004272                __fp_cmp
  .text.avr-libc.fplib
-                0x000033ac        0xc c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fp_inf.o)
-                0x000033ac                __fp_inf
+                0x000042ba        0xc c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fp_inf.o)
+                0x000042ba                __fp_inf
  .text.avr-libc.fplib
-                0x000033b8       0x36 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fp_mintl.o)
-                0x000033b8                __fp_mintl
+                0x000042c6       0x36 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fp_mintl.o)
+                0x000042c6                __fp_mintl
  .text.avr-libc.fplib
-                0x000033ee       0x1c c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fp_mpack.o)
-                0x000033ee                __fp_mpack
-                0x000033f2                __fp_mpack_finite
+                0x000042fc       0x1c c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fp_mpack.o)
+                0x000042fc                __fp_mpack
+                0x00004300                __fp_mpack_finite
  .text.avr-libc.fplib
-                0x0000340a        0x6 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fp_nan.o)
-                0x0000340a                __fp_nan
+                0x00004318        0x6 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fp_nan.o)
+                0x00004318                __fp_nan
  .text.avr-libc.fplib
-                0x00003410       0x4a c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fp_powser.o)
-                0x00003410                __fp_powser
+                0x0000431e       0x4a c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fp_powser.o)
+                0x0000431e                __fp_powser
  .text.avr-libc.fplib
-                0x0000345a        0xe c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fp_pscA.o)
-                0x0000345a                __fp_pscA
+                0x00004368        0xe c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fp_pscA.o)
+                0x00004368                __fp_pscA
  .text.avr-libc.fplib
-                0x00003468        0xe c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fp_pscB.o)
-                0x00003468                __fp_pscB
+                0x00004376        0xe c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fp_pscB.o)
+                0x00004376                __fp_pscB
  .text.avr-libc.fplib
-                0x00003476       0x50 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fp_rempio2.o)
-                0x00003478                __fp_rempio2
+                0x00004384       0x50 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fp_rempio2.o)
+                0x00004386                __fp_rempio2
  .text.avr-libc.fplib
-                0x000034c6       0x22 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fp_round.o)
-                0x000034c6                __fp_round
+                0x000043d4       0x22 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fp_round.o)
+                0x000043d4                __fp_round
  .text.avr-libc.fplib
-                0x000034e8       0x22 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fp_sinus.o)
-                0x000034e8                __fp_sinus
+                0x000043f6       0x22 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fp_sinus.o)
+                0x000043f6                __fp_sinus
  .text.avr-libc.fplib
-                0x0000350a       0x44 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fp_split3.o)
-                0x0000350a                __fp_split3
-                0x0000351a                __fp_splitA
+                0x00004418       0x44 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fp_split3.o)
+                0x00004418                __fp_split3
+                0x00004428                __fp_splitA
  .text.avr-libc.fplib
-                0x0000354e       0x2e c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fp_trunc.o)
-                0x0000354e                __fp_trunc
+                0x0000445c       0x2e c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fp_trunc.o)
+                0x0000445c                __fp_trunc
  .text.avr-libc.fplib
-                0x0000357c        0xe c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fp_zero.o)
-                0x0000357c                __fp_zero
-                0x0000357e                __fp_szero
+                0x0000448a        0xe c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fp_zero.o)
+                0x0000448a                __fp_zero
+                0x0000448c                __fp_szero
  .text.avr-libc.fplib
-                0x0000358a        0x8 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(gesf2.o)
-                0x0000358a                __gesf2
-                0x0000358a                __gtsf2
+                0x00004498        0x8 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(gesf2.o)
+                0x00004498                __gesf2
+                0x00004498                __gtsf2
  .text.avr-libc.fplib
-                0x00003592        0xe c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(inverse.o)
-                0x00003592                inverse
+                0x000044a0        0xe c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(inverse.o)
+                0x000044a0                inverse
  .text.avr-libc.fplib
-                0x000035a0        0x4 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(mulsf3.o)
-                0x000035a0                __mulsf3
+                0x000044ae        0x4 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(mulsf3.o)
+                0x000044ae                __mulsf3
  .text.avr-libc.fplib
-                0x000035a4       0xc2 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(mulsf3x.o)
-                0x000035b8                __mulsf3x
-                0x000035bc                __mulsf3_pse
+                0x000044b2       0xc2 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(mulsf3x.o)
+                0x000044c6                __mulsf3x
+                0x000044ca                __mulsf3_pse
  .text.avr-libc.fplib
-                0x00003666       0x40 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(round.o)
-                0x00003666                round
+                0x00004574       0x40 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(round.o)
+                0x00004574                round
  .text.avr-libc.fplib
-                0x000036a6        0xc c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(sin.o)
-                0x000036a6                sin
+                0x000045b4        0xc c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(sin.o)
+                0x000045b4                sin
  .text.avr-libc.fplib
-                0x000036b2       0x84 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(sqrt.o)
-                0x000036ba                sqrtf
-                0x000036ba                sqrt
+                0x000045c0       0x84 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(sqrt.o)
+                0x000045c8                sqrtf
+                0x000045c8                sqrt
  .text.avr-libc.fplib
-                0x00003736        0x6 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(square.o)
-                0x00003736                square
+                0x00004644        0x6 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(square.o)
+                0x00004644                square
  .text.avr-libc.fplib
-                0x0000373c        0xe c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fp_norm2.o)
-                0x0000373c                __fp_norm2
+                0x0000464a        0xe c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fp_norm2.o)
+                0x0000464a                __fp_norm2
  .text.avr-libc.fplib
-                0x0000374a       0x22 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fp_powsodd.o)
-                0x0000374a                __fp_powsodd
+                0x00004658       0x22 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fp_powsodd.o)
+                0x00004658                __fp_powsodd
  .text.libgcc.div
-                0x0000376c       0x28 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr51\libgcc.a(_udivmodhi4.o)
-                0x0000376c                __udivmodhi4
+                0x0000467a       0x28 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr51\libgcc.a(_udivmodhi4.o)
+                0x0000467a                __udivmodhi4
  .text.libgcc.div
-                0x00003794       0x44 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr51\libgcc.a(_udivmodsi4.o)
-                0x00003794                __udivmodsi4
+                0x000046a2       0x44 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr51\libgcc.a(_udivmodsi4.o)
+                0x000046a2                __udivmodsi4
  .text.libgcc.mul
-                0x000037d8       0x1e c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr51\libgcc.a(_umulhisi3.o)
-                0x000037d8                __umulhisi3
+                0x000046e6       0x1e c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr51\libgcc.a(_umulhisi3.o)
+                0x000046e6                __umulhisi3
  .text.avr-libc
-                0x000037f6       0x14 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libc.a(itoa_ncheck.o)
-                0x000037f6                __itoa_ncheck
+                0x00004704       0x14 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libc.a(itoa_ncheck.o)
+                0x00004704                __itoa_ncheck
  .text.avr-libc
-                0x0000380a       0x32 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libc.a(utoa_ncheck.o)
-                0x0000380a                __utoa_ncheck
-                0x0000380c                __utoa_common
+                0x00004718       0x32 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libc.a(utoa_ncheck.o)
+                0x00004718                __utoa_ncheck
+                0x0000471a                __utoa_common
  .text.avr-libc
-                0x0000383c       0x20 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libc.a(strrev.o)
-                0x0000383c                strrev
+                0x0000474a       0x20 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libc.a(strrev.o)
+                0x0000474a                strrev
  .text.avr-libc
-                0x0000385c       0x10 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega1284p/avr51\libatmega1284p.a(eerd_byte.o)
-                0x0000385c                eeprom_read_byte
+                0x0000476a       0x10 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega1284p/avr51\libatmega1284p.a(eerd_byte.o)
+                0x0000476a                eeprom_read_byte
  .text.avr-libc
-                0x0000386c       0x1c C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega1284p/avr51\libatmega1284p.a(eewr_byte.o)
-                0x0000386c                eeprom_write_byte
-                0x0000386e                eeprom_write_r18
-                0x00003888                . = ALIGN (0x2)
+                0x0000477a       0x1c C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega1284p/avr51\libatmega1284p.a(eewr_byte.o)
+                0x0000477a                eeprom_write_byte
+                0x0000477c                eeprom_write_r18
+                0x00004796                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x00003888        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr51\libgcc.a(_exit.o)
-                0x00003888                _exit
-                0x00003888                exit
+ .fini9         0x00004796        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr51\libgcc.a(_exit.o)
+                0x00004796                _exit
+                0x00004796                exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -2768,176 +3122,239 @@ END GROUP
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x00003888        0x4 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr51\libgcc.a(_exit.o)
+ .fini0         0x00004796        0x4 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr51\libgcc.a(_exit.o)
  *(.fini0)
-                0x0000388c                _etext = .
+                0x0000479a                _etext = .
 
-.data           0x00800100      0x386 load address 0x0000388c
+.data           0x00800100      0x41a load address 0x0000479a
                 0x00800100                PROVIDE (__data_start, .)
  *(.data)
  *(.data*)
- .data.bitmapArrowCenter
-                0x00800100        0xc Drv/DrvBitmap.o
-                0x00800100                bitmapArrowCenter
- .data.bitmapArrowDown
-                0x0080010c        0xc Drv/DrvBitmap.o
-                0x0080010c                bitmapArrowDown
- .data.bitmapArrowUp
-                0x00800118        0xc Drv/DrvBitmap.o
-                0x00800118                bitmapArrowUp
- .data.bitmapArrowLeft
-                0x00800124        0xc Drv/DrvBitmap.o
-                0x00800124                bitmapArrowLeft
- .data.bitmapArrowRight
-                0x00800130        0xc Drv/DrvBitmap.o
-                0x00800130                bitmapArrowRight
- .data.bitmapBattery0
-                0x0080013c        0xe Drv/DrvBitmap.o
-                0x0080013c                bitmapBattery0
- .data.bitmapBattery25
-                0x0080014a        0xe Drv/DrvBitmap.o
-                0x0080014a                bitmapBattery25
- .data.bitmapBattery50
-                0x00800158        0xe Drv/DrvBitmap.o
-                0x00800158                bitmapBattery50
- .data.bitmapBattery75
-                0x00800166        0xe Drv/DrvBitmap.o
-                0x00800166                bitmapBattery75
- .data.bitmapBattery100
-                0x00800174        0xe Drv/DrvBitmap.o
-                0x00800174                bitmapBattery100
- .data.ButtonsPins
-                0x00800182        0x1 Drv/DrvButton.o
-                0x00800182                ButtonsPins
- .data.LedsPins
-                0x00800183        0x4 Drv/DrvLed.o
-                0x00800183                LedsPins
- .data.dlist2.2614
-                0x00800187        0x5 Drv/DrvSSD1306.o
- .data.dlist1.2603
-                0x0080018c        0x5 Drv/DrvSSD1306.o
- .data.init5.2600
-                0x00800191        0x6 Drv/DrvSSD1306.o
- .data.init4a.2599
-                0x00800197        0x4 Drv/DrvSSD1306.o
- .data.init3.2598
-                0x0080019b        0x4 Drv/DrvSSD1306.o
- .data.init2.2597
-                0x0080019f        0x4 Drv/DrvSSD1306.o
- .data.init1.2596
-                0x008001a3        0x4 Drv/DrvSSD1306.o
+ .data.srf04PinPulse
+                0x00800100        0x2 Cmps/CmpSRF04.o
+                0x00800100                srf04PinPulse
+ .data.srf04PinEcho
+                0x00800102        0x2 Cmps/CmpSRF04.o
+                0x00800102                srf04PinEcho
+ .data.dlist2.2615
+                0x00800104        0x5 Cmps/CmpSSD1306.o
+ .data.dlist1.2604
+                0x00800109        0x5 Cmps/CmpSSD1306.o
+ .data.init5.2601
+                0x0080010e        0x6 Cmps/CmpSSD1306.o
+ .data.init4a.2600
+                0x00800114        0x4 Cmps/CmpSSD1306.o
+ .data.init3.2599
+                0x00800118        0x4 Cmps/CmpSSD1306.o
+ .data.init2.2598
+                0x0080011c        0x4 Cmps/CmpSSD1306.o
+ .data.init1.2597
+                0x00800120        0x4 Cmps/CmpSSD1306.o
  .data.vccstate
-                0x008001a7        0x1 Drv/DrvSSD1306.o
-                0x008001a7                vccstate
+                0x00800124        0x1 Cmps/CmpSSD1306.o
+                0x00800124                vccstate
  .data.addr_i2c
-                0x008001a8        0x1 Drv/DrvSSD1306.o
-                0x008001a8                addr_i2c
- .data.i2cPins  0x008001a9        0x2 Drv/DrvTwi.o
-                0x008001a9                i2cPins
+                0x00800125        0x1 Cmps/CmpSSD1306.o
+                0x00800125                addr_i2c
+ .data.bitmapCommunication
+                0x00800126        0xc Drv/DrvBitmap.o
+                0x00800126                bitmapCommunication
+ .data.bitmapArrowCenter
+                0x00800132        0xc Drv/DrvBitmap.o
+                0x00800132                bitmapArrowCenter
+ .data.bitmapArrowDown
+                0x0080013e        0xc Drv/DrvBitmap.o
+                0x0080013e                bitmapArrowDown
+ .data.bitmapArrowUp
+                0x0080014a        0xc Drv/DrvBitmap.o
+                0x0080014a                bitmapArrowUp
+ .data.bitmapArrowLeft
+                0x00800156        0xc Drv/DrvBitmap.o
+                0x00800156                bitmapArrowLeft
+ .data.bitmapArrowRight
+                0x00800162        0xc Drv/DrvBitmap.o
+                0x00800162                bitmapArrowRight
+ .data.bitmapBattery0
+                0x0080016e        0xe Drv/DrvBitmap.o
+                0x0080016e                bitmapBattery0
+ .data.bitmapBattery25
+                0x0080017c        0xe Drv/DrvBitmap.o
+                0x0080017c                bitmapBattery25
+ .data.bitmapBattery50
+                0x0080018a        0xe Drv/DrvBitmap.o
+                0x0080018a                bitmapBattery50
+ .data.bitmapBattery75
+                0x00800198        0xe Drv/DrvBitmap.o
+                0x00800198                bitmapBattery75
+ .data.bitmapBattery100
+                0x008001a6        0xe Drv/DrvBitmap.o
+                0x008001a6                bitmapBattery100
+ .data.ButtonsPins
+                0x008001b4        0x1 Drv/DrvButton.o
+                0x008001b4                ButtonsPins
+ .data.LedsPins
+                0x008001b5        0x4 Drv/DrvLed.o
+                0x008001b5                LedsPins
+ .data.i2cPins  0x008001b9        0x2 Drv/DrvTwi.o
+                0x008001b9                i2cPins
+ .data.coreServices
+                0x008001bb       0x6c Srv/SrvCore.o
+                0x008001bb                coreServices
  .data.batteryLevel
-                0x008001ab        0x1 Srv/SrvDisplay.o
-                0x008001ab                batteryLevel
+                0x00800227        0x1 Srv/SrvDisplay.o
+                0x00800227                batteryLevel
  .data.heartBeatArray
-                0x008001ac        0x8 Srv/SrvIhm.o
-                0x008001ac                heartBeatArray
+                0x00800228        0x8 Srv/SrvHeartbeat.o
+                0x00800228                heartBeatArray
+ .data.legsZTab
+                0x00800230        0x6 Srv/SrvWalk.o
+                0x00800230                legsZTab
+ .data.legsYTab
+                0x00800236        0x6 Srv/SrvWalk.o
+                0x00800236                legsYTab
+ .data.legsXTab
+                0x0080023c        0x6 Srv/SrvWalk.o
+                0x0080023c                legsXTab
  *(.gnu.linkonce.d*)
  *(.rodata)
+ .rodata        0x00800242        0x6 Srv/SrvWalk.o
  *(.rodata*)
- .rodata.font   0x008001b4      0x1e0 Drv/DrvFont.o
-                0x008001b4                font
+ .rodata.font   0x00800248      0x1e0 Drv/DrvFont.o
+                0x00800248                font
  .rodata.ioTable
-                0x00800394       0xe0 Drv/DrvIo.o
+                0x00800428       0xe0 Drv/DrvIo.o
  .rodata.str1.1
-                0x00800474        0x6 Srv/SrvComm.o
+                0x00800508        0x6 Srv/SrvComm.o
  .rodata.str1.1
-                0x0080047a        0xc Srv/SrvDisplay.o
+                0x0080050e        0xc Srv/SrvDisplay.o
  *(.gnu.linkonce.r*)
-                0x00800486                . = ALIGN (0x2)
-                0x00800486                _edata = .
-                0x00800486                PROVIDE (__data_end, .)
+                0x0080051a                . = ALIGN (0x2)
+                0x0080051a                _edata = .
+                0x0080051a                PROVIDE (__data_end, .)
 
-.bss            0x00800486      0x87d
-                0x00800486                PROVIDE (__bss_start, .)
+.bss            0x0080051a      0x898
+                0x0080051a                PROVIDE (__bss_start, .)
  *(.bss)
  *(.bss*)
- .bss.gama      0x00800486        0x4 Drv/DrvLeg.o
- .bss.beta      0x0080048a        0x4 Drv/DrvLeg.o
- .bss.alpha2    0x0080048e        0x4 Drv/DrvLeg.o
- .bss.alpha1    0x00800492        0x4 Drv/DrvLeg.o
- .bss.alpha     0x00800496        0x4 Drv/DrvLeg.o
- .bss.L1        0x0080049a        0x4 Drv/DrvLeg.o
- .bss.L         0x0080049e        0x4 Drv/DrvLeg.o
- .bss.update    0x008004a2        0x1 Drv/DrvLeg.o
-                0x008004a2                update
- .bss.legs      0x008004a3       0x2a Drv/DrvLeg.o
- .bss.servos    0x008004cd      0x18c Drv/DrvServo.o
- .bss.data      0x00800659        0x1 Drv/DrvSpi.o
-                0x00800659                data
+ .bss.distance  0x0080051a        0x4 Cmps/CmpSRF04.o
+                0x0080051a                distance
+ .bss.timeoutEcho
+                0x0080051e        0x4 Cmps/CmpSRF04.o
+                0x0080051e                timeoutEcho
+ .bss.timeBeforeEchoStart
+                0x00800522        0x8 Cmps/CmpSRF04.o
+                0x00800522                timeBeforeEchoStart
+ .bss.statusEcho
+                0x0080052a        0x2 Cmps/CmpSRF04.o
+                0x0080052a                statusEcho
+ .bss.gama      0x0080052c        0x4 Drv/DrvLeg.o
+ .bss.beta      0x00800530        0x4 Drv/DrvLeg.o
+ .bss.alpha2    0x00800534        0x4 Drv/DrvLeg.o
+ .bss.alpha1    0x00800538        0x4 Drv/DrvLeg.o
+ .bss.alpha     0x0080053c        0x4 Drv/DrvLeg.o
+ .bss.L1        0x00800540        0x4 Drv/DrvLeg.o
+ .bss.L         0x00800544        0x4 Drv/DrvLeg.o
+ .bss.prevMillisServosUpdate
+                0x00800548        0x4 Drv/DrvLeg.o
+                0x00800548                prevMillisServosUpdate
+ .bss.update    0x0080054c        0x1 Drv/DrvLeg.o
+                0x0080054c                update
+ .bss.legs      0x0080054d       0x2a Drv/DrvLeg.o
+ .bss.servos    0x00800577      0x18c Drv/DrvServo.o
+ .bss.data      0x00800703        0x1 Drv/DrvSpi.o
+                0x00800703                data
  .bss.tickCounter
-                0x0080065a        0x4 Drv/DrvTick.o
+                0x00800704        0x4 Drv/DrvTick.o
  .bss.errorsCount
-                0x0080065e        0x2 Drv/DrvTwi.o
+                0x00800708        0x2 Drv/DrvTwi.o
  .bss.uartRingBuffer
-                0x00800660      0x400 Drv/DrvUart.o
- .bss.lastLoopTime
-                0x00800a60        0x4 main.o
-                0x00800a60                lastLoopTime
- .bss.status    0x00800a64        0x1 Srv/SrvComm.o
-                0x00800a64                status
+                0x0080070a      0x404 Drv/DrvUart.o
+ .bss.status    0x00800b0e        0x1 Srv/SrvComm.o
+                0x00800b0e                status
  .bss.nbDataAvailable
-                0x00800a65        0x2 Srv/SrvComm.o
-                0x00800a65                nbDataAvailable
+                0x00800b0f        0x2 Srv/SrvComm.o
+                0x00800b0f                nbDataAvailable
  .bss.initStepDisplay
-                0x00800a67        0x1 Srv/SrvDisplay.o
-                0x00800a67                initStepDisplay
+                0x00800b11        0x1 Srv/SrvDisplay.o
+                0x00800b11                initStepDisplay
  .bss.toggleBatteryLogo
-                0x00800a68        0x1 Srv/SrvDisplay.o
-                0x00800a68                toggleBatteryLogo
+                0x00800b12        0x1 Srv/SrvDisplay.o
+                0x00800b12                toggleBatteryLogo
  .bss.tempPercentage
-                0x00800a69        0x1 Srv/SrvDisplay.o
-                0x00800a69                tempPercentage
+                0x00800b13        0x1 Srv/SrvDisplay.o
+                0x00800b13                tempPercentage
  .bss.prevMillisDisplay
-                0x00800a6a        0x4 Srv/SrvDisplay.o
-                0x00800a6a                prevMillisDisplay
+                0x00800b14        0x4 Srv/SrvDisplay.o
+                0x00800b14                prevMillisDisplay
+ .bss.prevMillisUpdateDisplay
+                0x00800b18        0x4 Srv/SrvDisplay.o
+                0x00800b18                prevMillisUpdateDisplay
+ .bss.feelingSet
+                0x00800b1c        0x1 Srv/SrvFeeling.o
+                0x00800b1c                feelingSet
+ .bss.prevMillisFeeling
+                0x00800b1d        0x4 Srv/SrvFeeling.o
+                0x00800b1d                prevMillisFeeling
  .bss.prevMillisHeartBeat
-                0x00800a6e        0x4 Srv/SrvIhm.o
-                0x00800a6e                prevMillisHeartBeat
+                0x00800b21        0x4 Srv/SrvHeartbeat.o
+                0x00800b21                prevMillisHeartBeat
  .bss.heartbeatIndex
-                0x00800a72        0x1 Srv/SrvIhm.o
-                0x00800a72                heartbeatIndex
- .bss.walk      0x00800a73        0x1 Srv/SrvWalk.o
+                0x00800b25        0x1 Srv/SrvHeartbeat.o
+                0x00800b25                heartbeatIndex
+ .bss.usToggle  0x00800b26        0x1 Srv/SrvUltrason.o
+                0x00800b26                usToggle
+ .bss.prevMillisUpdateUltrason
+                0x00800b27        0x4 Srv/SrvUltrason.o
+                0x00800b27                prevMillisUpdateUltrason
+ .bss.movingLeg.2655
+                0x00800b2b        0x1 Srv/SrvWalk.o
+ .bss.movingLegIndex
+                0x00800b2c        0x1 Srv/SrvWalk.o
+                0x00800b2c                movingLegIndex
+ .bss.initStepGaits
+                0x00800b2d        0x1 Srv/SrvWalk.o
+                0x00800b2d                initStepGaits
+ .bss.updateLeg
+                0x00800b2e        0x1 Srv/SrvWalk.o
+                0x00800b2e                updateLeg
  *(COMMON)
- COMMON         0x00800a74        0x2 Drv/DrvAdc.o
-                0x00800a74                adc
- COMMON         0x00800a76        0x5 Drv/DrvButton.o
-                0x00800a76                MesButtons
- COMMON         0x00800a7b       0x2c Drv/DrvLed.o
-                0x00800a7b                MesLeds
- COMMON         0x00800aa7      0x200 Drv/DrvSSD1306.o
-                0x00800aa7                bufferScreen
- COMMON         0x00800ca7       0x24 Drv/DrvTimer.o
-                0x00800ca7                MesTimers
- COMMON         0x00800ccb        0xc main.o
-                0x00800ccb                Body
- COMMON         0x00800cd7        0x3 Srv/SrvBattery.o
-                0x00800cd7                batteryPercentage
-                0x00800cd9                level
- COMMON         0x00800cda       0x15 Srv/SrvComm.o
-                0x00800cda                inMessage
- COMMON         0x00800cef        0x1 Srv/SrvDisplay.o
-                0x00800cef                direction
- COMMON         0x00800cf0       0x13 Srv/SrvWalk.o
-                0x00800cf0                gaits
-                0x00800cf1                stepLeg
-                0x00800d03                PROVIDE (__bss_end, .)
-                0x0000388c                __data_load_start = LOADADDR (.data)
-                0x00003c12                __data_load_end = (__data_load_start + SIZEOF (.data))
+ COMMON         0x00800b2f        0x2 Cmps/CmpSRF04.o
+                0x00800b2f                levelPin
+ COMMON         0x00800b31      0x200 Cmps/CmpSSD1306.o
+                0x00800b31                bufferScreen
+ COMMON         0x00800d31        0x2 Drv/DrvAdc.o
+                0x00800d31                adc
+ COMMON         0x00800d33        0x5 Drv/DrvButton.o
+                0x00800d33                MesButtons
+ COMMON         0x00800d38       0x2c Drv/DrvLed.o
+                0x00800d38                MesLeds
+ COMMON         0x00800d64       0x12 Drv/DrvTimer.o
+                0x00800d64                MesTimers
+ COMMON         0x00800d76        0x3 Srv/SrvBattery.o
+                0x00800d76                batteryPercentage
+                0x00800d78                level
+ COMMON         0x00800d79        0xc Srv/SrvBody.o
+                0x00800d79                Body
+ COMMON         0x00800d85       0x15 Srv/SrvComm.o
+                0x00800d85                inMessage
+ COMMON         0x00800d9a        0x1 Srv/SrvDisplay.o
+                0x00800d9a                direction
+ COMMON         0x00800d9b        0x1 Srv/SrvFeeling.o
+                0x00800d9b                feel
+ COMMON         0x00800d9c       0x16 Srv/SrvWalk.o
+                0x00800d9c                walking
+                0x00800d9d                walkingDelay
+                0x00800d9f                gaiting
+                0x00800da0                stepLeg
+                0x00800db2                PROVIDE (__bss_end, .)
+                0x0000479a                __data_load_start = LOADADDR (.data)
+                0x00004bb4                __data_load_end = (__data_load_start + SIZEOF (.data))
 
-.noinit         0x00800d03        0x0
+.noinit         0x00800db2        0x0
                 [!provide]                PROVIDE (__noinit_start, .)
  *(.noinit*)
                 [!provide]                PROVIDE (__noinit_end, .)
-                0x00800d03                _end = .
+                0x00800db2                _end = .
                 [!provide]                PROVIDE (__heap_start, .)
 
 .eeprom         0x00810000        0x0
@@ -2981,6 +3398,8 @@ END GROUP
  *(.comment)
  .comment       0x00000000       0x30 Cmps/CmpPCA9685.o
                                  0x31 (size before relaxing)
+ .comment       0x00000030       0x31 Cmps/CmpSRF04.o
+ .comment       0x00000030       0x31 Cmps/CmpSSD1306.o
  .comment       0x00000030       0x31 Drv/DrvAdc.o
  .comment       0x00000030       0x31 Drv/DrvBitmap.o
  .comment       0x00000030       0x31 Drv/DrvButton.o
@@ -2991,7 +3410,6 @@ END GROUP
  .comment       0x00000030       0x31 Drv/DrvLeg.o
  .comment       0x00000030       0x31 Drv/DrvServo.o
  .comment       0x00000030       0x31 Drv/DrvSpi.o
- .comment       0x00000030       0x31 Drv/DrvSSD1306.o
  .comment       0x00000030       0x31 Drv/DrvTick.o
  .comment       0x00000030       0x31 Drv/DrvTimer.o
  .comment       0x00000030       0x31 Drv/DrvTwi.o
@@ -3000,8 +3418,12 @@ END GROUP
  .comment       0x00000030       0x31 Srv/SrvBattery.o
  .comment       0x00000030       0x31 Srv/SrvBody.o
  .comment       0x00000030       0x31 Srv/SrvComm.o
+ .comment       0x00000030       0x31 Srv/SrvCore.o
  .comment       0x00000030       0x31 Srv/SrvDisplay.o
+ .comment       0x00000030       0x31 Srv/SrvFeeling.o
+ .comment       0x00000030       0x31 Srv/SrvHeartbeat.o
  .comment       0x00000030       0x31 Srv/SrvIhm.o
+ .comment       0x00000030       0x31 Srv/SrvUltrason.o
  .comment       0x00000030       0x31 Srv/SrvWalk.o
 
 .note.gnu.avr.deviceinfo
@@ -3024,247 +3446,292 @@ END GROUP
 .debug_sfnames
  *(.debug_sfnames)
 
-.debug_aranges  0x00000000      0x738
+.debug_aranges  0x00000000      0x800
  *(.debug_aranges)
  .debug_aranges
                 0x00000000       0x40 Cmps/CmpPCA9685.o
  .debug_aranges
-                0x00000040       0x28 Drv/DrvAdc.o
+                0x00000040       0x38 Cmps/CmpSRF04.o
  .debug_aranges
-                0x00000068       0x28 Drv/DrvBitmap.o
+                0x00000078       0x88 Cmps/CmpSSD1306.o
  .debug_aranges
-                0x00000090       0x40 Drv/DrvButton.o
+                0x00000100       0x28 Drv/DrvAdc.o
  .debug_aranges
-                0x000000d0       0xf0 Drv/DrvEeprom.o
+                0x00000128       0x30 Drv/DrvBitmap.o
  .debug_aranges
-                0x000001c0       0x18 Drv/DrvFont.o
+                0x00000158       0x40 Drv/DrvButton.o
  .debug_aranges
-                0x000001d8       0x50 Drv/DrvIo.o
+                0x00000198       0x80 Drv/DrvEeprom.o
  .debug_aranges
-                0x00000228       0x68 Drv/DrvLed.o
+                0x00000218       0x18 Drv/DrvFont.o
  .debug_aranges
-                0x00000290       0x40 Drv/DrvLeg.o
+                0x00000230       0x50 Drv/DrvIo.o
  .debug_aranges
-                0x000002d0       0x50 Drv/DrvServo.o
+                0x00000280       0x68 Drv/DrvLed.o
  .debug_aranges
-                0x00000320       0x38 Drv/DrvSpi.o
+                0x000002e8       0x48 Drv/DrvLeg.o
  .debug_aranges
-                0x00000358       0x88 Drv/DrvSSD1306.o
+                0x00000330       0x50 Drv/DrvServo.o
  .debug_aranges
-                0x000003e0       0x50 Drv/DrvTick.o
+                0x00000380       0x38 Drv/DrvSpi.o
  .debug_aranges
-                0x00000430       0x58 Drv/DrvTimer.o
+                0x000003b8       0x50 Drv/DrvTick.o
  .debug_aranges
-                0x00000488       0x58 Drv/DrvTwi.o
+                0x00000408       0x58 Drv/DrvTimer.o
  .debug_aranges
-                0x000004e0       0x78 Drv/DrvUart.o
+                0x00000460       0x58 Drv/DrvTwi.o
  .debug_aranges
-                0x00000558       0x20 main.o
+                0x000004b8       0x78 Drv/DrvUart.o
  .debug_aranges
-                0x00000578       0x38 Srv/SrvBattery.o
+                0x00000530       0x20 main.o
  .debug_aranges
-                0x000005b0       0x28 Srv/SrvBody.o
+                0x00000550       0x38 Srv/SrvBattery.o
  .debug_aranges
-                0x000005d8       0x38 Srv/SrvComm.o
+                0x00000588       0x40 Srv/SrvBody.o
  .debug_aranges
-                0x00000610       0x58 Srv/SrvDisplay.o
+                0x000005c8       0x38 Srv/SrvComm.o
  .debug_aranges
-                0x00000668       0x58 Srv/SrvIhm.o
+                0x00000600       0x30 Srv/SrvCore.o
  .debug_aranges
-                0x000006c0       0x38 Srv/SrvWalk.o
+                0x00000630       0x70 Srv/SrvDisplay.o
  .debug_aranges
-                0x000006f8       0x20 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega1284p/avr51\libatmega1284p.a(eerd_byte.o)
+                0x000006a0       0x30 Srv/SrvFeeling.o
  .debug_aranges
-                0x00000718       0x20 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega1284p/avr51\libatmega1284p.a(eewr_byte.o)
+                0x000006d0       0x40 Srv/SrvHeartbeat.o
+ .debug_aranges
+                0x00000710       0x40 Srv/SrvIhm.o
+ .debug_aranges
+                0x00000750       0x30 Srv/SrvUltrason.o
+ .debug_aranges
+                0x00000780       0x40 Srv/SrvWalk.o
+ .debug_aranges
+                0x000007c0       0x20 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega1284p/avr51\libatmega1284p.a(eerd_byte.o)
+ .debug_aranges
+                0x000007e0       0x20 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega1284p/avr51\libatmega1284p.a(eewr_byte.o)
 
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000     0x8807
+.debug_info     0x00000000     0x935f
  *(.debug_info .gnu.linkonce.wi.*)
  .debug_info    0x00000000      0x792 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega1284p/avr51/crtatmega1284p.o
- .debug_info    0x00000792      0x4b6 Cmps/CmpPCA9685.o
- .debug_info    0x00000c48      0x275 Drv/DrvAdc.o
- .debug_info    0x00000ebd      0x262 Drv/DrvBitmap.o
- .debug_info    0x0000111f      0x472 Drv/DrvButton.o
- .debug_info    0x00001591     0x1142 Drv/DrvEeprom.o
- .debug_info    0x000026d3       0xa8 Drv/DrvFont.o
- .debug_info    0x0000277b      0x3bc Drv/DrvIo.o
- .debug_info    0x00002b37      0x671 Drv/DrvLed.o
- .debug_info    0x000031a8      0x628 Drv/DrvLeg.o
- .debug_info    0x000037d0      0x644 Drv/DrvServo.o
- .debug_info    0x00003e14      0x27d Drv/DrvSpi.o
- .debug_info    0x00004091      0xd01 Drv/DrvSSD1306.o
- .debug_info    0x00004d92      0x23d Drv/DrvTick.o
- .debug_info    0x00004fcf      0x3b6 Drv/DrvTimer.o
- .debug_info    0x00005385      0x5cf Drv/DrvTwi.o
- .debug_info    0x00005954      0x444 Drv/DrvUart.o
- .debug_info    0x00005d98      0x534 main.o
- .debug_info    0x000062cc      0x293 Srv/SrvBattery.o
- .debug_info    0x0000655f      0x311 Srv/SrvBody.o
- .debug_info    0x00006870      0xc57 Srv/SrvComm.o
- .debug_info    0x000074c7      0x79f Srv/SrvDisplay.o
- .debug_info    0x00007c66      0x536 Srv/SrvIhm.o
- .debug_info    0x0000819c      0x50f Srv/SrvWalk.o
- .debug_info    0x000086ab       0xae C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega1284p/avr51\libatmega1284p.a(eerd_byte.o)
- .debug_info    0x00008759       0xae C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega1284p/avr51\libatmega1284p.a(eewr_byte.o)
+ .debug_info    0x00000792      0x452 Cmps/CmpPCA9685.o
+ .debug_info    0x00000be4      0x50f Cmps/CmpSRF04.o
+ .debug_info    0x000010f3      0xd01 Cmps/CmpSSD1306.o
+ .debug_info    0x00001df4      0x275 Drv/DrvAdc.o
+ .debug_info    0x00002069      0x29e Drv/DrvBitmap.o
+ .debug_info    0x00002307      0x466 Drv/DrvButton.o
+ .debug_info    0x0000276d      0x601 Drv/DrvEeprom.o
+ .debug_info    0x00002d6e       0xb3 Drv/DrvFont.o
+ .debug_info    0x00002e21      0x3bc Drv/DrvIo.o
+ .debug_info    0x000031dd      0x665 Drv/DrvLed.o
+ .debug_info    0x00003842      0x78d Drv/DrvLeg.o
+ .debug_info    0x00003fcf      0x616 Drv/DrvServo.o
+ .debug_info    0x000045e5      0x27d Drv/DrvSpi.o
+ .debug_info    0x00004862      0x24c Drv/DrvTick.o
+ .debug_info    0x00004aae      0x3ae Drv/DrvTimer.o
+ .debug_info    0x00004e5c      0x5cf Drv/DrvTwi.o
+ .debug_info    0x0000542b      0x43d Drv/DrvUart.o
+ .debug_info    0x00005868      0x13e main.o
+ .debug_info    0x000059a6      0x293 Srv/SrvBattery.o
+ .debug_info    0x00005c39      0x4f6 Srv/SrvBody.o
+ .debug_info    0x0000612f      0xe6b Srv/SrvComm.o
+ .debug_info    0x00006f9a      0x4db Srv/SrvCore.o
+ .debug_info    0x00007475      0xa24 Srv/SrvDisplay.o
+ .debug_info    0x00007e99      0x1dc Srv/SrvFeeling.o
+ .debug_info    0x00008075      0x244 Srv/SrvHeartbeat.o
+ .debug_info    0x000082b9      0x2fb Srv/SrvIhm.o
+ .debug_info    0x000085b4      0x325 Srv/SrvUltrason.o
+ .debug_info    0x000088d9      0x92a Srv/SrvWalk.o
+ .debug_info    0x00009203       0xae C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega1284p/avr51\libatmega1284p.a(eerd_byte.o)
+ .debug_info    0x000092b1       0xae C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega1284p/avr51\libatmega1284p.a(eewr_byte.o)
 
-.debug_abbrev   0x00000000     0x288b
+.debug_abbrev   0x00000000     0x2e56
  *(.debug_abbrev)
  .debug_abbrev  0x00000000      0x729 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega1284p/avr51/crtatmega1284p.o
  .debug_abbrev  0x00000729      0x12e Cmps/CmpPCA9685.o
- .debug_abbrev  0x00000857       0xfd Drv/DrvAdc.o
- .debug_abbrev  0x00000954       0xe7 Drv/DrvBitmap.o
- .debug_abbrev  0x00000a3b      0x158 Drv/DrvButton.o
- .debug_abbrev  0x00000b93      0x218 Drv/DrvEeprom.o
- .debug_abbrev  0x00000dab       0x53 Drv/DrvFont.o
- .debug_abbrev  0x00000dfe      0x11a Drv/DrvIo.o
- .debug_abbrev  0x00000f18      0x165 Drv/DrvLed.o
- .debug_abbrev  0x0000107d      0x1f7 Drv/DrvLeg.o
- .debug_abbrev  0x00001274      0x23e Drv/DrvServo.o
- .debug_abbrev  0x000014b2      0x10e Drv/DrvSpi.o
- .debug_abbrev  0x000015c0      0x25e Drv/DrvSSD1306.o
- .debug_abbrev  0x0000181e      0x121 Drv/DrvTick.o
- .debug_abbrev  0x0000193f      0x14a Drv/DrvTimer.o
- .debug_abbrev  0x00001a89      0x175 Drv/DrvTwi.o
- .debug_abbrev  0x00001bfe      0x122 Drv/DrvUart.o
- .debug_abbrev  0x00001d20      0x178 main.o
- .debug_abbrev  0x00001e98       0xe9 Srv/SrvBattery.o
- .debug_abbrev  0x00001f81      0x14e Srv/SrvBody.o
- .debug_abbrev  0x000020cf      0x2ce Srv/SrvComm.o
- .debug_abbrev  0x0000239d      0x235 Srv/SrvDisplay.o
- .debug_abbrev  0x000025d2      0x117 Srv/SrvIhm.o
- .debug_abbrev  0x000026e9      0x17a Srv/SrvWalk.o
- .debug_abbrev  0x00002863       0x14 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega1284p/avr51\libatmega1284p.a(eerd_byte.o)
- .debug_abbrev  0x00002877       0x14 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega1284p/avr51\libatmega1284p.a(eewr_byte.o)
+ .debug_abbrev  0x00000857      0x150 Cmps/CmpSRF04.o
+ .debug_abbrev  0x000009a7      0x25e Cmps/CmpSSD1306.o
+ .debug_abbrev  0x00000c05       0xfd Drv/DrvAdc.o
+ .debug_abbrev  0x00000d02       0xe7 Drv/DrvBitmap.o
+ .debug_abbrev  0x00000de9      0x158 Drv/DrvButton.o
+ .debug_abbrev  0x00000f41      0x1ae Drv/DrvEeprom.o
+ .debug_abbrev  0x000010ef       0x60 Drv/DrvFont.o
+ .debug_abbrev  0x0000114f      0x11a Drv/DrvIo.o
+ .debug_abbrev  0x00001269      0x165 Drv/DrvLed.o
+ .debug_abbrev  0x000013ce      0x1f7 Drv/DrvLeg.o
+ .debug_abbrev  0x000015c5      0x242 Drv/DrvServo.o
+ .debug_abbrev  0x00001807      0x10e Drv/DrvSpi.o
+ .debug_abbrev  0x00001915      0x123 Drv/DrvTick.o
+ .debug_abbrev  0x00001a38      0x166 Drv/DrvTimer.o
+ .debug_abbrev  0x00001b9e      0x175 Drv/DrvTwi.o
+ .debug_abbrev  0x00001d13      0x122 Drv/DrvUart.o
+ .debug_abbrev  0x00001e35       0xb7 main.o
+ .debug_abbrev  0x00001eec       0xe9 Srv/SrvBattery.o
+ .debug_abbrev  0x00001fd5      0x1a6 Srv/SrvBody.o
+ .debug_abbrev  0x0000217b      0x2c9 Srv/SrvComm.o
+ .debug_abbrev  0x00002444      0x187 Srv/SrvCore.o
+ .debug_abbrev  0x000025cb      0x283 Srv/SrvDisplay.o
+ .debug_abbrev  0x0000284e      0x100 Srv/SrvFeeling.o
+ .debug_abbrev  0x0000294e      0x12f Srv/SrvHeartbeat.o
+ .debug_abbrev  0x00002a7d       0xe9 Srv/SrvIhm.o
+ .debug_abbrev  0x00002b66      0x10b Srv/SrvUltrason.o
+ .debug_abbrev  0x00002c71      0x1bd Srv/SrvWalk.o
+ .debug_abbrev  0x00002e2e       0x14 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega1284p/avr51\libatmega1284p.a(eerd_byte.o)
+ .debug_abbrev  0x00002e42       0x14 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega1284p/avr51\libatmega1284p.a(eewr_byte.o)
 
-.debug_line     0x00000000     0x89a4
+.debug_line     0x00000000     0xa331
  *(.debug_line .debug_line.* .debug_line_end)
  .debug_line    0x00000000      0x169 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega1284p/avr51/crtatmega1284p.o
- .debug_line    0x00000169      0x53d Cmps/CmpPCA9685.o
- .debug_line    0x000006a6      0x486 Drv/DrvAdc.o
- .debug_line    0x00000b2c      0x498 Drv/DrvBitmap.o
- .debug_line    0x00000fc4      0x51d Drv/DrvButton.o
- .debug_line    0x000014e1      0x82c Drv/DrvEeprom.o
- .debug_line    0x00001d0d      0x3b2 Drv/DrvFont.o
- .debug_line    0x000020bf      0x519 Drv/DrvIo.o
- .debug_line    0x000025d8      0x62a Drv/DrvLed.o
- .debug_line    0x00002c02      0x7af Drv/DrvLeg.o
- .debug_line    0x000033b1      0x68a Drv/DrvServo.o
- .debug_line    0x00003a3b      0x45d Drv/DrvSpi.o
- .debug_line    0x00003e98      0x837 Drv/DrvSSD1306.o
- .debug_line    0x000046cf      0x500 Drv/DrvTick.o
- .debug_line    0x00004bcf      0x594 Drv/DrvTimer.o
- .debug_line    0x00005163      0x875 Drv/DrvTwi.o
- .debug_line    0x000059d8      0x61a Drv/DrvUart.o
- .debug_line    0x00005ff2      0x6a1 main.o
- .debug_line    0x00006693      0x4b8 Srv/SrvBattery.o
- .debug_line    0x00006b4b      0x49a Srv/SrvBody.o
- .debug_line    0x00006fe5      0x75a Srv/SrvComm.o
- .debug_line    0x0000773f      0x69d Srv/SrvDisplay.o
- .debug_line    0x00007ddc      0x5b5 Srv/SrvIhm.o
- .debug_line    0x00008391      0x4fb Srv/SrvWalk.o
- .debug_line    0x0000888c       0x7a C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega1284p/avr51\libatmega1284p.a(eerd_byte.o)
- .debug_line    0x00008906       0x9e C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega1284p/avr51\libatmega1284p.a(eewr_byte.o)
+ .debug_line    0x00000169      0x530 Cmps/CmpPCA9685.o
+ .debug_line    0x00000699      0x537 Cmps/CmpSRF04.o
+ .debug_line    0x00000bd0      0x83f Cmps/CmpSSD1306.o
+ .debug_line    0x0000140f      0x486 Drv/DrvAdc.o
+ .debug_line    0x00001895      0x4bb Drv/DrvBitmap.o
+ .debug_line    0x00001d50      0x51d Drv/DrvButton.o
+ .debug_line    0x0000226d      0x564 Drv/DrvEeprom.o
+ .debug_line    0x000027d1      0x3b2 Drv/DrvFont.o
+ .debug_line    0x00002b83      0x519 Drv/DrvIo.o
+ .debug_line    0x0000309c      0x62a Drv/DrvLed.o
+ .debug_line    0x000036c6      0x800 Drv/DrvLeg.o
+ .debug_line    0x00003ec6      0x67d Drv/DrvServo.o
+ .debug_line    0x00004543      0x45d Drv/DrvSpi.o
+ .debug_line    0x000049a0      0x506 Drv/DrvTick.o
+ .debug_line    0x00004ea6      0x582 Drv/DrvTimer.o
+ .debug_line    0x00005428      0x875 Drv/DrvTwi.o
+ .debug_line    0x00005c9d      0x61a Drv/DrvUart.o
+ .debug_line    0x000062b7      0x418 main.o
+ .debug_line    0x000066cf      0x4b2 Srv/SrvBattery.o
+ .debug_line    0x00006b81      0x569 Srv/SrvBody.o
+ .debug_line    0x000070ea      0x7e0 Srv/SrvComm.o
+ .debug_line    0x000078ca      0x681 Srv/SrvCore.o
+ .debug_line    0x00007f4b      0x7a9 Srv/SrvDisplay.o
+ .debug_line    0x000086f4      0x4af Srv/SrvFeeling.o
+ .debug_line    0x00008ba3      0x4ea Srv/SrvHeartbeat.o
+ .debug_line    0x0000908d      0x51f Srv/SrvIhm.o
+ .debug_line    0x000095ac      0x501 Srv/SrvUltrason.o
+ .debug_line    0x00009aad      0x76c Srv/SrvWalk.o
+ .debug_line    0x0000a219       0x7a C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega1284p/avr51\libatmega1284p.a(eerd_byte.o)
+ .debug_line    0x0000a293       0x9e C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega1284p/avr51\libatmega1284p.a(eewr_byte.o)
 
-.debug_frame    0x00000000     0x134c
+.debug_frame    0x00000000     0x158c
  *(.debug_frame)
- .debug_frame   0x00000000       0xb0 Cmps/CmpPCA9685.o
- .debug_frame   0x000000b0       0x34 Drv/DrvAdc.o
- .debug_frame   0x000000e4       0x34 Drv/DrvBitmap.o
- .debug_frame   0x00000118       0x64 Drv/DrvButton.o
- .debug_frame   0x0000017c      0x2cc Drv/DrvEeprom.o
- .debug_frame   0x00000448       0x84 Drv/DrvIo.o
- .debug_frame   0x000004cc       0xd8 Drv/DrvLed.o
- .debug_frame   0x000005a4       0xe8 Drv/DrvLeg.o
- .debug_frame   0x0000068c      0x100 Drv/DrvServo.o
- .debug_frame   0x0000078c       0x64 Drv/DrvSpi.o
- .debug_frame   0x000007f0      0x324 Drv/DrvSSD1306.o
- .debug_frame   0x00000b14       0xb8 Drv/DrvTick.o
- .debug_frame   0x00000bcc       0xf4 Drv/DrvTimer.o
- .debug_frame   0x00000cc0      0x18c Drv/DrvTwi.o
- .debug_frame   0x00000e4c      0x16c Drv/DrvUart.o
- .debug_frame   0x00000fb8       0x24 main.o
- .debug_frame   0x00000fdc       0x54 Srv/SrvBattery.o
- .debug_frame   0x00001030       0x44 Srv/SrvBody.o
- .debug_frame   0x00001074       0xac Srv/SrvComm.o
- .debug_frame   0x00001120      0x118 Srv/SrvDisplay.o
- .debug_frame   0x00001238       0xb4 Srv/SrvIhm.o
- .debug_frame   0x000012ec       0x60 Srv/SrvWalk.o
+ .debug_frame   0x00000000       0xa0 Cmps/CmpPCA9685.o
+ .debug_frame   0x000000a0      0x12c Cmps/CmpSRF04.o
+ .debug_frame   0x000001cc      0x324 Cmps/CmpSSD1306.o
+ .debug_frame   0x000004f0       0x34 Drv/DrvAdc.o
+ .debug_frame   0x00000524       0x44 Drv/DrvBitmap.o
+ .debug_frame   0x00000568       0x64 Drv/DrvButton.o
+ .debug_frame   0x000005cc      0x114 Drv/DrvEeprom.o
+ .debug_frame   0x000006e0       0x84 Drv/DrvIo.o
+ .debug_frame   0x00000764       0xd8 Drv/DrvLed.o
+ .debug_frame   0x0000083c      0x148 Drv/DrvLeg.o
+ .debug_frame   0x00000984       0xe4 Drv/DrvServo.o
+ .debug_frame   0x00000a68       0x64 Drv/DrvSpi.o
+ .debug_frame   0x00000acc       0xb8 Drv/DrvTick.o
+ .debug_frame   0x00000b84       0xf4 Drv/DrvTimer.o
+ .debug_frame   0x00000c78      0x18c Drv/DrvTwi.o
+ .debug_frame   0x00000e04      0x16c Drv/DrvUart.o
+ .debug_frame   0x00000f70       0x24 main.o
+ .debug_frame   0x00000f94       0x54 Srv/SrvBattery.o
+ .debug_frame   0x00000fe8       0x7c Srv/SrvBody.o
+ .debug_frame   0x00001064       0xac Srv/SrvComm.o
+ .debug_frame   0x00001110       0x88 Srv/SrvCore.o
+ .debug_frame   0x00001198      0x190 Srv/SrvDisplay.o
+ .debug_frame   0x00001328       0x68 Srv/SrvFeeling.o
+ .debug_frame   0x00001390       0x84 Srv/SrvHeartbeat.o
+ .debug_frame   0x00001414       0x64 Srv/SrvIhm.o
+ .debug_frame   0x00001478       0x50 Srv/SrvUltrason.o
+ .debug_frame   0x000014c8       0xc4 Srv/SrvWalk.o
 
-.debug_str      0x00000000     0xff1c
+.debug_str      0x00000000    0x1002b
  *(.debug_str)
  .debug_str     0x00000000      0x296 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega1284p/avr51/crtatmega1284p.o
- .debug_str     0x00000296     0xc583 Cmps/CmpPCA9685.o
-                               0xc7ca (size before relaxing)
- .debug_str     0x0000c819      0x239 Drv/DrvAdc.o
-                               0xc780 (size before relaxing)
- .debug_str     0x0000ca52      0x172 Drv/DrvBitmap.o
-                               0xc6c1 (size before relaxing)
- .debug_str     0x0000cbc4      0x29b Drv/DrvButton.o
-                               0xc9a8 (size before relaxing)
- .debug_str     0x0000ce5f      0x80e Drv/DrvEeprom.o
-                               0xcd8f (size before relaxing)
- .debug_str     0x0000d66d       0x22 Drv/DrvFont.o
-                               0xc562 (size before relaxing)
- .debug_str     0x0000d68f       0xa4 Drv/DrvIo.o
-                               0xc7e7 (size before relaxing)
- .debug_str     0x0000d733      0x1a7 Drv/DrvLed.o
-                               0xc984 (size before relaxing)
- .debug_str     0x0000d8da      0xde0 Drv/DrvLeg.o
-                               0xd33c (size before relaxing)
- .debug_str     0x0000e6ba      0x11a Drv/DrvServo.o
-                               0xc9e3 (size before relaxing)
- .debug_str     0x0000e7d4      0x11c Drv/DrvSpi.o
-                               0xc838 (size before relaxing)
- .debug_str     0x0000e8f0      0x60c Drv/DrvSSD1306.o
-                               0xcc10 (size before relaxing)
- .debug_str     0x0000eefc       0xab Drv/DrvTick.o
-                               0xc616 (size before relaxing)
- .debug_str     0x0000efa7      0x18b Drv/DrvTimer.o
-                               0xc798 (size before relaxing)
- .debug_str     0x0000f132      0x3dc Drv/DrvTwi.o
-                               0xcba1 (size before relaxing)
- .debug_str     0x0000f50e      0x1fe Drv/DrvUart.o
-                               0xc824 (size before relaxing)
- .debug_str     0x0000f70c      0x2f2 main.o
-                               0xd185 (size before relaxing)
- .debug_str     0x0000f9fe       0xb3 Srv/SrvBattery.o
-                               0xc803 (size before relaxing)
- .debug_str     0x0000fab1       0x2b Srv/SrvBody.o
-                               0xc87c (size before relaxing)
- .debug_str     0x0000fadc      0x158 Srv/SrvComm.o
-                               0xcc55 (size before relaxing)
- .debug_str     0x0000fc34      0x147 Srv/SrvDisplay.o
-                               0xcd11 (size before relaxing)
- .debug_str     0x0000fd7b       0x8d Srv/SrvIhm.o
-                               0xc8a1 (size before relaxing)
- .debug_str     0x0000fe08      0x114 Srv/SrvWalk.o
-                               0xc8a7 (size before relaxing)
+ .debug_str     0x00000296     0xc5c4 Cmps/CmpPCA9685.o
+                               0xc80b (size before relaxing)
+ .debug_str     0x0000c85a      0x3da Cmps/CmpSRF04.o
+                               0xc973 (size before relaxing)
+ .debug_str     0x0000cc34      0x668 Cmps/CmpSSD1306.o
+                               0xcc5d (size before relaxing)
+ .debug_str     0x0000d29c       0x6a Drv/DrvAdc.o
+                               0xc7cc (size before relaxing)
+ .debug_str     0x0000d306      0x165 Drv/DrvBitmap.o
+                               0xc741 (size before relaxing)
+ .debug_str     0x0000d46b      0x239 Drv/DrvButton.o
+                               0xc9d8 (size before relaxing)
+ .debug_str     0x0000d6a4      0x274 Drv/DrvEeprom.o
+                               0xc83b (size before relaxing)
+ .debug_str     0x0000d918       0x11 Drv/DrvFont.o
+                               0xc5b6 (size before relaxing)
+ .debug_str     0x0000d929       0x6c Drv/DrvIo.o
+                               0xc833 (size before relaxing)
+ .debug_str     0x0000d995      0x1a7 Drv/DrvLed.o
+                               0xc9b4 (size before relaxing)
+ .debug_str     0x0000db3c      0xe4d Drv/DrvLeg.o
+                               0xd401 (size before relaxing)
+ .debug_str     0x0000e989       0xed Drv/DrvServo.o
+                               0xca20 (size before relaxing)
+ .debug_str     0x0000ea76      0x11c Drv/DrvSpi.o
+                               0xc884 (size before relaxing)
+ .debug_str     0x0000eb92       0x8b Drv/DrvTick.o
+                               0xc66a (size before relaxing)
+ .debug_str     0x0000ec1d      0x18b Drv/DrvTimer.o
+                               0xc7c8 (size before relaxing)
+ .debug_str     0x0000eda8      0x3e7 Drv/DrvTwi.o
+                               0xcbed (size before relaxing)
+ .debug_str     0x0000f18f      0x1fe Drv/DrvUart.o
+                               0xc870 (size before relaxing)
+ .debug_str     0x0000f38d       0x40 main.o
+                               0xc5c6 (size before relaxing)
+ .debug_str     0x0000f3cd       0xe2 Srv/SrvBattery.o
+                               0xc84f (size before relaxing)
+ .debug_str     0x0000f4af      0x1c3 Srv/SrvBody.o
+                               0xd477 (size before relaxing)
+ .debug_str     0x0000f672      0x32b Srv/SrvComm.o
+                               0xd8b5 (size before relaxing)
+ .debug_str     0x0000f99d      0x167 Srv/SrvCore.o
+                               0xd85d (size before relaxing)
+ .debug_str     0x0000fb04      0x1da Srv/SrvDisplay.o
+                               0xce68 (size before relaxing)
+ .debug_str     0x0000fcde       0xbd Srv/SrvFeeling.o
+                               0xc692 (size before relaxing)
+ .debug_str     0x0000fd9b       0x86 Srv/SrvHeartbeat.o
+                               0xc6dd (size before relaxing)
+ .debug_str     0x0000fe21       0x6c Srv/SrvIhm.o
+                               0xc8b0 (size before relaxing)
+ .debug_str     0x0000fe8d       0x87 Srv/SrvUltrason.o
+                               0xc764 (size before relaxing)
+ .debug_str     0x0000ff14      0x117 Srv/SrvWalk.o
+                               0xd3bd (size before relaxing)
 
-.debug_loc      0x00000000     0x5aca
+.debug_loc      0x00000000     0x5be0
  *(.debug_loc)
- .debug_loc     0x00000000      0x55e Cmps/CmpPCA9685.o
- .debug_loc     0x0000055e       0x21 Drv/DrvAdc.o
- .debug_loc     0x0000057f      0x150 Drv/DrvBitmap.o
- .debug_loc     0x000006cf      0x163 Drv/DrvButton.o
- .debug_loc     0x00000832     0x1004 Drv/DrvEeprom.o
- .debug_loc     0x00001836      0x29b Drv/DrvIo.o
- .debug_loc     0x00001ad1      0x299 Drv/DrvLed.o
- .debug_loc     0x00001d6a      0x42b Drv/DrvLeg.o
- .debug_loc     0x00002195      0x58d Drv/DrvServo.o
- .debug_loc     0x00002722       0x5b Drv/DrvSpi.o
- .debug_loc     0x0000277d     0x123e Drv/DrvSSD1306.o
- .debug_loc     0x000039bb      0x1b0 Drv/DrvTick.o
- .debug_loc     0x00003b6b      0x2d1 Drv/DrvTimer.o
- .debug_loc     0x00003e3c      0x9e5 Drv/DrvTwi.o
- .debug_loc     0x00004821      0x494 Drv/DrvUart.o
- .debug_loc     0x00004cb5       0x46 main.o
- .debug_loc     0x00004cfb       0x5b Srv/SrvBody.o
- .debug_loc     0x00004d56      0x8cd Srv/SrvComm.o
- .debug_loc     0x00005623      0x3d1 Srv/SrvDisplay.o
- .debug_loc     0x000059f4       0x63 Srv/SrvIhm.o
- .debug_loc     0x00005a57       0x73 Srv/SrvWalk.o
+ .debug_loc     0x00000000      0x4da Cmps/CmpPCA9685.o
+ .debug_loc     0x000004da      0x373 Cmps/CmpSRF04.o
+ .debug_loc     0x0000084d     0x123e Cmps/CmpSSD1306.o
+ .debug_loc     0x00001a8b       0x21 Drv/DrvAdc.o
+ .debug_loc     0x00001aac      0x178 Drv/DrvBitmap.o
+ .debug_loc     0x00001c24      0x163 Drv/DrvButton.o
+ .debug_loc     0x00001d87      0x3e5 Drv/DrvEeprom.o
+ .debug_loc     0x0000216c      0x29b Drv/DrvIo.o
+ .debug_loc     0x00002407      0x299 Drv/DrvLed.o
+ .debug_loc     0x000026a0      0x6ad Drv/DrvLeg.o
+ .debug_loc     0x00002d4d      0x498 Drv/DrvServo.o
+ .debug_loc     0x000031e5       0x5b Drv/DrvSpi.o
+ .debug_loc     0x00003240      0x1b0 Drv/DrvTick.o
+ .debug_loc     0x000033f0      0x2a1 Drv/DrvTimer.o
+ .debug_loc     0x00003691      0x9e5 Drv/DrvTwi.o
+ .debug_loc     0x00004076      0x473 Drv/DrvUart.o
+ .debug_loc     0x000044e9       0x28 main.o
+ .debug_loc     0x00004511      0x137 Srv/SrvBody.o
+ .debug_loc     0x00004648      0xa2a Srv/SrvComm.o
+ .debug_loc     0x00005072      0x143 Srv/SrvCore.o
+ .debug_loc     0x000051b5      0x58b Srv/SrvDisplay.o
+ .debug_loc     0x00005740       0x9d Srv/SrvFeeling.o
+ .debug_loc     0x000057dd       0x84 Srv/SrvHeartbeat.o
+ .debug_loc     0x00005861       0x58 Srv/SrvIhm.o
+ .debug_loc     0x000058b9       0x50 Srv/SrvUltrason.o
+ .debug_loc     0x00005909      0x2d7 Srv/SrvWalk.o
 
 .debug_macinfo
  *(.debug_macinfo)
@@ -3284,75 +3751,85 @@ END GROUP
 .debug_pubtypes
  *(.debug_pubtypes)
 
-.debug_ranges   0x00000000      0x628
+.debug_ranges   0x00000000      0x6b8
  *(.debug_ranges)
  .debug_ranges  0x00000000       0x30 Cmps/CmpPCA9685.o
- .debug_ranges  0x00000030       0x18 Drv/DrvAdc.o
- .debug_ranges  0x00000048       0x18 Drv/DrvBitmap.o
- .debug_ranges  0x00000060       0x30 Drv/DrvButton.o
- .debug_ranges  0x00000090       0xe0 Drv/DrvEeprom.o
- .debug_ranges  0x00000170       0x40 Drv/DrvIo.o
- .debug_ranges  0x000001b0       0x58 Drv/DrvLed.o
- .debug_ranges  0x00000208       0x30 Drv/DrvLeg.o
- .debug_ranges  0x00000238       0x58 Drv/DrvServo.o
- .debug_ranges  0x00000290       0x28 Drv/DrvSpi.o
- .debug_ranges  0x000002b8       0xc0 Drv/DrvSSD1306.o
- .debug_ranges  0x00000378       0x40 Drv/DrvTick.o
- .debug_ranges  0x000003b8       0x48 Drv/DrvTimer.o
- .debug_ranges  0x00000400       0x78 Drv/DrvTwi.o
- .debug_ranges  0x00000478       0x68 Drv/DrvUart.o
- .debug_ranges  0x000004e0       0x10 main.o
- .debug_ranges  0x000004f0       0x28 Srv/SrvBattery.o
- .debug_ranges  0x00000518       0x18 Srv/SrvBody.o
- .debug_ranges  0x00000530       0x40 Srv/SrvComm.o
- .debug_ranges  0x00000570       0x48 Srv/SrvDisplay.o
- .debug_ranges  0x000005b8       0x48 Srv/SrvIhm.o
- .debug_ranges  0x00000600       0x28 Srv/SrvWalk.o
+ .debug_ranges  0x00000030       0x40 Cmps/CmpSRF04.o
+ .debug_ranges  0x00000070       0xc0 Cmps/CmpSSD1306.o
+ .debug_ranges  0x00000130       0x18 Drv/DrvAdc.o
+ .debug_ranges  0x00000148       0x20 Drv/DrvBitmap.o
+ .debug_ranges  0x00000168       0x30 Drv/DrvButton.o
+ .debug_ranges  0x00000198       0x70 Drv/DrvEeprom.o
+ .debug_ranges  0x00000208       0x40 Drv/DrvIo.o
+ .debug_ranges  0x00000248       0x58 Drv/DrvLed.o
+ .debug_ranges  0x000002a0       0x38 Drv/DrvLeg.o
+ .debug_ranges  0x000002d8       0x70 Drv/DrvServo.o
+ .debug_ranges  0x00000348       0x28 Drv/DrvSpi.o
+ .debug_ranges  0x00000370       0x40 Drv/DrvTick.o
+ .debug_ranges  0x000003b0       0x48 Drv/DrvTimer.o
+ .debug_ranges  0x000003f8       0x78 Drv/DrvTwi.o
+ .debug_ranges  0x00000470       0x68 Drv/DrvUart.o
+ .debug_ranges  0x000004d8       0x10 main.o
+ .debug_ranges  0x000004e8       0x28 Srv/SrvBattery.o
+ .debug_ranges  0x00000510       0x30 Srv/SrvBody.o
+ .debug_ranges  0x00000540       0x28 Srv/SrvComm.o
+ .debug_ranges  0x00000568       0x20 Srv/SrvCore.o
+ .debug_ranges  0x00000588       0x60 Srv/SrvDisplay.o
+ .debug_ranges  0x000005e8       0x20 Srv/SrvFeeling.o
+ .debug_ranges  0x00000608       0x30 Srv/SrvHeartbeat.o
+ .debug_ranges  0x00000638       0x30 Srv/SrvIhm.o
+ .debug_ranges  0x00000668       0x20 Srv/SrvUltrason.o
+ .debug_ranges  0x00000688       0x30 Srv/SrvWalk.o
 
-.debug_macro    0x00000000     0x2b96
+.debug_macro    0x00000000     0x33ae
  *(.debug_macro)
  .debug_macro   0x00000000      0x1a3 Cmps/CmpPCA9685.o
  .debug_macro   0x000001a3       0x5e Cmps/CmpPCA9685.o
  .debug_macro   0x00000201       0x10 Cmps/CmpPCA9685.o
- .debug_macro   0x00000211      0x182 Drv/DrvAdc.o
- .debug_macro   0x00000393      0x17d Drv/DrvBitmap.o
- .debug_macro   0x00000510       0x10 Drv/DrvBitmap.o
- .debug_macro   0x00000520      0x198 Drv/DrvButton.o
- .debug_macro   0x000006b8      0x242 Drv/DrvEeprom.o
- .debug_macro   0x000008fa      0x17d Drv/DrvFont.o
- .debug_macro   0x00000a77       0x10 Drv/DrvFont.o
- .debug_macro   0x00000a87      0x16e Drv/DrvIo.o
- .debug_macro   0x00000bf5      0x18c Drv/DrvLed.o
- .debug_macro   0x00000d81      0x2f0 Drv/DrvLeg.o
- .debug_macro   0x00001071       0x4c Drv/DrvLeg.o
- .debug_macro   0x000010bd       0x28 Drv/DrvLeg.o
- .debug_macro   0x000010e5      0x1ac Drv/DrvServo.o
- .debug_macro   0x00001291       0x46 Drv/DrvServo.o
- .debug_macro   0x000012d7      0x173 Drv/DrvSpi.o
- .debug_macro   0x0000144a       0x16 Drv/DrvSpi.o
- .debug_macro   0x00001460      0x1b6 Drv/DrvSSD1306.o
- .debug_macro   0x00001616       0x16 Drv/DrvSSD1306.o
- .debug_macro   0x0000162c       0xe8 Drv/DrvSSD1306.o
- .debug_macro   0x00001714      0x17e Drv/DrvTick.o
- .debug_macro   0x00001892      0x184 Drv/DrvTimer.o
- .debug_macro   0x00001a16      0x1a0 Drv/DrvTwi.o
- .debug_macro   0x00001bb6       0xdd Drv/DrvTwi.o
- .debug_macro   0x00001c93      0x179 Drv/DrvUart.o
- .debug_macro   0x00001e0c       0x1c Drv/DrvUart.o
- .debug_macro   0x00001e28      0x249 main.o
- .debug_macro   0x00002071       0x16 main.o
- .debug_macro   0x00002087       0x16 main.o
- .debug_macro   0x0000209d       0x1c main.o
- .debug_macro   0x000020b9       0x46 main.o
- .debug_macro   0x000020ff       0x16 main.o
- .debug_macro   0x00002115      0x196 Srv/SrvBattery.o
- .debug_macro   0x000022ab      0x1af Srv/SrvBody.o
- .debug_macro   0x0000245a      0x1b6 Srv/SrvComm.o
- .debug_macro   0x00002610       0x16 Srv/SrvComm.o
- .debug_macro   0x00002626       0x40 Srv/SrvComm.o
- .debug_macro   0x00002666      0x1cc Srv/SrvDisplay.o
- .debug_macro   0x00002832      0x1ab Srv/SrvIhm.o
- .debug_macro   0x000029dd      0x1a3 Srv/SrvWalk.o
- .debug_macro   0x00002b80       0x16 Srv/SrvWalk.o
+ .debug_macro   0x00000211      0x192 Cmps/CmpSRF04.o
+ .debug_macro   0x000003a3      0x1ae Cmps/CmpSSD1306.o
+ .debug_macro   0x00000551       0x10 Cmps/CmpSSD1306.o
+ .debug_macro   0x00000561       0x16 Cmps/CmpSSD1306.o
+ .debug_macro   0x00000577       0xe8 Cmps/CmpSSD1306.o
+ .debug_macro   0x0000065f      0x182 Drv/DrvAdc.o
+ .debug_macro   0x000007e1      0x17d Drv/DrvBitmap.o
+ .debug_macro   0x0000095e       0x10 Drv/DrvBitmap.o
+ .debug_macro   0x0000096e      0x198 Drv/DrvButton.o
+ .debug_macro   0x00000b06      0x1a6 Drv/DrvEeprom.o
+ .debug_macro   0x00000cac      0x17d Drv/DrvFont.o
+ .debug_macro   0x00000e29      0x16e Drv/DrvIo.o
+ .debug_macro   0x00000f97      0x18c Drv/DrvLed.o
+ .debug_macro   0x00001123      0x19e Drv/DrvLeg.o
+ .debug_macro   0x000012c1       0x4c Drv/DrvLeg.o
+ .debug_macro   0x0000130d      0x17e Drv/DrvLeg.o
+ .debug_macro   0x0000148b      0x1ac Drv/DrvServo.o
+ .debug_macro   0x00001637       0x46 Drv/DrvServo.o
+ .debug_macro   0x0000167d      0x173 Drv/DrvSpi.o
+ .debug_macro   0x000017f0       0x16 Drv/DrvSpi.o
+ .debug_macro   0x00001806      0x17e Drv/DrvTick.o
+ .debug_macro   0x00001984      0x184 Drv/DrvTimer.o
+ .debug_macro   0x00001b08      0x1a0 Drv/DrvTwi.o
+ .debug_macro   0x00001ca8       0xdd Drv/DrvTwi.o
+ .debug_macro   0x00001d85      0x179 Drv/DrvUart.o
+ .debug_macro   0x00001efe       0x1c Drv/DrvUart.o
+ .debug_macro   0x00001f1a      0x178 main.o
+ .debug_macro   0x00002092      0x196 Srv/SrvBattery.o
+ .debug_macro   0x00002228      0x1d3 Srv/SrvBody.o
+ .debug_macro   0x000023fb       0x1c Srv/SrvBody.o
+ .debug_macro   0x00002417       0x16 Srv/SrvBody.o
+ .debug_macro   0x0000242d      0x1d5 Srv/SrvComm.o
+ .debug_macro   0x00002602       0x16 Srv/SrvComm.o
+ .debug_macro   0x00002618       0x58 Srv/SrvComm.o
+ .debug_macro   0x00002670      0x270 Srv/SrvCore.o
+ .debug_macro   0x000028e0       0x16 Srv/SrvCore.o
+ .debug_macro   0x000028f6       0x16 Srv/SrvCore.o
+ .debug_macro   0x0000290c       0x16 Srv/SrvCore.o
+ .debug_macro   0x00002922       0x5e Srv/SrvCore.o
+ .debug_macro   0x00002980      0x1e6 Srv/SrvDisplay.o
+ .debug_macro   0x00002b66      0x194 Srv/SrvFeeling.o
+ .debug_macro   0x00002cfa      0x198 Srv/SrvHeartbeat.o
+ .debug_macro   0x00002e92      0x1b9 Srv/SrvIhm.o
+ .debug_macro   0x0000304b      0x1b2 Srv/SrvUltrason.o
+ .debug_macro   0x000031fd      0x1b1 Srv/SrvWalk.o
 OUTPUT(hexapod.elf elf32-avr)
 LOAD linker stubs

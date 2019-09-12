@@ -16,21 +16,21 @@
 ////////////////////////////////////////INCLUDES//////////////////////////////////////////////////
 
 ////////////////////////////////////////PUBLIC ENUM///////////////////////////////////////////////
-typedef enum
-{
-	E_WALK_STOP,
-	E_WALK_STEP,
-	E_WALK_RUN,
-	E_WALK_BACK,
-}E_WALK;
  
 typedef enum
 {
 	E_GAITS_TRIPOD,
 	E_GAITS_WAVE,
 	E_GAITS_RIPPLE,
-}E_GAITS;
+}E_GAIT;
 
+typedef enum
+{
+	E_WALK_STOP,
+	E_WALK_FW,
+	E_WALK_RV,
+	E_WALK_UNKNOWN,
+}E_WALK;
 
 #define GAITS_TRIPOD_STEPS	2U
 #define GAITS_WAVE_STEPS	6U
@@ -70,8 +70,7 @@ typedef enum
 Boolean SrvWalkInit ( void ) ;
 //Fonction de dispatching d'evenements
 void SrvWalkUpdate (void) ;
-//Change the status of the walk
-Boolean SrvWalkChangeWalk ( E_WALK w );
-//Change the status of the walk
-Boolean SrvWalkChangeGaits ( E_GAITS g );
+
+Boolean SrvWalkSetWalk( E_WALK walk, uint16_t delay );
+Boolean SrvWalkSetGait( E_GAIT gait, uint16_t delay );
 #endif //SRVWALK_H_

@@ -27,7 +27,7 @@ Srv/SrvComm.d Srv/SrvComm.o: ../Srv/SrvComm.c ../Srv/../Conf/ConfHard.h \
  ../Srv/../Drv/../Conf/ConfHard.h ../Srv/../Drv/DrvServo.h \
  ../Srv/../Drv/../Tools/tools_typedefs.h ../Srv/../Drv/DrvLeg.h \
  ../Srv/../Drv/DrvServo.h ../Srv/SrvComm.h \
- ../Srv/../Tools/tools_typedefs.h
+ ../Srv/../Tools/tools_typedefs.h ../Srv/SrvBody.h ../Srv/SrvWalk.h
 
 ../Srv/../Conf/ConfHard.h:
 
@@ -98,3 +98,7 @@ c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\
 ../Srv/SrvComm.h:
 
 ../Srv/../Tools/tools_typedefs.h:
+
+../Srv/SrvBody.h:
+
+../Srv/SrvWalk.h:

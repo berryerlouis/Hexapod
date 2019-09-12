@@ -23,8 +23,9 @@ Drv/DrvLeg.d Drv/DrvLeg.o: ../Drv/DrvLeg.c ../Conf\ConfHard.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\pgmspace.h \
  c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\include\avr\wdt.h \
  ../Conf\../Drv/DrvIo.h ../Conf\../Drv/../Tools/tools_typedefs.h \
- ../Drv/DrvTimer.h ../Drv/../Conf/ConfHard.h \
- ../Drv/../Tools/tools_typedefs.h ../Drv/DrvLeg.h ../Drv/DrvServo.h
+ ../Drv/DrvTick.h ../Drv/../Conf/ConfHard.h \
+ ../Drv/../Tools/tools_typedefs.h ../Drv/DrvTimer.h ../Drv/DrvLeg.h \
+ ../Drv/DrvServo.h
 
 ../Conf\ConfHard.h:
 
@@ -80,11 +81,13 @@ c:\program\ files\ (x86)\atmel\studio\7.0\toolchain\avr8\avr8-gnu-toolchain\avr\
 
 ../Conf\../Drv/../Tools/tools_typedefs.h:
 
-../Drv/DrvTimer.h:
+../Drv/DrvTick.h:
 
 ../Drv/../Conf/ConfHard.h:
 
 ../Drv/../Tools/tools_typedefs.h:
+
+../Drv/DrvTimer.h:
 
 ../Drv/DrvLeg.h:
 

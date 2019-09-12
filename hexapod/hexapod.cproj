@@ -41,7 +41,7 @@
       <ToolName>AVR Dragon</ToolName>
     </com_atmel_avrdbg_tool_avrdragon>
     <avrtoolinterface>JTAG</avrtoolinterface>
-    <avrtoolinterfaceclock>1056154</avrtoolinterfaceclock>
+    <avrtoolinterfaceclock>1198848</avrtoolinterfaceclock>
     <ResetRule>0</ResetRule>
     <EraseKey />
     <com_atmel_avrdbg_tool_simulator>
@@ -71,7 +71,7 @@
     <com_atmel_avrdbg_tool_jtagice3plus>
       <ToolOptions>
         <InterfaceProperties>
-          <JtagDbgClock>1056154</JtagDbgClock>
+          <JtagDbgClock>1198848</JtagDbgClock>
           <JtagEnableExtResetOnStartSession>false</JtagEnableExtResetOnStartSession>
           <JtagInChain>false</JtagInChain>
           <JtagDevicesBefore>0</JtagDevicesBefore>
@@ -238,6 +238,18 @@
     <Compile Include="Cmps\CmpPCA9685.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="Cmps\CmpSRF04.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Cmps\CmpSRF04.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Cmps\CmpSSD1306.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Cmps\CmpSSD1306.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Conf\ConfBoard.h">
       <SubType>compile</SubType>
     </Compile>
@@ -307,12 +319,6 @@
     <Compile Include="Drv\DrvSpi.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="Drv\DrvSSD1306.c">
-      <SubType>compile</SubType>
-    </Compile>
-    <Compile Include="Drv\DrvSSD1306.h">
-      <SubType>compile</SubType>
-    </Compile>
     <Compile Include="Drv\DrvTick.c">
       <SubType>compile</SubType>
     </Compile>
@@ -328,9 +334,9 @@
     <Compile Include="Drv\DrvTwi.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="Drv\DrvTwi.h">
+    <None Include="Drv\DrvTwi.h">
       <SubType>compile</SubType>
-    </Compile>
+    </None>
     <Compile Include="Drv\DrvUart.c">
       <SubType>compile</SubType>
     </Compile>
@@ -358,16 +364,40 @@
     <Compile Include="Srv\SrvComm.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="Srv\SrvCore.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Srv\SrvCore.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Srv\SrvDisplay.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Srv\SrvDisplay.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="Srv\SrvFeeling.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Srv\SrvFeeling.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Srv\SrvHeartbeat.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Srv\SrvHeartbeat.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Srv\SrvIhm.c">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Srv\SrvIhm.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Srv\SrvUltrason.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Srv\SrvUltrason.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Srv\SrvWalk.c">

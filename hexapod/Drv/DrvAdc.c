@@ -60,7 +60,7 @@ Int16U DrvAdcRead ( EIoPin pin )
 	
 	//
 	adc[E_ADC_0].value = ADC;
-	return adc[E_ADC_0].value * STEP;		
+	return (Int16U)(adc[E_ADC_0].value * STEP);		
 }
 
 

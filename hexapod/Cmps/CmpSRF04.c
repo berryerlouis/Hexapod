@@ -6,109 +6,117 @@
  */
 /////////////////////////////////////////////INCLUDES/////////////////////////////////////////////
 #include "CmpSRF04.h"
- 
-#include "Drv/DrvIO.h"
 #include "Drv/DrvTick.h"
-#include "Drv/DrvTimer.h"
-#include "Drv/DrvEeprom.h"
+ 
 
 ////////////////////////////////////////PRIVATE DEFINES///////////////////////////////////////////
-#define SRF04_ECHO_TIMEOUT	30000U		//30ms
-#define SRF04_TIMEOUT		30U		//30ms
+#define SRF04_ECHO_TIMEOUT	50000U		//30ms
+#define SRF04_TIMEOUT		10U		//30ms
 ////////////////////////////////////////PRIVATE DEFINES///////////////////////////////////////////
 typedef enum
 {
 	SEND_PULSE,
 	WAIT_RISING_EDGE,
 	WAIT_FALLING_EDGE,
+	WAIT_NEXT_PULSE,
 }E_StatusSRF04;
 
 ////////////////////////////////////////PRIVATE VARIABLES/////////////////////////////////////////
-volatile E_StatusSRF04 statusEcho = SEND_PULSE;
-volatile Int32U timeBeforeEchoStart = 0UL;
-volatile Int16U timeoutEcho = 0UL;
+volatile E_StatusSRF04 statusEcho[ E_NB_USS ] = {SEND_PULSE};
+volatile Int32U timeBeforeEchoStart[ E_NB_USS ] = {0UL};
+volatile Int16U timeoutEcho[ E_NB_USS ] = {0UL};
+
+EIoPin srf04PinEcho[ E_NB_USS ] = US_PINS_ECHO ;
+EIoPin srf04PinPulse[ E_NB_USS ] = US_PINS_PULSE ;
+Int16U distance[ E_NB_USS ] = {0U};
+EIOLevel levelPin[ E_NB_USS ];
 
 ////////////////////////////////////////PRIVATE FUNCTIONS/////////////////////////////////////////
-static Boolean CmpSRF04Init( void );
-static Boolean CmpSRF04SendPulse( void );
-
-//definition de la structure des fonctions du ultrasonic pour le composant SRF04
-UltraSonicFunctions srf04 =
-{
-	CmpSRF04Init,
-	CmpSRF04SendPulse,
-};
-
-//definition de la structure des data ultrasonic pour le composant SRF04
-UltraSonicData srf04Data;
-EIoPin srf04Pins[ E_NB_USS ] = US_PINS ;
 
 /////////////////////////////////////////PUBLIC FUNCTIONS/////////////////////////////////////////
 
 //fonction init du capteur
-static Boolean CmpSRF04Init( void )
+Boolean CmpSRF04Init( void )
 {
-	DrvIoSetPinOutput(srf04Pins[0U]);
-	DrvIoSetPinState(srf04Pins[0U],IO_LEVEL_LOW);
-	statusEcho = SEND_PULSE;
-	timeoutEcho = 0U;
+	for(uint8_t loop_us = 0U ; loop_us < E_NB_USS ; loop_us++)
+	{
+		//set pin to output
+		DrvIoSetPinOutput(srf04PinPulse[loop_us]);
+		DrvIoSetPinState(srf04PinPulse[loop_us],IO_LEVEL_LOW);
+		
+		//set pin to input
+		DrvIoSetPinInput(srf04PinEcho[loop_us]);
+		//enable ext int
+		DrvIoSetInterruptPin(srf04PinEcho[loop_us]);
+		
+		statusEcho[loop_us] = SEND_PULSE;
+		timeoutEcho[loop_us] = 0U;
+		timeBeforeEchoStart[loop_us] = 0U;
+	}
+	
 	return TRUE;
 }
 
 // send a US pulse
-static Boolean CmpSRF04SendPulse( void )
+Boolean CmpSRF04SendPulse( E_US us )
 {
 	Boolean oSuccess = FALSE;
-	if(statusEcho == SEND_PULSE)
+	
+	if(statusEcho[us] == SEND_PULSE)
 	{
-		//send a pulse 
-		DrvIoSetPinOutput(srf04Pins[0U]);
-		DrvIoSetPinState(srf04Pins[0U],IO_LEVEL_HIGH);
+		//send a pulse
+		DrvIoSetPinState(srf04PinPulse[us],IO_LEVEL_HIGH);
 		DrvTickDelayUs(10);
-		DrvIoSetPinState(srf04Pins[0U],IO_LEVEL_LOW);
-		//wait for response from the SRF04
-		DrvIoSetPinInput(srf04Pins[0U]);
-		
+		DrvIoSetPinState(srf04PinPulse[us],IO_LEVEL_LOW);
+			
 		//update timeout and status
-		timeoutEcho = 0U;
-		statusEcho = WAIT_RISING_EDGE;
-		
-		//enable ext int
-		DrvIoSetInterruptPin(srf04Pins[0U]);
+		timeoutEcho[us] = 0U;
+		statusEcho[us] = WAIT_RISING_EDGE;
+			
 	}
 	else
 	{
 		//count a timeout if detecting issue
-		if(++timeoutEcho >= SRF04_TIMEOUT)
+		if(++timeoutEcho[us] >= SRF04_TIMEOUT)
 		{
-			statusEcho = SEND_PULSE;
-			timeoutEcho = 0U;
+			statusEcho[us] = SEND_PULSE;
+			timeoutEcho[us] = 0U;
 		}
 	}
+	
 	return oSuccess;
 }
 
+Int16U CmpSRF04GetDistance( E_US us )
+{
+	return distance[us];
+}
 /////////////////////////////////////ISR PRIVATE FUNCTIONS////////////////////////////////////////
 //ISR pin Sonar
 ISR(PCINT0_vect)
 {
-	Int32U time = DrvTickGetTimeUs();
-	if(statusEcho == WAIT_RISING_EDGE)
+	for(uint8_t loop_us = 0U ; loop_us < E_NB_USS ; loop_us++)
 	{
-		timeBeforeEchoStart = time;
-		statusEcho = WAIT_FALLING_EDGE;
-	}
-	else
-	{
-		Int32U timeAfterEcho = time - timeBeforeEchoStart;
-		//must be inf to 30 ms
-		if( timeAfterEcho <  SRF04_ECHO_TIMEOUT)
+		levelPin[loop_us] = DrvIoGetPinState(srf04PinEcho[loop_us]);
+		Int32U time = DrvTickGetTimeUs();
+		if(levelPin[loop_us] == IO_LEVEL_HIGH)
 		{
-			srf04Data.distance = timeAfterEcho / 58UL;
+			if(statusEcho[loop_us] == WAIT_RISING_EDGE)
+			{
+				timeBeforeEchoStart[loop_us] = time;
+				statusEcho[loop_us] = WAIT_FALLING_EDGE;
+			}
 		}
-		statusEcho = SEND_PULSE;
-		
-		//disable ext int
-		DrvIoResetInterruptPin(srf04Pins[0U]);
+		else
+		{
+			Int32U timeAfterEcho = time - timeBeforeEchoStart[loop_us];
+			//must be inf to 30 ms
+			if( timeAfterEcho <  SRF04_ECHO_TIMEOUT)
+			{
+				distance[loop_us] = timeAfterEcho / 58UL;
+				statusEcho[loop_us] = SEND_PULSE;
+			}
+			statusEcho[loop_us] = SEND_PULSE;
+		}
 	}
 }

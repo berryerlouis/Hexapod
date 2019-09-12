@@ -13,7 +13,7 @@
 #include "../Tools/tools_typedefs.h"
 
 //on init le driver
-void DrvTickInit(void);
+Boolean DrvTickInit(void);
 
 //on reset les compteurs
 void DrvTickReset(void);

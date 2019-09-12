@@ -30,7 +30,7 @@ typedef enum
 
 /////////////////////////////////////////PUBLIC FUNCTIONS/////////////////////////////////////////
 // Init du Drv Timer 
-void DrvTimerInit( void ) ;
+Boolean DrvTimerInit( void ) ;
 
 //fct qui parametre le timer
 void DrvTimerAddTimer( Int8U index_timer, Int16U delay_ms, ETimerMode mode, ptrfct_Isr_Callback_Timer ptrfct ) ;

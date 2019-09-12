@@ -257,7 +257,7 @@ void DrvSSD1306DrawChar(char c, uint16_t x, uint16_t y, uint8_t color)
 
 	// 'font' is a multidimensional array of [96][char_width]
 	// which is really just a 1D array of size 96*char_width.
-	const uint8_t* chr = font[c];
+	const uint8_t* chr = font[(uint8_t)c];
 
 	// Draw pixels
 	for (j = 0; j < CHAR_WIDTH; j++) 

@@ -35,4 +35,5 @@ typedef struct SSBitmap
 void DrvBitmapGetBitmapBattery( SBitmap *bmp );
 void DrvBitmapGetBitmapBatteryValue( SBitmap *bmp, uint8_t value );
 void DrvBitmapGetBitmapArrow( SBitmap *bmp, EBitmapArrow value );
+void DrvBitmapGetBitmapCommunication( SBitmap *bmp );
 #endif /* DRVBITMAP_H_ */

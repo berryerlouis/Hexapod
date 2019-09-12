@@ -16,7 +16,7 @@ static volatile Int32U tickCounter = 0UL;
 
 ///////////////////////////////////////////PUBLIC FUNCTIONS////////////////////////////////////////
 //on init le driver
-void DrvTickInit(void)
+Boolean DrvTickInit(void)
 {	
 	tickCounter = 0UL;
 	//on init le timer
@@ -30,6 +30,8 @@ void DrvTickInit(void)
 	BIT_HIGH(TCCR0B,CS01);
 	BIT_LOW(TCCR0B,CS00);
 	BIT_HIGH(TIMSK0,TOIE0);
+	
+	return TRUE;
 }
 
 //get the tick counter in Us

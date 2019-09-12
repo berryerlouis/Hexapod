@@ -10,10 +10,12 @@
 #include "../Drv/DrvServo.h"
 #include "../Drv/DrvLeg.h"
 #include "SrvComm.h"
+#include "SrvBody.h"
 
 
 ////////////////////////////////////////PRIVATE DEFINES///////////////////////////////////////////
-
+#define WRITE_OK "OK"
+#define WRITE_KO "KO"
 ////////////////////////////////////////PRIVATE STRUCTURES////////////////////////////////////////
 //enum used for parsing the incoming frame
 typedef enum {
@@ -42,6 +44,10 @@ commMessage inMessage;
 /************************************************************************/
 Boolean SrvCommInit (void) 
 {
+	status = COMM_START;
+	inMessage.header = 0;
+	inMessage.command = 0;
+	inMessage.size = 0;
 	return DrvUartInit( E_UART_0, UART_SPEED_115200 );
 }	
 
@@ -58,6 +64,7 @@ static Boolean SrvCommExecuteMessage( void )
 {
 	Boolean oSuccess = FALSE;
 	uint8_t servoId = 0xFFU;
+	uint8_t legId = 0xFFU;
 	SServo *servo;
 	uint8_t response [20U] = { 0U };
 		
@@ -65,7 +72,7 @@ static Boolean SrvCommExecuteMessage( void )
 	if( inMessage.command ==  COMM_COMMAND_VERSION)
 	{
 		//prepare output string
-		uint8_t responseVersion [ 4U ] = { COMM_HEADER_MESSAGE ,COMM_COMMAND_VERSION, '1', '5' };
+		uint8_t responseVersion [ 4U ] = { COMM_HEADER_MESSAGE ,COMM_COMMAND_VERSION, VERSION_SOFTWARE, VERSION_HARDWARE };
 		SrvCommWriteMessage(responseVersion, 4U);
 				
 		//can send data
@@ -81,7 +88,7 @@ static Boolean SrvCommExecuteMessage( void )
 				
 			response[ 0U ] = '0'; //header
 			response[ 1U ] = COMM_COMMAND_SERVO_READ; //command
-			formatMessage(servoId, servo->currentPosition, servo->movingTime, response);
+			formatMessage(servoId, servo->targetPosition, servo->movingTime, response);
 			SrvCommWriteMessage(response, 11U);
 			//can send data
 			oSuccess = TRUE;
@@ -112,7 +119,7 @@ static Boolean SrvCommExecuteMessage( void )
 			response[ 0U ] = '0'; //header
 			response[ 1U ] = COMM_COMMAND_SERVO_MIN_READ; //command
 			formatMessageMinMax(servoId, servo->min, response);
-			SrvCommWriteMessage(response, 11U);
+			SrvCommWriteMessage(response, 7U);
 			//can send data
 			oSuccess = TRUE;
 		}
@@ -128,12 +135,37 @@ static Boolean SrvCommExecuteMessage( void )
 			response[ 0U ] = '0'; //header
 			response[ 1U ] = COMM_COMMAND_SERVO_MAX_READ; //command
 			formatMessageMinMax(servoId, servo->max, response);
-			SrvCommWriteMessage(response, 11U);
+			SrvCommWriteMessage(response, 7U);
 			//can send data
 			oSuccess = TRUE;
 		}
 	}
+	else if( inMessage.command ==  COMM_COMMAND_LEG_WRITE)
+	{		 
+		legId  = (uint8_t)(inMessage.data[ 0U ]) ;
 		
+		DrvLegSetPosition(legId,
+		inMessage.data[ 2U ] * 100 + inMessage.data[ 3U ] * 10 + inMessage.data[ 4U ],
+		inMessage.data[ 2U ] * 100 + inMessage.data[ 3U ] * 10 + inMessage.data[ 4U ],
+		inMessage.data[ 2U ] * 100 + inMessage.data[ 3U ] * 10 + inMessage.data[ 4U ],
+		inMessage.data[ 1U ] * 1000 + inMessage.data[ 2U ] * 100 + inMessage.data[ 3U ] * 10 + inMessage.data[ 4U ]);
+	}
+	else if( inMessage.command ==  COMM_COMMAND_SET_POSITION)
+	{
+		uint16_t delay = inMessage.data[ 1U ] * 1000 + inMessage.data[ 2U ] * 100 + inMessage.data[ 3U ] * 10 + inMessage.data[ 4U ];
+		oSuccess = SrvBodySetPosition((E_BODY_POSITION)inMessage.data[ 0U ], delay);
+	}
+	else if( inMessage.command ==  COMM_COMMAND_SET_WALK)
+	{
+		uint16_t delay = inMessage.data[ 1U ] * 1000 + inMessage.data[ 2U ] * 100 + inMessage.data[ 3U ] * 10 + inMessage.data[ 4U ];
+		oSuccess = SrvBodySetWalk((E_WALK)inMessage.data[ 0U ], delay);
+	}
+	else if( inMessage.command ==  COMM_COMMAND_SET_MOVE)
+	{
+		uint16_t delay = inMessage.data[ 1U ] * 1000 + inMessage.data[ 2U ] * 100 + inMessage.data[ 3U ] * 10 + inMessage.data[ 4U ];
+		oSuccess = SrvBodySetGait((E_GAIT)inMessage.data[ 0U ], delay);
+	}
+
 	return oSuccess;
 }
 
@@ -192,21 +224,20 @@ static Boolean SrvCommDecodeMessage( void )
 				//if end of frame
 				if( datum == '>' )
 				{
+					//reset pointer
+					inMessage.size = 0U;
 					status = COMM_START;
-				
 					//execute incoming message
 					if(SrvCommExecuteMessage())
 					{
-						SrvCommWriteMessage((uint8_t*)"OK",2U);
+						SrvCommWriteMessage((uint8_t*)WRITE_OK,2U);
 						return TRUE;
 					}
 					else
 					{
-						SrvCommWriteMessage((uint8_t*)"NO",2U);
+						SrvCommWriteMessage((uint8_t*)WRITE_KO,2U);
 						return FALSE;
 					}
-					//reset pointer
-					inMessage.size = 0U;
 				}
 				else
 				{

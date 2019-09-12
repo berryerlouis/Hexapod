@@ -44,6 +44,8 @@ SUBDIRS :=  \
 C_SRCS +=  \
 ../Cmps/CmpNRF24L01.c \
 ../Cmps/CmpPCA9685.c \
+../Cmps/CmpSRF04.c \
+../Cmps/CmpSSD1306.c \
 ../Drv/DrvAdc.c \
 ../Drv/DrvBitmap.c \
 ../Drv/DrvButton.c \
@@ -54,7 +56,6 @@ C_SRCS +=  \
 ../Drv/DrvLeg.c \
 ../Drv/DrvServo.c \
 ../Drv/DrvSpi.c \
-../Drv/DrvSSD1306.c \
 ../Drv/DrvTick.c \
 ../Drv/DrvTimer.c \
 ../Drv/DrvTwi.c \
@@ -63,8 +64,12 @@ C_SRCS +=  \
 ../Srv/SrvBattery.c \
 ../Srv/SrvBody.c \
 ../Srv/SrvComm.c \
+../Srv/SrvCore.c \
 ../Srv/SrvDisplay.c \
+../Srv/SrvFeeling.c \
+../Srv/SrvHeartbeat.c \
 ../Srv/SrvIhm.c \
+../Srv/SrvUltrason.c \
 ../Srv/SrvWalk.c
 
 
@@ -77,6 +82,8 @@ ASM_SRCS +=
 OBJS +=  \
 Cmps/CmpNRF24L01.o \
 Cmps/CmpPCA9685.o \
+Cmps/CmpSRF04.o \
+Cmps/CmpSSD1306.o \
 Drv/DrvAdc.o \
 Drv/DrvBitmap.o \
 Drv/DrvButton.o \
@@ -87,7 +94,6 @@ Drv/DrvLed.o \
 Drv/DrvLeg.o \
 Drv/DrvServo.o \
 Drv/DrvSpi.o \
-Drv/DrvSSD1306.o \
 Drv/DrvTick.o \
 Drv/DrvTimer.o \
 Drv/DrvTwi.o \
@@ -96,13 +102,19 @@ main.o \
 Srv/SrvBattery.o \
 Srv/SrvBody.o \
 Srv/SrvComm.o \
+Srv/SrvCore.o \
 Srv/SrvDisplay.o \
+Srv/SrvFeeling.o \
+Srv/SrvHeartbeat.o \
 Srv/SrvIhm.o \
+Srv/SrvUltrason.o \
 Srv/SrvWalk.o
 
 OBJS_AS_ARGS +=  \
 Cmps/CmpNRF24L01.o \
 Cmps/CmpPCA9685.o \
+Cmps/CmpSRF04.o \
+Cmps/CmpSSD1306.o \
 Drv/DrvAdc.o \
 Drv/DrvBitmap.o \
 Drv/DrvButton.o \
@@ -113,7 +125,6 @@ Drv/DrvLed.o \
 Drv/DrvLeg.o \
 Drv/DrvServo.o \
 Drv/DrvSpi.o \
-Drv/DrvSSD1306.o \
 Drv/DrvTick.o \
 Drv/DrvTimer.o \
 Drv/DrvTwi.o \
@@ -122,13 +133,19 @@ main.o \
 Srv/SrvBattery.o \
 Srv/SrvBody.o \
 Srv/SrvComm.o \
+Srv/SrvCore.o \
 Srv/SrvDisplay.o \
+Srv/SrvFeeling.o \
+Srv/SrvHeartbeat.o \
 Srv/SrvIhm.o \
+Srv/SrvUltrason.o \
 Srv/SrvWalk.o
 
 C_DEPS +=  \
 Cmps/CmpNRF24L01.d \
 Cmps/CmpPCA9685.d \
+Cmps/CmpSRF04.d \
+Cmps/CmpSSD1306.d \
 Drv/DrvAdc.d \
 Drv/DrvBitmap.d \
 Drv/DrvButton.d \
@@ -139,7 +156,6 @@ Drv/DrvLed.d \
 Drv/DrvLeg.d \
 Drv/DrvServo.d \
 Drv/DrvSpi.d \
-Drv/DrvSSD1306.d \
 Drv/DrvTick.d \
 Drv/DrvTimer.d \
 Drv/DrvTwi.d \
@@ -148,13 +164,19 @@ main.d \
 Srv/SrvBattery.d \
 Srv/SrvBody.d \
 Srv/SrvComm.d \
+Srv/SrvCore.d \
 Srv/SrvDisplay.d \
+Srv/SrvFeeling.d \
+Srv/SrvHeartbeat.d \
 Srv/SrvIhm.d \
+Srv/SrvUltrason.d \
 Srv/SrvWalk.d
 
 C_DEPS_AS_ARGS +=  \
 Cmps/CmpNRF24L01.d \
 Cmps/CmpPCA9685.d \
+Cmps/CmpSRF04.d \
+Cmps/CmpSSD1306.d \
 Drv/DrvAdc.d \
 Drv/DrvBitmap.d \
 Drv/DrvButton.d \
@@ -165,7 +187,6 @@ Drv/DrvLed.d \
 Drv/DrvLeg.d \
 Drv/DrvServo.d \
 Drv/DrvSpi.d \
-Drv/DrvSSD1306.d \
 Drv/DrvTick.d \
 Drv/DrvTimer.d \
 Drv/DrvTwi.d \
@@ -174,8 +195,12 @@ main.d \
 Srv/SrvBattery.d \
 Srv/SrvBody.d \
 Srv/SrvComm.d \
+Srv/SrvCore.d \
 Srv/SrvDisplay.d \
+Srv/SrvFeeling.d \
+Srv/SrvHeartbeat.d \
 Srv/SrvIhm.d \
+Srv/SrvUltrason.d \
 Srv/SrvWalk.d
 
 OUTPUT_FILE_PATH +=hexapod.elf
@@ -200,6 +225,20 @@ Cmps/CmpNRF24L01.o: ../Cmps/CmpNRF24L01.c
 	
 
 Cmps/CmpPCA9685.o: ../Cmps/CmpPCA9685.c
+	@echo Building file: $<
+	@echo Invoking: AVR/GNU C Compiler : 5.4.0
+	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I".." -I"C:\Program Files (x86)\Atmel\Studio\7.0\packs\atmel\ATmega_DFP\1.3.300\include"  -O1 -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -mrelax -g3 -Wall -mmcu=atmega1284p -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.2.209\gcc\dev\atmega1284p" -c -std=gnu99 -std=c11 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	@echo Finished building: $<
+	
+
+Cmps/CmpSRF04.o: ../Cmps/CmpSRF04.c
+	@echo Building file: $<
+	@echo Invoking: AVR/GNU C Compiler : 5.4.0
+	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I".." -I"C:\Program Files (x86)\Atmel\Studio\7.0\packs\atmel\ATmega_DFP\1.3.300\include"  -O1 -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -mrelax -g3 -Wall -mmcu=atmega1284p -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.2.209\gcc\dev\atmega1284p" -c -std=gnu99 -std=c11 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	@echo Finished building: $<
+	
+
+Cmps/CmpSSD1306.o: ../Cmps/CmpSSD1306.c
 	@echo Building file: $<
 	@echo Invoking: AVR/GNU C Compiler : 5.4.0
 	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I".." -I"C:\Program Files (x86)\Atmel\Studio\7.0\packs\atmel\ATmega_DFP\1.3.300\include"  -O1 -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -mrelax -g3 -Wall -mmcu=atmega1284p -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.2.209\gcc\dev\atmega1284p" -c -std=gnu99 -std=c11 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
@@ -276,13 +315,6 @@ Drv/DrvSpi.o: ../Drv/DrvSpi.c
 	@echo Finished building: $<
 	
 
-Drv/DrvSSD1306.o: ../Drv/DrvSSD1306.c
-	@echo Building file: $<
-	@echo Invoking: AVR/GNU C Compiler : 5.4.0
-	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I".." -I"C:\Program Files (x86)\Atmel\Studio\7.0\packs\atmel\ATmega_DFP\1.3.300\include"  -O1 -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -mrelax -g3 -Wall -mmcu=atmega1284p -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.2.209\gcc\dev\atmega1284p" -c -std=gnu99 -std=c11 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
-	@echo Finished building: $<
-	
-
 Drv/DrvTick.o: ../Drv/DrvTick.c
 	@echo Building file: $<
 	@echo Invoking: AVR/GNU C Compiler : 5.4.0
@@ -339,6 +371,13 @@ Srv/SrvComm.o: ../Srv/SrvComm.c
 	@echo Finished building: $<
 	
 
+Srv/SrvCore.o: ../Srv/SrvCore.c
+	@echo Building file: $<
+	@echo Invoking: AVR/GNU C Compiler : 5.4.0
+	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I".." -I"C:\Program Files (x86)\Atmel\Studio\7.0\packs\atmel\ATmega_DFP\1.3.300\include"  -O1 -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -mrelax -g3 -Wall -mmcu=atmega1284p -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.2.209\gcc\dev\atmega1284p" -c -std=gnu99 -std=c11 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	@echo Finished building: $<
+	
+
 Srv/SrvDisplay.o: ../Srv/SrvDisplay.c
 	@echo Building file: $<
 	@echo Invoking: AVR/GNU C Compiler : 5.4.0
@@ -346,7 +385,28 @@ Srv/SrvDisplay.o: ../Srv/SrvDisplay.c
 	@echo Finished building: $<
 	
 
+Srv/SrvFeeling.o: ../Srv/SrvFeeling.c
+	@echo Building file: $<
+	@echo Invoking: AVR/GNU C Compiler : 5.4.0
+	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I".." -I"C:\Program Files (x86)\Atmel\Studio\7.0\packs\atmel\ATmega_DFP\1.3.300\include"  -O1 -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -mrelax -g3 -Wall -mmcu=atmega1284p -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.2.209\gcc\dev\atmega1284p" -c -std=gnu99 -std=c11 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	@echo Finished building: $<
+	
+
+Srv/SrvHeartbeat.o: ../Srv/SrvHeartbeat.c
+	@echo Building file: $<
+	@echo Invoking: AVR/GNU C Compiler : 5.4.0
+	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I".." -I"C:\Program Files (x86)\Atmel\Studio\7.0\packs\atmel\ATmega_DFP\1.3.300\include"  -O1 -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -mrelax -g3 -Wall -mmcu=atmega1284p -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.2.209\gcc\dev\atmega1284p" -c -std=gnu99 -std=c11 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	@echo Finished building: $<
+	
+
 Srv/SrvIhm.o: ../Srv/SrvIhm.c
+	@echo Building file: $<
+	@echo Invoking: AVR/GNU C Compiler : 5.4.0
+	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I".." -I"C:\Program Files (x86)\Atmel\Studio\7.0\packs\atmel\ATmega_DFP\1.3.300\include"  -O1 -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -mrelax -g3 -Wall -mmcu=atmega1284p -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.2.209\gcc\dev\atmega1284p" -c -std=gnu99 -std=c11 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	@echo Finished building: $<
+	
+
+Srv/SrvUltrason.o: ../Srv/SrvUltrason.c
 	@echo Building file: $<
 	@echo Invoking: AVR/GNU C Compiler : 5.4.0
 	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG  -I".." -I"C:\Program Files (x86)\Atmel\Studio\7.0\packs\atmel\ATmega_DFP\1.3.300\include"  -O1 -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -mrelax -g3 -Wall -mmcu=atmega1284p -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.2.209\gcc\dev\atmega1284p" -c -std=gnu99 -std=c11 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 

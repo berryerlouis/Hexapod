@@ -9,8 +9,10 @@
 #ifndef SRVIHM_H_
 #define SRVIHM_H_
 
-#include "../Conf/ConfHard.h"
-#include "../Tools/tools_typedefs.h"
+#include "Conf/ConfHard.h"
+#include "Tools/tools_typedefs.h"
+
+#include "Drv/DrvLed.h"
 
 
 ////////////////////////////////////////INCLUDES//////////////////////////////////////////////////
@@ -23,18 +25,16 @@
 //Fonction d'initialisation
 Boolean SrvIhmInit ( void ) ;
 //Fonction de dispatching d'evenements
-void SrvIhmDispatcher (void) ;
+void SrvIhmUpdate (void) ;
 
 //heartbeat
 void SrvIhmHeartbeat ( void ) ;
-//platform init start
-void SrvIhmPlatformInitStart ( void ) ;
+void SrvIhmHeartbeatCalm ( void );
+void SrvIhmHeartbeatStress ( void );
 //platform init done
 void SrvIhmPlatformInitDone ( void ) ;
 //platform Disarm
-void SrvIhmPlatformDisarm ( void ) ;
+void SrvIhmPlatformLedLeft ( ELedState state ) ;
 //platform Arm
-void SrvIhmPlatformArm ( void ) ;
-//platform Error
-void SrvIhmPlatformError ( void ) ;
+void SrvIhmPlatformLedRight ( ELedState state ) ;
 #endif //SRVIHM_H_

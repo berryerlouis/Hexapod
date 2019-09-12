@@ -32,7 +32,7 @@ void SrvBatteryUpdate (void)
 	#define MIN_VOLATGE 130U
 	batteryPercentage = (uint16_t)DrvAdcRead(EIO_PIN_A_0);
 	
-	batteryPercentage = (batteryPercentage * 100U) / MAX_VOLATGE ;
+	//batteryPercentage = (batteryPercentage * 100U) / MAX_VOLATGE ;
 	//return (x - 0) * (out_max - out_min) / (in_max - in_min) + out_min;
 	
 	if(batteryPercentage >= 95)	level = BATTERY_100;
