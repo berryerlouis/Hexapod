@@ -281,8 +281,8 @@ static void SrvWalkRipple ( void )
 //Stop
 static void SrvWalkStop ( void )
 {
-	if(DrvLegCheckTarget(E_LEG_U_L) && DrvLegCheckTarget(E_LEG_M_L) && DrvLegCheckTarget(E_LEG_B_L) && 
-	   DrvLegCheckTarget(E_LEG_U_R) && DrvLegCheckTarget(E_LEG_M_R) && DrvLegCheckTarget(E_LEG_B_R)
+	if(!(DrvLegCheckTarget(E_LEG_U_L) && DrvLegCheckTarget(E_LEG_M_L) && DrvLegCheckTarget(E_LEG_B_L) && 
+	   DrvLegCheckTarget(E_LEG_U_R) && DrvLegCheckTarget(E_LEG_M_R) && DrvLegCheckTarget(E_LEG_B_R))
 	)
 	{
 		DrvLegSetPosition(E_LEG_U_L, LEG_COXA_U_L_MID, LEG_FEMUR_U_L_MAX, LEG_TIBIA_U_L_MAX, 0);

@@ -29,59 +29,97 @@
 //permits to compute the main loop time
 Int32U lastLoopTime = 0U;
 ////////////////////////////////////////PRIVATE STRUCTURES////////////////////////////////////////
-
-
-SServices coreServices [] =
+SCoreDriver coreDrivers [] =
 {
 	{
+		0U,
+		DrvTickInit,
+		0UL,
+	},
+	{
+		1U,
+		DrvTimerInit,
+		0UL,
+	},
+	{
+		2U,
+		DrvEepromInit,
+		0UL,
+	},
+	{
+		3U,
+		DrvUartInit,
+		0UL,
+	},
+	{
+		4U,
+		DrvTwiInit,
+		0UL,
+	},
+};
+
+#define NB_CORE_DRIVERS (Int8U)((Int8U)sizeof(coreDrivers)/sizeof(SCoreDriver))
+
+SCoreService coreServices [] =
+{
+	{
+		0U,
 		SrvCommInit,
 		SrvCommUpdate,
 		0UL,
 		0UL
 	},
 	{
+		1U,
 		SrvBatteryInit,
 		SrvBatteryUpdate,
 		0UL,
 		0UL
 	},
 	{
+		2U,
 		SrvIhmInit,
 		SrvIhmUpdate,
 		0UL,
 		0UL
 	},
 	{
+		3U,
 		SrvBodyInit,
 		SrvBodyUpdate,
 		0UL,
 		0UL
 	},
 	{
+		4U,
 		SrvWalkInit,
 		SrvWalkUpdate,
 		0UL,
 		0UL
 	},
 	{
+		5U,
 		SrvUltrasonInit,
 		SrvUltrasonUpdate,
 		0UL,
 		0UL
 	},
 	{
+		6U,
 		SrvHeartbeatInit,
 		SrvHeartbeatUpdate,
 		0UL,
 		0UL
 	},
 	{
+		7U,
 		SrvFeelingInit,
 		SrvFeelingUpdate,
 		0UL,
 		0UL
 	},
 	{
+		8U,
 		SrvDisplayInit,
 		SrvDisplayUpdate,
 		0UL,
@@ -89,7 +127,17 @@ SServices coreServices [] =
 	}
 };
 
-#define NB_SERVICES (Int8U)((Int8U)sizeof(coreServices)/sizeof(SServices))
+#define NB_CORE_SERVICES (Int8U)((Int8U)sizeof(coreServices)/sizeof(SCoreService))
+
+SCore core = 
+{
+	.drivers = coreDrivers,
+	.nbDrivers = NB_CORE_DRIVERS,
+	.services = coreServices,
+	.nbServices = NB_CORE_SERVICES,
+	.updateTime = 0U,
+	.updateTimeMax = 0U,
+};
 ////////////////////////////////////////PRIVATE FUNCTIONS/////////////////////////////////////////
 
 ////////////////////////////////////////PUBILC FUNCTIONS//////////////////////////////////////////
@@ -100,19 +148,24 @@ SServices coreServices [] =
 Boolean SrvCoreInit ( void ) 
 {
 	Boolean oSuccess = TRUE;
-	
-	//Init Drivers
-	oSuccess == TRUE ? oSuccess = DrvTickInit() : FALSE;
-	oSuccess == TRUE ? oSuccess = DrvTimerInit() : FALSE;
-	oSuccess == TRUE ? oSuccess = DrvEepromInit() : FALSE;
-	oSuccess == TRUE ? oSuccess = DrvUartInit( E_UART_0, UART_SPEED_115200 ) : FALSE;
-	oSuccess == TRUE ? oSuccess = DrvTwiInit( TWI_SPEED_400K ) : FALSE;
-
-	
-	for(uint8_t i = 0U ; i < NB_SERVICES ; i++)
+	DrvTwiInit();
+	//Init Core Drivers
+	for(uint8_t i = 0U ; i < core.nbDrivers ; i++)
 	{
+		Int32U nowDrvCore = DrvTickGetTimeUs();
+		oSuccess == TRUE ? oSuccess = core.drivers[i].init() : FALSE;
+		//get loop update time
+		core.drivers[i].updateTime = DrvTickGetTimeUs() - nowDrvCore;
+		core.drivers[i].index = i;
+	}
+	
+	//Init Core Services
+	for(uint8_t i = 0U ; i < NB_CORE_SERVICES ; i++)
+	{
+		Int32U nowSrvCore = DrvTickGetTimeUs();
 		oSuccess == TRUE ? oSuccess = coreServices[i].init() : FALSE;
-		coreServices[i].updateTime = 0UL;
+		core.services[i].index = i;
+		core.services[i].updateTime = DrvTickGetTimeUs() - nowSrvCore;
 	}
 		
 	//Reset time
@@ -123,25 +176,29 @@ Boolean SrvCoreInit ( void )
 
 Boolean SrvCoreLoop ( void ) 
 {
-	Boolean oSuccess = FALSE;
-	for(uint8_t i = 0U ; i < NB_SERVICES ; i++)
+	Boolean oSuccess = TRUE;
+	//get time
+	Int32U nowSrvCore = DrvTickGetTimeUs();
+	for(uint8_t i = 0U ; i < NB_CORE_SERVICES ; i++)
 	{
 		//get time
 		Int32U now = DrvTickGetTimeUs();
-		coreServices[i].update();
+		core.services[i].update();
 		//get loop update time
-		coreServices[i].updateTime = DrvTickGetTimeUs() - now;
+		core.services[i].updateTime = DrvTickGetTimeUs() - now;
 		//get the max time
-		if(coreServices[i].updateTime > coreServices[i].updateTimeMax)
-		{
-			coreServices[i].updateTimeMax = coreServices[i].updateTime;
-		}
+		core.services[i].updateTimeMax = MAX(core.services[i].updateTime,core.services[i].updateTimeMax);
 	}
+	//get loop update time
+	core.updateTime = DrvTickGetTimeUs() - nowSrvCore;
+	//get the max time
+	core.updateTimeMax = MAX(core.updateTime,core.updateTimeMax);
+	
 	return oSuccess;
 }
 
 
-SServices *SrvCoreGetServices ( void )
+SCoreService *SrvCoreGetServices ( void )
 {
 	return coreServices;
 }

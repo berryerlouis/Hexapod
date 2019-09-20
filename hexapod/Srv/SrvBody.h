@@ -9,10 +9,11 @@
 #ifndef SRVBODY_H_
 #define SRVBODY_H_
 
-#include "../Conf/ConfHard.h"
-#include "../Tools/tools_typedefs.h"
+#include "Conf/ConfHard.h"
+#include "Tools/tools_typedefs.h"
 
-#include "../Drv/DrvLeg.h"
+#include "Drv/DrvLeg.h"
+#include "SrvBattery.h"
 #include "SrvWalk.h"
 
 ////////////////////////////////////////INCLUDES//////////////////////////////////////////////////
@@ -29,16 +30,13 @@ typedef enum
 ////////////////////////////////////////PUBLIC STRUCTURES/////////////////////////////////////////
 struct SBody 
 {
-	S_Leg *legs[NB_LEGS];
-	
+	SLeg *legs[NB_LEGS];
+	SBatteryInfo *battery;
 }Body;
 ////////////////////////////////////////PUBLIC FUNCTIONS//////////////////////////////////////////
 //Fonction d'initialisation
 Boolean SrvBodyInit ( void ) ;
 //Fonction de dispatching d'evenements
 void SrvBodyUpdate (void) ;
-Boolean SrvBodySetPosition( E_BODY_POSITION position, uint16_t delay);
-Boolean SrvBodySetWalk( E_WALK walk, uint16_t delay );
-Boolean SrvBodySetGait( E_GAIT gait, uint16_t delay );
 
 #endif //SRVBODY_H_

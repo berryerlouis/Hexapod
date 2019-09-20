@@ -58,6 +58,15 @@ typedef enum
 	E_BUTTON_NONE
 }EButton;
 
+//nb timers used
+typedef enum
+{
+	E_TIMER_BUTTON,
+	//E_TIMER_LED,
+	//----------------- Alaways at end -----------------------
+	E_NB_TIMER,
+	E_TIMER_NONE
+}ETimer;
 
 //set output IR used
 typedef enum
@@ -86,8 +95,14 @@ typedef enum
 	//Alaways at end
 	E_NB_UARTS,
 	E_UART_NONE
-}E_UART;
+}EUART;
 
+#if E_UART_0 == 0U
+	#define E_UART_0_BAUD_RATE	115200UL
+#endif
+#if E_UART_1 == 0U
+	#define E_UART_1_BAUD_RATE	115200UL
+#endif
 //set output Uart used
 typedef enum
 {
@@ -97,46 +112,11 @@ typedef enum
 	E_I2C_NONE
 }EI2c;
 
+#if E_I2C_0 == 0U
+	#define E_I2C_0_SPEED	400000UL
+#endif
+
 ////////////////////////////////////////PUBLIC SENSORS BOARD///////////////////////////////////////
-//list of board with or without sensors
-#define DAISY_7		
-//#define CRIUS	
-
-
-#ifdef DAISY_7
-//details of sensors available on this board
-	#define ACC_LIS331DLH
-	#define GYR_L3G4200D
-	#define MAG_HMC5883
-	#define BAR_BMP085
-	#define US_SRF04
-	#define GPS_VENUS638LPX
-//enable sensors type
-	#define ACC							1U
-	#define BAR							1U
-	#define MAG							1U
-	#define GPS							1U
-	#define US							1U
-#endif
-
-#ifdef CRIUS
-//details of sensors available on this board
-	#define ACC_BMA180
-	#define GYR_ITG3205
-	#define MAG_HMC5883
-	#define BAR_BMP085
-//enable sensors type
-	#define ACC							1U
-	#define BAR							1U
-	#define MAG							1U
-	#define GPS							0U
-	#define US							0U
-#endif
-
-////////////////////////////////////////PUBLIC DEVICE TYPE /////////////////////////////////////////
-#define BI
-//#define QUADX
-
 
 
 

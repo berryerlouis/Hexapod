@@ -16,14 +16,12 @@
 ////////////////////////////////////////INCLUDES//////////////////////////////////////////////////
 
 ////////////////////////////////////////PUBLIC ENUM///////////////////////////////////////////////
-typedef enum 
+
+typedef struct
 {
-	BATTERY_100,
-	BATTERY_75,
-	BATTERY_50,
-	BATTERY_25,
-	BATTERY_0
-}EBatteryLevel;
+	uint16_t milliVolt;
+	uint8_t percentage;
+}SBatteryInfo;
 ////////////////////////////////////////PUBLIC DEFINES////////////////////////////////////////////
 
 ////////////////////////////////////////PUBLIC STRUCTURES/////////////////////////////////////////
@@ -34,7 +32,6 @@ Boolean SrvBatteryInit ( void ) ;
 //Fonction de dispatching d'evenements
 void SrvBatteryUpdate (void) ;
 
-EBatteryLevel SrvBatteryGetLevel (void) ;
-uint8_t SrvBatteryGetValue (void) ;
+SBatteryInfo* SrvBatteryGetStruct (void) ;
 
 #endif //SRVBATTERY_H_

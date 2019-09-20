@@ -14,8 +14,6 @@
 
 ////////////////////////////////////////////PUBLIC DEFINES/////////////////////////////////////////
 
-#define ComputeBaudRate( baud )				(Int16U)( CONF_FOSC_HZ / ( (Int32U)baud * CONF_FOSC_MHZ ) - 1 )
-#define ComputeBaudRateDoubleSpeed( baud )	(Int16U)( CONF_FOSC_HZ / ( (Int32U)baud * (CONF_FOSC_MHZ/2) ) - 1 )
 
 //////////////////////////////////////////PUBLIC PTR FCTS//////////////////////////////////////////
 //callback fire when data is received

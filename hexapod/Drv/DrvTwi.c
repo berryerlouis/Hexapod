@@ -31,15 +31,18 @@ static void DrvTwiWaitTransmission( void );
 /************************************************************************/
 /*Init du Drv Twi                                                       */
 /************************************************************************/
-Boolean DrvTwiInit( Int32U speed ) 
+Boolean DrvTwiInit( void ) 
 {
 	Boolean o_success = TRUE;
 	
 	//set gpio to output for I2C
 	DrvIoSetPinOutput(i2cPins[ E_I2C_0 ][I2C_SCL_PIN]);
 	DrvIoSetPinOutput(i2cPins[ E_I2C_0 ][I2C_SDA_PIN]);
-	
-	TWBR =  (Int8U)((Int16U)((Int32U)(CONF_FOSC_HZ / speed ) - 16U) / 2U);	// change the I2C clock rate
+	#ifdef E_I2C_0_SPEED
+		TWBR =  (Int8U)((Int16U)((Int32U)(CONF_FOSC_HZ / E_I2C_0_SPEED ) - 16U) / 2U);	// change the I2C clock rate
+	#else
+		TWBR =  (Int8U)((Int16U)((Int32U)(CONF_FOSC_HZ / 100000UL ) - 16U) / 2U);	// change the I2C clock rate
+	#endif
 	TWSR =  0U;	                                        	// Not used. Driver presumes prescaler to be 00.
 	TWCR =	(1U<<TWEN) |                                	// Enable TWI-interface and release TWI pins.
 			(0U<<TWIE) | (0U<<TWINT) |                    	// Disable Interupt.

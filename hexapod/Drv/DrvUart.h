@@ -19,8 +19,6 @@
 											UART_1_PINS  /*E_UART_1			*/\
 }
 
-#define ComputeBaudRate( baud )				(Int16U)( CONF_FOSC_HZ / ( (Int32U)baud * CONF_FOSC_MHZ ) - 1 )
-#define ComputeBaudRateDoubleSpeed( baud )	(Int16U)( CONF_FOSC_HZ / ( (Int32U)baud * (CONF_FOSC_MHZ/2) ) - 1 )
 
 //////////////////////////////////////////PUBLIC PTR FCTS//////////////////////////////////////////
 //callback fire when data is received
@@ -30,22 +28,9 @@ typedef void (*DrvUartCallbackReceiveDataISR) (Int8U data);
 
 ////////////////////////////////////////////PUBLIC ENUMS///////////////////////////////////////////
 
-
-typedef enum
-{
-	UART_SPEED_9600,
-	UART_SPEED_38400,
-	UART_SPEED_57600,
-	UART_SPEED_76800,
-	UART_SPEED_115200,
-}UartBaudRate;
-
-
-
 /////////////////////////////////////////PUBLIC FUNCTIONS/////////////////////////////////////////
 // Init du Drv Uart 
-Boolean DrvUartInit( Int8U indexUart, UartBaudRate baudRate ) ;
-
+Boolean DrvUartInit( void ) ;
 
 Int8U DrvUartDataUsedTXBuff(Int8U indexUart);
 Int8U DrvUartDataAvailable(Int8U indexUart);

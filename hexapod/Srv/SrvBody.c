@@ -30,7 +30,7 @@ Boolean SrvBodyInit ( void )
 	{
 		Body.legs[ i ] = DrvLegGetLeg( i );
 	}
-	
+	Body.battery = SrvBatteryGetStruct();
 	
 	return TRUE;
 }
@@ -38,29 +38,5 @@ Boolean SrvBodyInit ( void )
 //Fonction de dispatching d'evenements
 void SrvBodyUpdate (void)
 {
-	SrvWalkUpdate();
-}
-
-
-Boolean SrvBodySetPosition( E_BODY_POSITION position, uint16_t delay)
-{
-	return TRUE;
-}
-
-Boolean SrvBodySetWalk( E_WALK walk, uint16_t delay )
-{
-	if(SrvWalkSetWalk(walk,delay))
-	{
-		if(walk == E_WALK_FW)		SrvDisplaySetDirection(ARROW_UP);
-		else if(walk == E_WALK_RV)		SrvDisplaySetDirection(ARROW_DOWN);
-		else SrvDisplaySetDirection(ARROW_CENTER);
-		return TRUE;
-	}
 	
-	return FALSE;
-}
-
-Boolean SrvBodySetGait( E_GAIT gait, uint16_t delay )
-{
-	return SrvWalkSetGait(gait,delay);
 }

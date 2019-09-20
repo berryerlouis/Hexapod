@@ -22,8 +22,10 @@ typedef struct SSLed
 
 ////////////////////////////////////////PRIVATE FUNCTIONS/////////////////////////////////////////
 //fct appele par le timer
-static void DrvLedIsrCallbackTimer( void ) ;
 
+#ifdef E_TIMER_LED
+static void DrvLedIsrCallbackTimer( void ) ;
+#endif
 ////////////////////////////////////////PRIVATE VARIABLES/////////////////////////////////////////
 //configuration initial des boutons
 EIoPin LedsPins[ E_NB_LEDS ] = LEDS_PINS ;
@@ -40,8 +42,9 @@ Boolean DrvLedInit ( void )
 	Boolean oSuccess = TRUE;
 	
 	//init de la callback du debounce des leds
+	#ifdef E_TIMER_LED
 	DrvTimerAddTimer(E_TIMER_LED, LED_PERIOD, E_TIMER_MODE_PERIODIC, DrvLedIsrCallbackTimer);
-
+	#endif
 	return oSuccess;
 }
 
@@ -175,6 +178,7 @@ Boolean DrvLedSetBlinkMode ( Int8U idLed, Int16U delay_on , Int16U delay_off )
 }
 
 /////////////////////////////////////ISR PRIVATE FUNCTIONS////////////////////////////////////////
+#ifdef E_TIMER_LED
 //fct appele par le timer
 static void DrvLedIsrCallbackTimer( void )
 {
@@ -206,4 +210,5 @@ static void DrvLedIsrCallbackTimer( void )
 			}
 		}
 	}
-}
+}	
+#endif

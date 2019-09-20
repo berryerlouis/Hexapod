@@ -101,29 +101,22 @@ Boolean DrvServoCheckPosition( Int8U index )
 //set the position
 void DrvServoUpdate ( void )
 {
+	//fill the pwm for each servos
+	SPCA9685Pwm pwm[NB_SERVOS];
 	for (Int8U index = 0U; index < NB_SERVOS ; index++)
 	{
-		//if needed
-		if( DrvServoCheckPosition(index) == FALSE )
-		{
-			DrvServoComputeAngle(index);
-			Int16S angle = servos[index].currentPosition;
-	
-			//convert to 0� to 180,0�
-			angle += 90;
-			angle = SetRangeInt16(angle, SERVO_ANGLE_MIN, SERVO_ANGLE_MAX, 114, 522);
-	
-			//send to PCA9685
-			if(index > 8)
-			{
-				CmpPCA9685SetPWM(PCA9685_ADDRESS_0, index - 9, 0, angle);
-			}
-			else
-			{
-				CmpPCA9685SetPWM(PCA9685_ADDRESS_1, index, 0, angle);
-			}
-		}
+		DrvServoComputeAngle(index);
+		Int16S angle = servos[index].currentPosition;
+		
+		//convert to 0� to 180,0�
+		angle += 90;
+		angle = SetRangeInt16(angle, SERVO_ANGLE_MIN, SERVO_ANGLE_MAX, 114, 522);
+		pwm[index].on = 0U;
+		pwm[index].off = angle;
 	}
+	//send to each component
+	CmpPCA9685SetAllPWM(PCA9685_ADDRESS_0,pwm,NB_SERVOS/2U);
+	CmpPCA9685SetAllPWM(PCA9685_ADDRESS_1,&pwm[NB_SERVOS/2U],NB_SERVOS/2U);	
 }
 
 // get the servo strucutre
@@ -140,34 +133,31 @@ SServo* DrvServoGetStruture( Int8U index )
 
 void DrvServoComputeAngle ( Int8U index )
 {
-	float currentTime	= DrvTickGetTimeMs() - servos[ index ].startTime;
-	float startValue	= servos[ index ].startPosition;
-	float changeValue	= servos[ index ].targetPosition - startValue;
-	float duration		= servos[ index ].movingTime;
+	Int32U currentTime	= DrvTickGetTimeMs() - servos[ index ].startTime;
+	Int16S startValue	= servos[ index ].startPosition;
+	Int16S changeValue	= servos[ index ].targetPosition - startValue;
+	Int16U duration		= servos[ index ].movingTime;
 	
 	if(servos[ index ].ease == E_SERVO_EASE_LINEAR)
 	{
-		servos[index].currentPosition = round(changeValue * (currentTime / duration) + startValue);
+		servos[index].currentPosition = changeValue * (currentTime / duration) + startValue;
 	}
 	else if(servos[ index ].ease == E_SERVO_EASE_SINUS_IN)
 	{
-		servos[index].currentPosition = round(-changeValue * cos( M_PI_2 * (currentTime / duration)) + changeValue + startValue);
+		servos[index].currentPosition = -changeValue * cos( M_PI_2 * (currentTime / duration)) + changeValue + startValue;
 	}
 	else if(servos[ index ].ease == E_SERVO_EASE_SINUS_OUT)
 	{
-		servos[index].currentPosition = round(changeValue * sin( M_PI_2 * (currentTime / duration)) + startValue);
+		servos[index].currentPosition = changeValue * sin( M_PI_2 * (currentTime / duration)) + startValue;
 	}
 	else if(servos[ index ].ease == E_SERVO_EASE_SINUS_IN_OUT)
 	{
-		servos[index].currentPosition = round((-changeValue/2) * (cos( M_PI * (currentTime / duration)) - 1 ) + startValue);
+		servos[index].currentPosition = (-changeValue/2) * (cos( M_PI * (currentTime / duration)) - 1 ) + startValue;
 	}
 	
-	if(currentTime > duration)
+	if(currentTime >= duration)
 	{
 		servos[index].currentPosition = servos[ index ].targetPosition;
-	}
-	else if(currentTime == duration)
-	{
 		if(servos[index].callback != NULL)
 		{
 			servos[index].callback(index);

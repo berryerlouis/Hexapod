@@ -20,15 +20,36 @@
 ////////////////////////////////////////PUBLIC DEFINES////////////////////////////////////////////
 
 ////////////////////////////////////////PUBLIC STRUCTURES/////////////////////////////////////////
+
+typedef Boolean (*ptrfctDriverInit)(void);
+typedef struct
+{
+	Int8U index;
+	ptrfctDriverInit init;
+	Int32U updateTime;
+}SCoreDriver;
+
 typedef Boolean (*ptrfctServiceInit)(void);
 typedef void (*ptrfctServiceUpdate)(void);
 typedef struct
 {
+	Int8U index;
 	ptrfctServiceInit init;
 	ptrfctServiceUpdate update;
 	Int32U updateTime;
 	Int32U updateTimeMax;
-}SServices;
+}SCoreService;
+
+typedef struct
+{
+	SCoreDriver *drivers;
+	Int8U nbDrivers;
+	SCoreService *services;
+	Int8U nbServices;
+	Int32U updateTime;
+	Int32U updateTimeMax;
+}SCore;
+
 
 ////////////////////////////////////////PUBLIC FUNCTIONS//////////////////////////////////////////
 //Fonction d'initialisation
@@ -36,6 +57,6 @@ Boolean SrvCoreInit ( void ) ;
 
 Boolean SrvCoreLoop ( void ) ;
 
-SServices *SrvCoreGetServices ( void ) ;
+SCoreService *SrvCoreGetServices ( void ) ;
 
 #endif //SRVCORE_H_

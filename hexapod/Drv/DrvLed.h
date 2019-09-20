@@ -54,12 +54,13 @@ Boolean DrvLedSetToggle ( Int8U id_led );
 //Fonction de modification d'etat de la led
 Boolean DrvLedSetState ( Int8U id_led, ELedState state );
 
-//Fonction de modification du mode de la led
-Boolean DrvLedSetMode ( Int8U id_led, ELedMode mode );
-
 //Fonction de recuperation d'etat de la led
 ELedState DrvLedGetState ( Int8U id_led );
 
+#ifdef E_TIMER_LED
+//Fonction de modification du mode de la led
+Boolean DrvLedSetMode ( Int8U id_led, ELedMode mode );
 //Fonction de modification du mode de la led
 Boolean DrvLedSetBlinkMode ( Int8U id_led, Int16U delay_on , Int16U delay_off );
+#endif
 #endif /* DRV_LED_H_ */

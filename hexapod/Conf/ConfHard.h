@@ -96,15 +96,7 @@
 										EIO_PIN_B_7  /*SCK				*/\
 									}	
 ////////////////////////////////////////////PUBLIC TIMER///////////////////////////////////////////
-//nb timers used
-typedef enum
-{
-	E_TIMER_BUTTON,
-	E_TIMER_LED,
-	//----------------- Alaways at end -----------------------
-	E_NB_TIMER,
-	E_TIMER_NONE
-}ETimer;
+
 
 /////////////////////////////////////PUBLIC PID MANAGMENT//////////////////////////////////////////
 

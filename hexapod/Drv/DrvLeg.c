@@ -15,7 +15,7 @@
 
 
 ////////////////////////////////////////PRIVATE VARIABLES/////////////////////////////////////////
-static S_Leg legs [NB_LEGS];
+static SLeg legs [NB_LEGS];
 volatile Int8U update = 0U;
 uint32_t prevMillisServosUpdate = 0U;
 
@@ -48,7 +48,7 @@ Boolean DrvLegInit( void )
 	return TRUE;
 }
 
-S_Leg* DrvLegGetLeg( E_LEG indexLeg )
+SLeg* DrvLegGetLeg( E_LEG indexLeg )
 {
 	return &legs[ indexLeg ];
 }
@@ -140,10 +140,10 @@ Boolean DrvLegUpdate( void )
 	//if ((DrvTickGetTimeMs() - prevMillisServosUpdate) > 1U)
 	{
 		//update each servo
-		DrvServoUpdate();
-		prevMillisServosUpdate = DrvTickGetTimeMs();
+		//DrvServoUpdate();
+		//prevMillisServosUpdate = DrvTickGetTimeMs();
 	}
-
+	DrvServoUpdate();
 	return TRUE;
 } 
 

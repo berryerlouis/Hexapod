@@ -5,12 +5,13 @@
  *  Author: berryer
  */ 
 
-#include "../Conf/ConfHard.h"
-#include "../Drv/DrvUart.h"
-#include "../Drv/DrvServo.h"
-#include "../Drv/DrvLeg.h"
+#include "Conf/ConfHard.h"
+#include "Drv/DrvUart.h"
+#include "Drv/DrvServo.h"
+#include "Drv/DrvLeg.h"
 #include "SrvComm.h"
-#include "SrvBody.h"
+#include "SrvWalk.h"
+#include "SrvDisplay.h"
 
 
 ////////////////////////////////////////PRIVATE DEFINES///////////////////////////////////////////
@@ -48,7 +49,7 @@ Boolean SrvCommInit (void)
 	inMessage.header = 0;
 	inMessage.command = 0;
 	inMessage.size = 0;
-	return DrvUartInit( E_UART_0, UART_SPEED_115200 );
+	return TRUE;
 }	
 
 /************************************************************************/
@@ -152,18 +153,23 @@ static Boolean SrvCommExecuteMessage( void )
 	}
 	else if( inMessage.command ==  COMM_COMMAND_SET_POSITION)
 	{
-		uint16_t delay = inMessage.data[ 1U ] * 1000 + inMessage.data[ 2U ] * 100 + inMessage.data[ 3U ] * 10 + inMessage.data[ 4U ];
-		oSuccess = SrvBodySetPosition((E_BODY_POSITION)inMessage.data[ 0U ], delay);
+		//uint16_t delay = inMessage.data[ 1U ] * 1000 + inMessage.data[ 2U ] * 100 + inMessage.data[ 3U ] * 10 + inMessage.data[ 4U ];
+		//oSuccess = SrvWalkSetPosition((E_BODY_POSITION)inMessage.data[ 0U ], delay);
 	}
 	else if( inMessage.command ==  COMM_COMMAND_SET_WALK)
 	{
 		uint16_t delay = inMessage.data[ 1U ] * 1000 + inMessage.data[ 2U ] * 100 + inMessage.data[ 3U ] * 10 + inMessage.data[ 4U ];
-		oSuccess = SrvBodySetWalk((E_WALK)inMessage.data[ 0U ], delay);
+		E_WALK walk = (E_WALK)inMessage.data[ 0U ];
+		oSuccess = SrvWalkSetWalk(walk, delay);
+		
+		if(walk == E_WALK_FW)		SrvDisplaySetDirection(ARROW_UP);
+		else if(walk == E_WALK_RV)		SrvDisplaySetDirection(ARROW_DOWN);
+		else SrvDisplaySetDirection(ARROW_CENTER);
 	}
 	else if( inMessage.command ==  COMM_COMMAND_SET_MOVE)
 	{
 		uint16_t delay = inMessage.data[ 1U ] * 1000 + inMessage.data[ 2U ] * 100 + inMessage.data[ 3U ] * 10 + inMessage.data[ 4U ];
-		oSuccess = SrvBodySetGait((E_GAIT)inMessage.data[ 0U ], delay);
+		oSuccess = SrvWalkSetGait((E_GAIT)inMessage.data[ 0U ], delay);
 	}
 
 	return oSuccess;

@@ -27,7 +27,7 @@ void SrvDisplayScreenShowUltrason ( void );
 uint32_t prevMillisUpdateDisplay = 0U;
 uint32_t prevMillisDisplay = 0U;
 uint8_t tempPercentage = 0U;
-uint8_t batteryLevel = 100U;
+SBatteryInfo *batteryInfo;
 Boolean toggleBatteryLogo = FALSE;
 uint8_t initStepDisplay = 0U;
 EBitmapArrow direction;
@@ -40,7 +40,6 @@ Boolean SrvDisplayInit ( void )
 {
 	prevMillisDisplay = 0U;
 	tempPercentage = 0U;
-	batteryLevel = 100U;
 	toggleBatteryLogo = FALSE;
 	initStepDisplay = 0U;
 	direction = ARROW_CENTER;
@@ -100,7 +99,7 @@ void SrvDisplayUpdate (void)
 	
 	
 	//update every 20ms
-	if ((DrvTickGetTimeMs() - prevMillisUpdateDisplay) > 20U)
+	if ((DrvTickGetTimeMs() - prevMillisUpdateDisplay) > 25U)
 	{
 		prevMillisUpdateDisplay = DrvTickGetTimeMs();
 		CmpSSD1306Update();
@@ -150,13 +149,13 @@ void SrvDisplayScreenBatteryManagement ( void )
 	{
 		prevMillisDisplay = DrvTickGetTimeMs();
 
-		batteryLevel = SrvBatteryGetValue();
-		if( batteryLevel <= 25U )
+		batteryInfo = SrvBatteryGetStruct();
+		if( batteryInfo->percentage <= 25U )
 		{
 			if(toggleBatteryLogo == TRUE)
 			{
 				toggleBatteryLogo = FALSE;
-				SrvDisplayScreenShowBattery(batteryLevel);
+				SrvDisplayScreenShowBattery(batteryInfo->percentage);
 			}
 			else
 			{
@@ -167,11 +166,11 @@ void SrvDisplayScreenBatteryManagement ( void )
 		else
 		{
 			//show battery
-			SrvDisplayScreenShowBattery(batteryLevel);
+			SrvDisplayScreenShowBattery(batteryInfo->percentage);
 		}
 		
 		char tab[5U] = {0U};
-		itoa (batteryLevel, tab, 10);
+		itoa (batteryInfo->percentage, tab, 10);
 		tab[strlen(tab)] = '%';
 		SrvDisplayScreenShowString(18U,0U,tab);
 	}
@@ -231,6 +230,7 @@ Boolean SrvDisplayScreenShowProgressBar ( uint8_t percentage )
 		//stop at percentage
 		if( tempPercentage > ((percentage * SCREEN_WIDTH)/100) )
 		{
+			tempPercentage = 0U;
 			return TRUE;
 		}
 		else
@@ -247,7 +247,7 @@ Boolean SrvDisplayScreenShowProgressBar ( uint8_t percentage )
 			{
 				CmpSSD1306DrawPixel(tempPercentage, (SCREEN_HEIGHT / 2U) + loop_y, COLOR_WHITE);
 			}
-			tempPercentage++;
+			tempPercentage += 1U;
 		}
 	}
 	return FALSE;

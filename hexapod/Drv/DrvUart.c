@@ -12,6 +12,8 @@
 ////////////////////////////////////////PRIVATE DEFINES///////////////////////////////////////////
 #define MAX_BUFFER	255U
 
+#define ComputeBaudRate( baud )				( CONF_FOSC_HZ / ( baud * 16 ))  
+#define ComputeBaudRateDoubleSpeed( baud )	( CONF_FOSC_HZ / ( baud * (16/2))) - 1 
 ////////////////////////////////////////PRIVATE STRUCTURES////////////////////////////////////////
 typedef struct
 {
@@ -32,60 +34,41 @@ static volatile UartRingBuffer uartRingBuffer[ E_NB_UARTS ];
 	
 /////////////////////////////////////////PUBLIC FUNCTIONS/////////////////////////////////////////
 // Init du Drv Uart 
-Boolean DrvUartInit( Int8U indexUart, UartBaudRate baudRate )
+Boolean DrvUartInit( void )
 {
-	Boolean oSuccess = TRUE;
-	Int16U ubrr = 0U;
-	switch (baudRate)
-	{
-	case UART_SPEED_9600: ubrr = ComputeBaudRateDoubleSpeed(9600);
-		break;
-	case UART_SPEED_38400: ubrr = ComputeBaudRateDoubleSpeed(38400);
-		break;
-	case UART_SPEED_57600: ubrr = ComputeBaudRateDoubleSpeed(57600);
-		break;
-	case UART_SPEED_76800: ubrr = ComputeBaudRateDoubleSpeed(76800);
-		break;
-	case UART_SPEED_115200: ubrr = ComputeBaudRate(115200);
-		break;
-		default:
-	oSuccess = FALSE;
-		break;
-	}
-
-	//ubrr is correct
-	if(oSuccess == TRUE)
-	{
-		oSuccess = FALSE;
-		if(indexUart == E_UART_0)
-		{			
-			UBRR0 = 0x000A;
-			//BIT_HIGH(UCSR0A,U2X0);		//double speed mode
-			BIT_HIGH(UCSR0B,RXEN0);		//enable RX
-			BIT_HIGH(UCSR0B,TXEN0);		//enable TX
-			BIT_HIGH(UCSR0C,UCSZ00);	//8 bits, no parity, 1 stop
-			BIT_LOW(UCSR0B,TXCIE0);		//disable TX interrupt
-			BIT_LOW(UCSR0B,UDRIE0);		//disable UDR interrupt
-			BIT_HIGH(UCSR0B,RXCIE0);	//enable RX interrupt
-						
-			oSuccess = TRUE;
-		}
-		else if(indexUart == E_UART_0)
-		{
-			#ifdef UBRR1
-			UBRR1 = ubrr;
-			BIT_HIGH(UCSR1A,U2X1);		//double speed mode
-			BIT_HIGH(UCSR1B,RXEN1);		//enable RX
-			BIT_HIGH(UCSR1B,TXEN1);		//enable TX
-			BIT_HIGH(UCSR1C,UCSZ10);	//8 bits, no parity, 1 stop
-			BIT_HIGH(UCSR1B,RXCIE1);	//enable RX interrupt
-			BIT_LOW(UCSR1B,TXCIE1);		//disable TX interrupt
-			BIT_LOW(UCSR1B,UDRIE1);		//disable UDR interrupt
-			BIT_HIGH(UCSR1B,RXCIE1);	//enable RX interrupt
-			oSuccess = TRUE;
-			#endif
-		}
-	}
+	Boolean oSuccess = FALSE;
+	#if E_UART_0 == 0U
+		#ifdef E_UART_0_BAUD_RATE
+			UBRR0 = ComputeBaudRateDoubleSpeed(E_UART_0_BAUD_RATE);	
+		#else
+			UBRR0 = ComputeBaudRateDoubleSpeed(9600);
+		#endif
+		BIT_HIGH(UCSR0A,U2X0);		//double speed mode
+		BIT_HIGH(UCSR0B,RXEN0);		//enable RX
+		BIT_HIGH(UCSR0B,TXEN0);		//enable TX
+		BIT_HIGH(UCSR0C,UCSZ00);	//8 bits, no parity, 1 stop
+		BIT_LOW(UCSR0B,TXCIE0);		//disable TX interrupt
+		BIT_LOW(UCSR0B,UDRIE0);		//disable UDR interrupt
+		BIT_HIGH(UCSR0B,RXCIE0);	//enable RX interrupt
+		oSuccess = TRUE;
+	#endif
+	
+	#if E_UART_1 == 0U
+		#ifdef E_UART_1_BAUD_RATE
+			UBRR1 = ComputeBaudRate(E_UART_1_BAUD_RATE);
+		#else
+			UBRR1 = ComputeBaudRate(9600);
+		#endif
+		//BIT_HIGH(UCSR1A,U2X1);		//double speed mode
+		BIT_HIGH(UCSR1B,RXEN1);		//enable RX
+		BIT_HIGH(UCSR1B,TXEN1);		//enable TX
+		BIT_HIGH(UCSR1C,UCSZ10);	//8 bits, no parity, 1 stop
+		BIT_HIGH(UCSR1B,RXCIE1);	//enable RX interrupt
+		BIT_LOW(UCSR1B,TXCIE1);		//disable TX interrupt
+		BIT_LOW(UCSR1B,UDRIE1);		//disable UDR interrupt
+		BIT_HIGH(UCSR1B,RXCIE1);	//enable RX interrupt
+		oSuccess = TRUE;
+	#endif
 	return oSuccess;
 }
 
@@ -104,7 +87,7 @@ Boolean DrvUartFillTxBuffer(Int8U indexUart, Int8U datum)
 	return TRUE;
 }
 
-//envoie des donn�es sur la liaison s�rie
+//envoie des données sur la liaison série
 Boolean DrvUartSendData(Int8U indexUart)
 {
 	Boolean oSuccess = FALSE;
@@ -144,13 +127,13 @@ Int8U DrvUartReadData(Int8U indexUart)
 Int8U DrvUartDataAvailable(Int8U indexUart)
 {
 	Int8U nbDataAvailable = uartRingBuffer[indexUart].Rx.Head - uartRingBuffer[indexUart].Rx.Tail;
-	return nbDataAvailable%MAX_BUFFER;
+	return nbDataAvailable % MAX_BUFFER;
 }
 
 Int8U DrvUartDataUsedTXBuff(Int8U indexUart) 
 {
 	Int8U nbDataUsed = uartRingBuffer[indexUart].Tx.Head - uartRingBuffer[indexUart].Tx.Tail;
-	return nbDataUsed%MAX_BUFFER;
+	return nbDataUsed % MAX_BUFFER;
 }
 
 

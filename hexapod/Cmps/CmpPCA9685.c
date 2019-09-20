@@ -21,9 +21,9 @@
  /////////////////////////////////////////PUBLIC FUNCTIONS/////////////////////////////////////////
 Boolean CmpPCA9685Init( Int8U addr )
 {
-	Boolean oSuccess = TRUE;
+	Boolean oSuccess = FALSE;
 		
-	CmpPCA9685Reset(addr);
+	oSuccess = CmpPCA9685Reset(addr);
 	return oSuccess;
 }
 
@@ -56,8 +56,14 @@ Boolean CmpPCA9685SetPWMFreq(Int8U addr, float freq)
 
 Boolean CmpPCA9685SetPWM(Int8U addr, Int8U num, Int16U on, Int16U off)
 {
-	Int8U buffer [] = {on,on>>8U,off, off>>8U}; 
+	Int8U buffer [] = {	on,on>>8U,
+						off, off>>8U};
 	return DrvTwiWriteRegBuf(addr, LED0_ON_L + 4 * num, buffer, 4U);
+}
+
+Boolean CmpPCA9685SetAllPWM(Int8U addr, SPCA9685Pwm *pwm, Int8U nbPwm)
+{						
+	return DrvTwiWriteRegBuf(addr, LED0_ON_L + 4U, (Int8U*)pwm, nbPwm * sizeof(pwm[0]));
 }
 
 Boolean CmpPCA9685SetPin(Int8U addr, Int8U num, Int16U val, Boolean invert)

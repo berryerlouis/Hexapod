@@ -36,6 +36,9 @@ Boolean DrvEepromInit ( void )
 		DrvEepromWriteByte(ADDR_EEPROM_VERSION_SOFT, VERSION_SOFTWARE);
 		//on ecrit la version hardware
 		DrvEepromWriteByte(ADDR_EEPROM_VERSION_HARD, VERSION_HARDWARE);
+		
+		//configuration done
+		DrvEepromSetConfiguration();
 	}
 
 	return oSuccess;
