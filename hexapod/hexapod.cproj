@@ -226,6 +226,12 @@
     <OutputPath>bin\DebugPC\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Cmps\CmpMPU9150.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Cmps\CmpMPU9150.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Cmps\CmpNRF24L01.c">
       <SubType>compile</SubType>
     </Compile>

@@ -59,7 +59,8 @@ void SrvWalkUpdate ( void )
 {
 	//update servos every 15 ms
 	//if ((DrvTickGetTimeMs() - prevMillisWalkUpdate) > 10U)
-	if( walking !=  E_WALK_STOP )
+	
+	/*if( walking !=  E_WALK_STOP )
 	{
 		if( gaiting == E_GAITS_TRIPOD )
 		{
@@ -77,8 +78,8 @@ void SrvWalkUpdate ( void )
 	else
 	{
 		SrvWalkStop();
-	}
-
+	}*/
+	//SrvWalkStop();
 //prevMillisWalkUpdate = DrvTickGetTimeMs();
 	//update legs
 	DrvLegUpdate();
@@ -281,7 +282,7 @@ static void SrvWalkRipple ( void )
 //Stop
 static void SrvWalkStop ( void )
 {
-	if(!(DrvLegCheckTarget(E_LEG_U_L) && DrvLegCheckTarget(E_LEG_M_L) && DrvLegCheckTarget(E_LEG_B_L) && 
+	if((DrvLegCheckTarget(E_LEG_U_L) && DrvLegCheckTarget(E_LEG_M_L) && DrvLegCheckTarget(E_LEG_B_L) && 
 	   DrvLegCheckTarget(E_LEG_U_R) && DrvLegCheckTarget(E_LEG_M_R) && DrvLegCheckTarget(E_LEG_B_R))
 	)
 	{

@@ -63,7 +63,7 @@ Boolean CmpPCA9685SetPWM(Int8U addr, Int8U num, Int16U on, Int16U off)
 
 Boolean CmpPCA9685SetAllPWM(Int8U addr, SPCA9685Pwm *pwm, Int8U nbPwm)
 {						
-	return DrvTwiWriteRegBuf(addr, LED0_ON_L + 4U, (Int8U*)pwm, nbPwm * sizeof(pwm[0]));
+	return DrvTwiWriteRegBuf(addr, LED0_ON_L, (Int8U*)pwm, nbPwm * sizeof(pwm[0]));
 }
 
 Boolean CmpPCA9685SetPin(Int8U addr, Int8U num, Int16U val, Boolean invert)

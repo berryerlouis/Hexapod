@@ -1,317 +1,157 @@
 /* 
-* CmpSSD1306.c
+* CmpMPU9150.c
 *
 * Created: 17/02/2019 22:53:39
 * Author: louis
 */
+#include "CmpMPU9150.h"
 
-
-#include "CmpSSD1306.h"
-#include "Drv/DrvFont.h"
-#include "Drv/DrvBitmap.h"
-
+#include "Drv/DrvTwi.h"
 
 ////////////////////////////////////////PRIVATE DEFINES///////////////////////////////////////////
-#define BUFFER_DISPLAY_LENGTH	SCREEN_WIDTH * ((SCREEN_HEIGHT + 7U) / 8U)
-
+#define NB_SAMPLES		20
 ////////////////////////////////////////PRIVATE STRUCTURES////////////////////////////////////////
 
 ////////////////////////////////////////PRIVATE FUNCTIONS/////////////////////////////////////////
 
 ////////////////////////////////////////PRIVATE VARIABLES/////////////////////////////////////////
-Int8U addr_i2c = 0xFFU;
-Int8U bufferScreen[BUFFER_DISPLAY_LENGTH];
-Int8U vccstate =  SSD1306_SWITCHCAPVCC;
 
+SMpu9150Acc accOffset={ 0, 0, 0};
+SMpu9150Gyr gyrOffset={ 0, 0, 0};
+SMpu9150Acc accOffsetMoy;
+SMpu9150Gyr gyrOffsetMoy;
+uint8_t accOffsetIndex = 0U;
+uint8_t gyrOffsetIndex = 0U;
 ////////////////////////////////////////PRIVATE FUNCTIONS/////////////////////////////////////////
-void CmpSSD1306SendDatum(Int8U data) ;
-void CmpSSD1306SendData( Int8U *datum, Int8U nbData);
-
 
 ////////////////////////////////////////PUBILC FUNCTIONS//////////////////////////////////////////
-Boolean CmpSSD1306Init(Int8U addr)
+Boolean CmpMPU9150Init(Int8U addr)
 {
-	addr_i2c = addr;
-	memset(bufferScreen, 0,BUFFER_DISPLAY_LENGTH);
+	Boolean oSuccess = FALSE;
+	uint8_t whoAmI = 0x00U;
+	uint8_t reg = 0x00U;
 	
-	vccstate = SSD1306_SWITCHCAPVCC;
-	static Int8U init1[] = 
+	//check device
+	DrvTwiReadReg( addr, MPU9150_WHOAMI, &whoAmI );
+	if(whoAmI == addr - 1)
 	{
-		SSD1306_DISPLAYOFF,                   // 0xAE
-		SSD1306_SETDISPLAYCLOCKDIV,           // 0xD5
-		0x80,                                 // the suggested ratio 0x80
-		SSD1306_SETMULTIPLEX 
-	};               // 0xA8
-	CmpSSD1306SendData(init1, sizeof(init1));
-	CmpSSD1306SendDatum(SCREEN_HEIGHT - 1);
+		oSuccess = TRUE;
+	}
 	
-	static Int8U init2[] =
-		{
-		SSD1306_SETDISPLAYOFFSET,             // 0xD3
-		0x0,                                  // no offset
-		SSD1306_SETSTARTLINE | 0x0,           // line #0
-		SSD1306_CHARGEPUMP 
-	};                 // 0x8D
-	CmpSSD1306SendData(init2, sizeof(init2));
-
-	CmpSSD1306SendDatum((vccstate == SSD1306_EXTERNALVCC) ? 0x10 : 0x14);
-
-	static Int8U init3[] = 
-	{
-		SSD1306_MEMORYMODE,                   // 0x20
-		0x00,                                 // 0x0 act like ks0108
-		SSD1306_SEGREMAP | 0x1,
-		SSD1306_COMSCANDEC 
-	};
-	CmpSSD1306SendData(init3, sizeof(init3));
-
-	static Int8U init4a[] = 
-	{
-		SSD1306_SETCOMPINS,                 // 0xDA
-		0x02,
-		SSD1306_SETCONTRAST,                // 0x81
-		0x8F 
-	};
-	CmpSSD1306SendData(init4a, sizeof(init4a));
+	//setClockSource
+	DrvTwiReadReg( addr, MPU9150_PWR_MGMT_1, &reg );
+	reg |= MPU9150_CLOCK_PLL_XGYRO;
+	DrvTwiWriteReg(addr, MPU9150_PWR_MGMT_1, reg);
+	
+    //setFullScaleGyroRange
+    DrvTwiReadReg( addr, MPU9150_GYRO_CONFIG, &reg );
+	reg |= (MPU9150_GYRO_FS_250 << 3U);
+	DrvTwiWriteReg(addr, MPU9150_GYRO_CONFIG, reg);
+	
+    //setFullScaleAccelRange
+    DrvTwiReadReg( addr, MPU9150_ACCEL_CONFIG, &reg );
+    reg |= (MPU9150_ACCEL_FS_8 << 3U);
+	DrvTwiWriteReg(addr, MPU9150_ACCEL_CONFIG, reg);
+	
+	//setBandWidthLowPassFilter
+	DrvTwiReadReg( addr, MPU9150_CONFIG, &reg );
+    reg |= MPU9150_DLPF_BW_20;
+	DrvTwiWriteReg(addr, MPU9150_CONFIG, reg);
+	
+    //setSleepEnabled
+    DrvTwiReadReg( addr, MPU9150_PWR_MGMT_1, &reg );
+    reg &= !(FALSE << MPU9150_PWR1_SLEEP_BIT);
+    DrvTwiWriteReg(addr, MPU9150_PWR_MGMT_1, reg);
 		
-
-	CmpSSD1306SendDatum(SSD1306_SETPRECHARGE); // 0xd9
-	CmpSSD1306SendDatum((vccstate == SSD1306_EXTERNALVCC) ? 0x22 : 0xF1);
-	static Int8U init5[] = {
-		SSD1306_SETVCOMDETECT,               // 0xDB
-		0x40,
-		SSD1306_DISPLAYALLON_RESUME,         // 0xA4
-		SSD1306_NORMALDISPLAY,               // 0xA6
-		SSD1306_DEACTIVATE_SCROLL,
-		SSD1306_DISPLAYON };                 // Main screen turn on
-	CmpSSD1306SendData(init5, sizeof(init5));
-		
-	CmpSSD1306ClearDisplay();
-	CmpSSD1306Update();
-	return TRUE;
+	return oSuccess;
 }
-Boolean CmpSSD1306ClearDisplay()
-{
-	static Int8U dlist1[] = {
-		SSD1306_PAGEADDR,
-		0U,                         // Page start address
-		0xFFU,                      // Page end (not really, but works here)
-		SSD1306_COLUMNADDR,
-		0U 
-	};                       // Column start address
-	CmpSSD1306SendData(dlist1, sizeof(dlist1));
-	CmpSSD1306SendDatum(SCREEN_WIDTH - 1); // Column end address
 
 
-	Int16U count = BUFFER_DISPLAY_LENGTH;
-	
-	while(count >= 32U)
+Boolean CmpMPU9150IsInitialized(void)
+{	
+	Boolean oSuccess = FALSE;
+	if((accOffsetIndex == NB_SAMPLES) && (gyrOffsetIndex == NB_SAMPLES))
 	{
-		DrvTwiFillRegBuf(addr_i2c,0x40U,0x00U,32U);
-		count -= 32U;
+		oSuccess = TRUE;
 	}
-	if(count > 0U )
+	return oSuccess;
+}
+
+Boolean CmpMPU9150ReadAcc(Int8U addr, SMpu9150Acc * acc)
+{
+	Boolean oSuccess = FALSE;
+	oSuccess = DrvTwiReadRegBuf(addr,MPU9150_ACCEL_XOUT_H, (uint8_t*) acc, 6U);
+	if(oSuccess)
 	{
-		DrvTwiFillRegBuf(addr_i2c,0x40U,0x00U, count);
+		acc->accX = ((acc->accX>>8U) | (acc->accX<<8U)) - accOffset.accX;
+		acc->accY = ((acc->accY>>8U) | (acc->accY<<8U)) - accOffset.accY;
+		acc->accZ = ((acc->accZ>>8U) | (acc->accZ<<8U)) - accOffset.accZ + MPU9150_ACCEL_1G_8G;
+	}
+	if(accOffsetIndex < NB_SAMPLES)
+	{
+		accOffsetMoy.accX += acc->accX ;
+		accOffsetMoy.accY += acc->accY ;
+		accOffsetMoy.accZ += acc->accZ ;
+		if(accOffsetIndex == NB_SAMPLES - 1U)
+		{
+			accOffset.accX = accOffsetMoy.accX / NB_SAMPLES;
+			accOffset.accY = accOffsetMoy.accY / NB_SAMPLES;
+			accOffset.accZ = accOffsetMoy.accZ / NB_SAMPLES;
+		}
+		accOffsetIndex++;
 	}
 	
-	return TRUE;
-}	
-Boolean CmpSSD1306Update( void )
-{
-	static Int8U dlist2[] = {
-		SSD1306_PAGEADDR,
-		0U,                         // Page start address
-		0xFFU,                      // Page end (not really, but works here)
-		SSD1306_COLUMNADDR,
-		0U
-	};
-	
-	CmpSSD1306SendData(dlist2, sizeof(dlist2)); // Column start address
-	CmpSSD1306SendDatum(SCREEN_WIDTH - 1); // Column end address
-
-	Int16U count = BUFFER_DISPLAY_LENGTH;
-	
-	while(count >= 32U)
-	{
-		DrvTwiWriteRegBuf(addr_i2c,0x40U,&bufferScreen[ BUFFER_DISPLAY_LENGTH - count ],32U);
-		count -= 32U;
-	}
-	if(count > 0U )
-	{
-		DrvTwiWriteRegBuf(addr_i2c,0x40U,&bufferScreen[ BUFFER_DISPLAY_LENGTH - count ], count);
-	}
-	return TRUE;
+	return oSuccess;
 }
 
-//display line on screen
-Boolean CmpSSD1306EraseArea ( uint16_t x, uint16_t y, uint16_t width, uint16_t height )
+
+Boolean CmpMPU9150ReadGyr(Int8U addr, SMpu9150Gyr * gyr)
 {
-	//show value
-	for( uint8_t loop_x = 0U ; loop_x < width ; loop_x++ )
+	Boolean oSuccess = FALSE;
+	oSuccess = DrvTwiReadRegBuf(addr,MPU9150_GYRO_XOUT_H, (uint8_t*) gyr, 6U);
+	if(oSuccess)
 	{
-		for( uint8_t loop_y = 0U ; loop_y < height ; loop_y++ )
+		gyr->gyrX = ((gyr->gyrX>>8U) | (gyr->gyrX<<8U)) - gyrOffset.gyrX;
+		gyr->gyrY = ((gyr->gyrY>>8U) | (gyr->gyrY<<8U)) - gyrOffset.gyrY;
+		gyr->gyrZ = ((gyr->gyrZ>>8U) | (gyr->gyrZ<<8U)) - gyrOffset.gyrZ;
+	}
+	if(gyrOffsetIndex < NB_SAMPLES)
+	{
+		gyrOffsetMoy.gyrX += gyr->gyrX ;
+		gyrOffsetMoy.gyrY += gyr->gyrY ;
+		gyrOffsetMoy.gyrZ += gyr->gyrZ ;
+		if(gyrOffsetIndex == NB_SAMPLES - 1U)
 		{
-			CmpSSD1306DrawPixel(x + loop_x, y + loop_y, COLOR_BLACK);
+			gyrOffset.gyrX = gyrOffsetMoy.gyrX / NB_SAMPLES;
+			gyrOffset.gyrY = gyrOffsetMoy.gyrY / NB_SAMPLES;
+			gyrOffset.gyrZ = gyrOffsetMoy.gyrZ / NB_SAMPLES;
 		}
+		gyrOffsetIndex++;
 	}
-	return TRUE;
-}
-Boolean CmpSSD1306ClearBuffer( void )
-{
-	memset(bufferScreen, 0,BUFFER_DISPLAY_LENGTH);
-	return TRUE;
-}
-void CmpSSD1306DrawPixel(uint16_t x, uint16_t y, uint16_t color)
-{
-	if((x < SCREEN_WIDTH) && (y < SCREEN_HEIGHT))
-	{
-		switch(color) 
-		{
-			case COLOR_WHITE:   bufferScreen[x + (y/8)*SCREEN_WIDTH] |=  (1 << (y&7)); break;
-			case COLOR_BLACK:   bufferScreen[x + (y/8)*SCREEN_WIDTH] &= ~(1 << (y&7)); break;
-			case INVERSE: bufferScreen[x + (y/8)*SCREEN_WIDTH] ^=  (1 << (y&7)); break;
-		}
-	}
-}
-void CmpSSD1306DrawLine(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, uint16_t color)
-{
-	if(
-		(x1 <= SCREEN_WIDTH) && (x2 <= SCREEN_WIDTH) &&
-		(y1 <= SCREEN_HEIGHT) && (y2 <= SCREEN_HEIGHT) 
-	)
-	{
-		uint16_t dx = x2 - x1;
-		uint16_t dy = y2 - y1;
-		if( dx != 0U )
-		{
-			for( uint16_t x = 0U ; x < x2 ; x++ )
-			{
-				uint16_t y = y1 + dy * (x - x1) / dx;
-				CmpSSD1306DrawPixel(x, y, color);
-			}
-		}
-		else
-		{
-			for( uint16_t y = y1 ; y < y2 ; y++ )
-			{
-				CmpSSD1306DrawPixel(x1, y, color);
-			}
-		}
-	}
-}
-void CmpSSD1306DrawRectangle(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, uint16_t color)
-{
-	if(
-		(x1 < SCREEN_WIDTH) && (x2 < SCREEN_WIDTH) &&
-		(y1 < SCREEN_HEIGHT) && (y2 < SCREEN_HEIGHT)
-	)
-	{
-		CmpSSD1306DrawLine(x1, y1, x2, y1, color);
-		CmpSSD1306DrawLine(x1, y2, x2, y2, color);
-		CmpSSD1306DrawLine(x1, y1, x1, y2, color);
-		CmpSSD1306DrawLine(x2, y1, x2, y2, color);
-	}
-}
-void CmpSSD1306DrawCircle(uint16_t xc,uint16_t yc,uint16_t r, uint16_t color)
-{
-	uint16_t x,y,p;
-	x = 0;
-	y = r;
-	CmpSSD1306DrawPixel(xc+x,yc-y,color);
-
-	p = 3 - ( 2 * r );
-
-	for( x = 0 ; x <= y ; x++ )
-	{
-		if ( p < 0 )
-		{
-			p = ( p + ( 4 * x ) + 6);
-		}
-		else
-		{
-			y -= 1;
-			p += ( ( 4 * ( x - y ) + 10 ) );
-		}
-
-		CmpSSD1306DrawPixel(xc+x, yc-y, color);
-		CmpSSD1306DrawPixel(xc-x, yc-y, color);
-		CmpSSD1306DrawPixel(xc+x, yc+y, color);
-		CmpSSD1306DrawPixel(xc-x, yc+y, color);
-		CmpSSD1306DrawPixel(xc+y, yc-x, color);
-		CmpSSD1306DrawPixel(xc-y, yc-x, color);
-		CmpSSD1306DrawPixel(xc+y, yc+x, color);
-		CmpSSD1306DrawPixel(xc-y, yc+x, color);
-	}
-}
-void CmpSSD1306DrawChar(char c, uint16_t x, uint16_t y, uint8_t color)
-{
-	uint8_t i,j;
-
-	// Convert the character to an index
-	c = c & 0x7FU;
-	if (c < ' ') 
-	{
-		c = 0U;
-	}
-	else 
-	{
-		c -= ' ';
-	}
-
-	// 'font' is a multidimensional array of [96][char_width]
-	// which is really just a 1D array of size 96*char_width.
-	const uint8_t* chr = font[(uint8_t)c];
-
-	// Draw pixels
-	for (j = 0; j < CHAR_WIDTH; j++) 
-	{
-		for (i = 0; i < CHAR_HEIGHT; i++)
-		{
-			if (chr[j] & (1<<i)) 
-			{
-				CmpSSD1306DrawPixel(x+j, y+i, color);
-			}
-			else
-			{
-				CmpSSD1306DrawPixel(x+j, y+i, color==COLOR_BLACK ? COLOR_WHITE : COLOR_BLACK);
-			}
-		}
-	}
-}
-void CmpSSD1306DrawString(const char* str, uint16_t x, uint16_t y, uint8_t color) 
-{
-	while ( *str ) 
-	{
-		CmpSSD1306DrawChar(*str++, x, y, color);
-		x += CHAR_WIDTH + 1U;
-	}
-}
-void CmpSSD1306DrawBitmap(const SBitmap* bmp, uint16_t x, uint16_t y, uint8_t color)
-{
-	// Draw pixels
-	for (uint16_t i = 0; i < bmp->height; i++)
-	{
-		for (uint16_t j = 0; j < bmp->width; j++)
-		{
-			if (bmp->bmp[(j/8U)+(i*(bmp->width/8U))] & (0x80>>(j%8U)))
-			{
-				CmpSSD1306DrawPixel(x+j, y+i, color);
-			}
-			else
-			{
-				CmpSSD1306DrawPixel(x+j, y+i, color==COLOR_BLACK ? COLOR_WHITE : COLOR_BLACK);
-			}
-		}
-	}
+	return oSuccess;
 }
 
-////////////////////////////////////////PRIVATE FUNCTIONS/////////////////////////////////////////
-void CmpSSD1306SendData( Int8U *data, Int8U nbData)
+Boolean CmpMPU9150ReadTmp(Int8U addr, SMpu9150Tmp * tmp)
 {
-	DrvTwiWriteRegBuf(addr_i2c,0x00U,data,nbData);
+	Boolean oSuccess = FALSE;
+	oSuccess = DrvTwiReadRegBuf(addr,MPU9150_TEMP_OUT_H, (uint8_t*) tmp, 2U);
+	if(oSuccess)
+	{
+		*tmp = (*tmp>>8U) | (*tmp<<8U);
+		*tmp = (*tmp/340.0) + 35U;
+	}
+	return oSuccess;
 }
-void CmpSSD1306SendDatum(Int8U datum) 
+
+Boolean CmpMPU9150ReadCmps(Int8U addr, SMpu9150GCmps * cmps)
 {
-	DrvTwiWriteReg(addr_i2c,0x00U,datum);
+	Boolean oSuccess = FALSE;
+	oSuccess = DrvTwiReadRegBuf(addr,MPU9150_CMPS_XOUT_L, (uint8_t*) cmps, 6U);
+	if(oSuccess)
+	{
+		cmps->cmpsX = (cmps->cmpsX>>8U) | (cmps->cmpsX<<8U);
+		cmps->cmpsY = (cmps->cmpsY>>8U) | (cmps->cmpsY<<8U);
+		cmps->cmpsZ = (cmps->cmpsZ>>8U) | (cmps->cmpsZ<<8U);
+	}
+	return oSuccess;
 }

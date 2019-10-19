@@ -13,6 +13,7 @@
 #include "Tools/tools_typedefs.h"
 
 #include "Drv/DrvLeg.h"
+#include "Cmps/CmpMPU9150.h"
 #include "SrvBattery.h"
 #include "SrvWalk.h"
 
@@ -32,7 +33,10 @@ struct SBody
 {
 	SLeg *legs[NB_LEGS];
 	SBatteryInfo *battery;
-}Body;
+	SMpu9150Acc acc;
+	SMpu9150Gyr gyr;
+	SMpu9150Tmp tmp;
+}body;
 ////////////////////////////////////////PUBLIC FUNCTIONS//////////////////////////////////////////
 //Fonction d'initialisation
 Boolean SrvBodyInit ( void ) ;

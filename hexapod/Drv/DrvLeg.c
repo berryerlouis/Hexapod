@@ -163,8 +163,8 @@ static Boolean DrvLegSetOffset ( void )
 	legs[ E_LEG_U_L ].coxaAngle->mid			= LEG_COXA_U_L_MID ;
 	legs[ E_LEG_U_L ].coxaAngle->min			= LEG_COXA_U_L_MIN ;
 	legs[ E_LEG_U_L ].coxaAngle->max			= LEG_COXA_U_L_MAX ;
-	legs[ E_LEG_U_L ].femurAngle->currentPosition			= LEG_FEMUR_U_L_MAX ;
-	legs[ E_LEG_U_L ].femurAngle->targetPosition		= LEG_FEMUR_U_L_MAX ;
+	legs[ E_LEG_U_L ].femurAngle->currentPosition			= LEG_FEMUR_U_L_MIN ;
+	legs[ E_LEG_U_L ].femurAngle->targetPosition		= LEG_FEMUR_U_L_MIN ;
 	legs[ E_LEG_U_L ].femurAngle->mid			= LEG_FEMUR_U_L_MID ;
 	legs[ E_LEG_U_L ].femurAngle->min			= LEG_FEMUR_U_L_MIN ;
 	legs[ E_LEG_U_L ].femurAngle->max			= LEG_FEMUR_U_L_MAX ;

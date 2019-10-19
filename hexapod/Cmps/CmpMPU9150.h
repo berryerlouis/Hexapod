@@ -6,80 +6,110 @@
 */
 
 
-#ifndef __CMPSSD1306_H__
-#define __CMPSSD1306_H__
+#ifndef __CMPSMPU9150_H__
+#define __CMPSMPU9150_H__
 
 
 #include "Conf/ConfHard.h"
-#include "Drv/DrvTwi.h"
-#include "Drv/DrvFont.h"
-#include "Drv/DrvBitmap.h"
 
 ////////////////////////////////////////PUBLIC DEFINES/////////////////////////////////////////
 
-#define SSD1306_ADDRESS				0x3CU ///< I2C address of the ssd1306 module
-
-#define COLOR_BLACK                          0U ///< Draw 'off' pixels
-#define COLOR_WHITE                          1U ///< Draw 'on' pixels
-#define INVERSE                        2U ///< Invert pixels
-
-#define SSD1306_MEMORYMODE          0x20U ///< See datasheet
-#define SSD1306_COLUMNADDR          0x21U ///< See datasheet
-#define SSD1306_PAGEADDR            0x22U ///< See datasheet
-#define SSD1306_SETCONTRAST         0x81U ///< See datasheet
-#define SSD1306_CHARGEPUMP          0x8DU ///< See datasheet
-#define SSD1306_SEGREMAP            0xA0U ///< See datasheet
-#define SSD1306_DISPLAYALLON_RESUME 0xA4U ///< See datasheet
-#define SSD1306_DISPLAYALLON        0xA5U ///< Not currently used
-#define SSD1306_NORMALDISPLAY       0xA6U ///< See datasheet
-#define SSD1306_INVERTDISPLAY       0xA7U ///< See datasheet
-#define SSD1306_SETMULTIPLEX        0xA8U ///< See datasheet
-#define SSD1306_DISPLAYOFF          0xAEU ///< See datasheet
-#define SSD1306_DISPLAYON           0xAFU ///< See datasheet
-#define SSD1306_COMSCANINC          0xC0U ///< Not currently used
-#define SSD1306_COMSCANDEC          0xC8U ///< See datasheet
-#define SSD1306_SETDISPLAYOFFSET    0xD3U ///< See datasheet
-#define SSD1306_SETDISPLAYCLOCKDIV  0xD5U ///< See datasheet
-#define SSD1306_SETPRECHARGE        0xD9U ///< See datasheet
-#define SSD1306_SETCOMPINS          0xDAU ///< See datasheet
-#define SSD1306_SETVCOMDETECT       0xDBU ///< See datasheet
-
-#define SSD1306_SETLOWCOLUMN        0x00U ///< Not currently used
-#define SSD1306_SETHIGHCOLUMN       0x10U ///< Not currently used
-#define SSD1306_SETSTARTLINE        0x40U ///< See datasheet
-
-#define SSD1306_EXTERNALVCC         0x01U ///< External display voltage source
-#define SSD1306_SWITCHCAPVCC        0x02U ///< Gen. display voltage from 3.3V
-
-#define SSD1306_RIGHT_HORIZONTAL_SCROLL              0x26U ///< Init rt scroll
-#define SSD1306_LEFT_HORIZONTAL_SCROLL               0x27U ///< Init left scroll
-#define SSD1306_VERTICAL_AND_RIGHT_HORIZONTAL_SCROLL 0x29U ///< Init diag scroll
-#define SSD1306_VERTICAL_AND_LEFT_HORIZONTAL_SCROLL  0x2AU ///< Init diag scroll
-#define SSD1306_DEACTIVATE_SCROLL                    0x2EU ///< Stop scroll
-#define SSD1306_ACTIVATE_SCROLL                      0x2FU ///< Start scroll
-#define SSD1306_SET_VERTICAL_SCROLL_AREA             0xA3U ///< Set scroll range
+#define MPU9150_ADDRESS						0x69U ///< I2C address of the MPU9150 module
 
 
-#define SCREEN_WIDTH	128U // OLED display width, in pixels
-#define SCREEN_HEIGHT	32U // OLED display height, in pixels
+#define MPU9150_CONFIG						26U
+#define MPU9150_GYRO_CONFIG					27U
+#define MPU9150_ACCEL_CONFIG				28U
+#define MPU9150_ACCEL_XOUT_H				59U
+#define MPU9150_ACCEL_XOUT_L				60U
+#define MPU9150_ACCEL_YOUT_H				61U
+#define MPU9150_ACCEL_YOUT_L				62U
+#define MPU9150_ACCEL_ZOUT_H				63U
+#define MPU9150_ACCEL_ZOUT_L				64U
+#define MPU9150_TEMP_OUT_H					65U
+#define MPU9150_TEMP_OUT_L					66U
+#define MPU9150_GYRO_XOUT_H					67U
+#define MPU9150_GYRO_XOUT_L					68U
+#define MPU9150_GYRO_YOUT_H					69U
+#define MPU9150_GYRO_YOUT_L					70U
+#define MPU9150_GYRO_ZOUT_H					71U
+#define MPU9150_GYRO_ZOUT_L					72U
+#define MPU9150_CMPS_XOUT_L					74U
+#define MPU9150_CMPS_XOUT_H					75U
+#define MPU9150_CMPS_YOUT_L					76U
+#define MPU9150_CMPS_YOUT_H					77U
+#define MPU9150_CMPS_ZOUT_L					78U
+#define MPU9150_CMPS_ZOUT_H					79U
+#define MPU9150_USER_CTRL					106U
+#define MPU9150_PWR_MGMT_1					107U
+#define MPU9150_PWR_MGMT_2					108U
+#define MPU9150_WHOAMI						117U
 
+#define MPU9150_CLOCK_PLL_XGYRO				0x01
+
+#define MPU9150_PWR1_CLKSEL_BIT				2
+#define MPU9150_PWR1_SLEEP_BIT				6
+	
+#define MPU9150_GYRO_FS_250					0x00
+#define MPU9150_GYRO_FS_500					0x01
+#define MPU9150_GYRO_FS_1000				0x02
+#define MPU9150_GYRO_FS_2000				0x03
+
+#define MPU9150_ACCEL_FS_2					0x00
+#define MPU9150_ACCEL_FS_4					0x01
+#define MPU9150_ACCEL_FS_8					0x02
+#define MPU9150_ACCEL_FS_16					0x03
+
+#define MPU9150_DLPF_BW_256					0x00
+#define MPU9150_DLPF_BW_188					0x01
+#define MPU9150_DLPF_BW_98					0x02
+#define MPU9150_DLPF_BW_42					0x03
+#define MPU9150_DLPF_BW_20					0x04
+#define MPU9150_DLPF_BW_10					0x05
+#define MPU9150_DLPF_BW_5					0x06
+
+#define MPU9150_ACCEL_1G_2G					0x3FFF
+#define MPU9150_ACCEL_1G_4G					0x1FFF
+#define MPU9150_ACCEL_1G_8G					0x0FFF
+#define MPU9150_ACCEL_1G_16G				0x07FF
 
 ////////////////////////////////////////PUBLIC STRUCTURES/////////////////////////////////////////
+typedef struct
+{
+	int16_t accX;
+	int16_t accY;
+	int16_t accZ;
+}SMpu9150Acc;
+
+typedef struct
+{
+	int16_t gyrX;
+	int16_t gyrY;
+	int16_t gyrZ;
+}SMpu9150Gyr;
+
+typedef struct
+{
+	int16_t cmpsX;
+	int16_t cmpsY;
+	int16_t cmpsZ;
+}SMpu9150GCmps;
+
+
+typedef int16_t SMpu9150Tmp;
 
 
 ////////////////////////////////////////PUBLIC FUNCTIONS/////////////////////////////////////////
 
-Boolean CmpSSD1306Init(Int8U addr);
-void CmpSSD1306DrawPixel(uint16_t x, uint16_t y, uint16_t color);
-void CmpSSD1306DrawLine(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, uint16_t color);
-void CmpSSD1306DrawRectangle(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, uint16_t color);
-void CmpSSD1306DrawCircle(uint16_t xc, uint16_t yc, uint16_t r, uint16_t color);
-void CmpSSD1306DrawChar(char c, uint16_t x, uint16_t y, uint8_t color);
-void CmpSSD1306DrawString(const char* str, uint16_t x, uint16_t y, uint8_t color);
-void CmpSSD1306DrawBitmap(const SBitmap* bmp, uint16_t x, uint16_t y, uint8_t color);
-Boolean CmpSSD1306Update( void );
-Boolean CmpSSD1306ClearBuffer( void );
-Boolean CmpSSD1306ClearDisplay( void );
-Boolean CmpSSD1306EraseArea ( uint16_t x, uint16_t y, uint16_t width, uint16_t height );
+Boolean CmpMPU9150Init(Int8U addr);
 
-#endif //__CMPSSD1306_H__
+Boolean CmpMPU9150IsInitialized(void);
+
+Boolean CmpMPU9150ReadAcc(Int8U addr, SMpu9150Acc * acc);
+
+Boolean CmpMPU9150ReadGyr(Int8U addr, SMpu9150Gyr * gyr);
+
+Boolean CmpMPU9150ReadTmp(Int8U addr, SMpu9150Tmp * tmp);
+
+Boolean CmpMPU9150ReadCmps(Int8U addr, SMpu9150GCmps * cmps);
+#endif //__CMPSMPU9150_H__
