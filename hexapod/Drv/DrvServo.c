@@ -30,6 +30,7 @@ Boolean DrvServoInit( void )
 	for (Int8U index = 0U; index < NB_SERVOS ; index++)
 	{
 		servos[ index ].id = index;
+		servos[ index ].enable = FALSE;
 		servos[ index ].currentPosition = 0;
 		servos[ index ].startPosition = 0;
 		servos[ index ].targetPosition = 0;
@@ -56,7 +57,7 @@ Boolean DrvServoInit( void )
 Boolean DrvServoSetTarget( Int8U index, Int16S angle, Int16U time)
 {
 	//check index
-	if( index < NB_SERVOS )
+	if(( index < NB_SERVOS ) && (servos[ index ].enable == TRUE))
 	{
 		//if between limits
 		if(( angle >= servos[ index ].min ) && ( angle <= servos[ index ].max ))
@@ -79,6 +80,13 @@ Boolean DrvServoSetTarget( Int8U index, Int16S angle, Int16U time)
 Boolean DrvServoSetCallback( Int8U index, DrvServoCallback callback )
 {
 	servos[ index ].callback = callback;
+	return TRUE;
+}
+
+// activate or not the desired servo
+Boolean DrvServoActivate( Int8U index, Boolean enable)
+{
+	servos[ index ].enable = enable;
 	return TRUE;
 }
 
@@ -113,6 +121,10 @@ void DrvServoUpdate ( void )
 		angle = SetRangeInt16(angle, SERVO_ANGLE_MIN, SERVO_ANGLE_MAX, 114, 522);
 		pwm[index].on = 0U;
 		pwm[index].off = angle;
+		if(servos[ index ].enable == FALSE)
+		{
+			pwm[index].off = 4096;
+		}
 	}
 	//send to each component
 	CmpPCA9685SetAllPWM(PCA9685_ADDRESS_0,pwm,NB_SERVOS/2U);

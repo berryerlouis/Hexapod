@@ -119,6 +119,7 @@ typedef struct
 /////////////////////////////////////////PUBLIC FUNCTIONS/////////////////////////////////////////
 Boolean DrvLegInit( void );
 Boolean DrvLegUpdate( void );
+SLeg* DrvLegGetLegs( void );
 SLeg* DrvLegGetLeg( E_LEG indexLeg );
 Boolean DrvLegSetXYZ( E_LEG indexLeg, Int16S x, Int16S y, Int16S z, Int16U speed );
 Boolean DrvLegSetPosition( E_LEG indexLeg, Int16S coxaAngle, Int16S femurAngle, Int16S tibiaAngle, Int16U speed );

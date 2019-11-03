@@ -43,6 +43,7 @@ typedef void (*DrvServoCallback) (Int8U index);
 typedef struct
 {
 	Int8U id;
+	Boolean enable;
 	Int16S currentPosition;
 	Int16S startPosition;
 	Int16S targetPosition;
@@ -66,6 +67,8 @@ Boolean DrvServoSetTarget( Int8U index, Int16S angle , Int16U time ) ;
 Boolean DrvServoSetCallback( Int8U index, DrvServoCallback callback ) ;
 // get the target of the selected servo
 Int16S DrvServoGetTarget( Int8U index ) ;
+// activate or not the desired servo
+Boolean DrvServoActivate( Int8U index, Boolean enable) ;
 //check if servo reaches target
 Boolean DrvServoCheckPosition( Int8U index ) ;
 //compute and set the next angle

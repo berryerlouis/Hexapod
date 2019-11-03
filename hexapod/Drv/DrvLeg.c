@@ -48,6 +48,11 @@ Boolean DrvLegInit( void )
 	return TRUE;
 }
 
+SLeg* DrvLegGetLegs( void )
+{
+	return &legs;
+}
+
 SLeg* DrvLegGetLeg( E_LEG indexLeg )
 {
 	return &legs[ indexLeg ];
