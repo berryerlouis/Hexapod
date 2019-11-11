@@ -22,6 +22,7 @@
 #include "SrvBattery.h"
 #include "SrvUltrason.h"
 #include "SrvFeeling.h"
+#include "SrvImuSimple.h"
 
 ////////////////////////////////////////PRIVATE DEFINES///////////////////////////////////////////
 
@@ -85,15 +86,15 @@ SCoreService coreServices [] =
 	},
 	{
 		3U,
-		SrvBodyInit,
-		SrvBodyUpdate,
+		SrvWalkInit,
+		SrvWalkUpdate,
 		0UL,
 		0UL
 	},
 	{
 		4U,
-		SrvWalkInit,
-		SrvWalkUpdate,
+		SrvBodyInit,
+		SrvBodyUpdate,
 		0UL,
 		0UL
 	},
@@ -120,11 +121,18 @@ SCoreService coreServices [] =
 	},
 	{
 		8U,
+		SrvImuSimpleInit,
+		SrvImuSimpleUpdate,
+		0UL,
+		0UL
+	},
+	{
+		9U,
 		SrvDisplayInit,
 		SrvDisplayUpdate,
 		0UL,
 		0UL
-	}
+	},
 };
 
 #define NB_CORE_SERVICES (Int8U)((Int8U)sizeof(coreServices)/sizeof(SCoreService))
@@ -184,10 +192,14 @@ Boolean SrvCoreLoop ( void )
 		//get time
 		Int32U now = DrvTickGetTimeUs();
 		core.services[i].update();
+		//update each servo
+		DrvServoUpdate();
 		//get loop update time
 		core.services[i].updateTime = DrvTickGetTimeUs() - now;
 		//get the max time
 		core.services[i].updateTimeMax = MAX(core.services[i].updateTime,core.services[i].updateTimeMax);
+		
+		
 	}
 	//get loop update time
 	core.updateTime = DrvTickGetTimeUs() - nowSrvCore;

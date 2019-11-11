@@ -27,7 +27,7 @@ Boolean SrvBatteryInit ( void )
 //Fonction de dispatching d'evenements
 void SrvBatteryUpdate (void)
 {
-	#define MAX_VOLATGE 152.0
+	#define MAX_VOLATGE 170.0
 	#define MIN_VOLATGE 130.0
 	batteryInfo.milliVolt = (uint16_t)DrvAdcRead(EIO_PIN_A_0);
 	batteryInfo.percentage = (batteryInfo.milliVolt * 100U) / MAX_VOLATGE;

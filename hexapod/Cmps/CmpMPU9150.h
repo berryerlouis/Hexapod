@@ -103,7 +103,7 @@ typedef int16_t SMpu9150Tmp;
 
 Boolean CmpMPU9150Init(Int8U addr);
 
-Boolean CmpMPU9150IsInitialized(void);
+Boolean CmpMPU9150IsCalibrated(void);
 
 Boolean CmpMPU9150ReadAcc(Int8U addr, SMpu9150Acc * acc);
 

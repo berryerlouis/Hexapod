@@ -400,6 +400,12 @@
     <Compile Include="Srv\SrvIhm.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="Srv\SrvImuSimple.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Srv\SrvImuSimple.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Srv\SrvUltrason.c">
       <SubType>compile</SubType>
     </Compile>

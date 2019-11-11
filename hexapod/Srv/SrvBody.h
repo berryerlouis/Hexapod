@@ -13,9 +13,8 @@
 #include "Tools/tools_typedefs.h"
 
 #include "Drv/DrvLeg.h"
-#include "Cmps/CmpMPU9150.h"
 #include "SrvBattery.h"
-#include "SrvWalk.h"
+#include "SrvImuSimple.h"
 
 ////////////////////////////////////////INCLUDES//////////////////////////////////////////////////
 
@@ -29,14 +28,12 @@ typedef enum
 ////////////////////////////////////////PUBLIC DEFINES////////////////////////////////////////////
 
 ////////////////////////////////////////PUBLIC STRUCTURES/////////////////////////////////////////
-struct SBody 
+typedef struct SBody 
 {
 	SLeg *legs;
 	SBatteryInfo *battery;
-	SMpu9150Acc acc;
-	SMpu9150Gyr gyr;
-	SMpu9150Tmp tmp;
-}body;
+	SImuSimple* imu;
+}SBody;
 ////////////////////////////////////////PUBLIC FUNCTIONS//////////////////////////////////////////
 //Fonction d'initialisation
 Boolean SrvBodyInit ( void ) ;

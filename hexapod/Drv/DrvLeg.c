@@ -12,50 +12,65 @@
 
 
 ////////////////////////////////////////PRIVATE DEFINES///////////////////////////////////////////
-
+#define SERVO_REFRESH_PERIOD	10U
+#define SERVO_INITIALIZE_STEP	50U
 
 ////////////////////////////////////////PRIVATE VARIABLES/////////////////////////////////////////
-static SLeg legs [NB_LEGS];
-volatile Int8U update = 0U;
+static SLegs legs;
+
+//period of refresh
 uint32_t prevMillisServosUpdate = 0U;
 
+//permits to senable servo step by step
+uint8_t servoIndex = 0U;
+uint16_t servosInitializingPeriod = 0U;
+
+//variable for trigonometry
+static volatile float L, L1;
+static volatile float alpha, alpha1,alpha2,beta,gama;
+
 ////////////////////////////////////////PRIVATE FUNCTIONS/////////////////////////////////////////
+//permits to set offset of bot
 static Boolean DrvLegSetOffset ( void ) ;
 /////////////////////////////////////////PUBLIC FUNCTIONS/////////////////////////////////////////
- static volatile float L, L1;
- static volatile float alpha, alpha1,alpha2,beta,gama;
 
 // Init of Drv PWM
 Boolean DrvLegInit( void )
 {
+	//permits to enable servo step by step
+	servoIndex = 0U;
+	legs.isInitializing = TRUE;
+	servosInitializingPeriod = 0U;
+	
+	//initialize the driver
 	DrvServoInit();
-	//init each servos of each leg
+	
+	//get each servos for each leg and set member id
 	for(Int8U i = 0U ; i < NB_LEGS ; i++ )
 	{
-		legs[i].id					= i ;
-		
-		legs[i].coxaAngle				= DrvServoGetStruture(i * 3) ;
-		legs[i].coxaAngle->id			= (i * 3);
-		legs[i].femurAngle				= DrvServoGetStruture((i * 3) + 1) ;
-		legs[i].femurAngle->id			= (i * 3) + 1 ;
-		legs[i].tibiaAngle				= DrvServoGetStruture((i * 3) + 2) ;
-		legs[i].tibiaAngle->id			= (i * 3) + 2 ;
+		legs.leg[i].id				= i ;
+		legs.leg[i].coxaAngle		= DrvServoGetStruture(i * 3) ;
+		legs.leg[i].coxaAngle->id	= (i * 3);
+		legs.leg[i].femurAngle		= DrvServoGetStruture((i * 3) + 1) ;
+		legs.leg[i].femurAngle->id	= (i * 3) + 1 ;
+		legs.leg[i].tibiaAngle		= DrvServoGetStruture((i * 3) + 2) ;
+		legs.leg[i].tibiaAngle->id	= (i * 3) + 2 ;
 	}
+	
 	//offset and limits
 	DrvLegSetOffset();	
-	update = 0;
-	
+		
 	return TRUE;
 }
 
-SLeg* DrvLegGetLegs( void )
+SLegs* DrvLegGetLegs( void )
 {
-	return &legs;
+	return (SLegs*)&legs;
 }
 
 SLeg* DrvLegGetLeg( E_LEG indexLeg )
 {
-	return &legs[ indexLeg ];
+	return &legs.leg[indexLeg];
 }
 
 Boolean DrvLegCheckTarget( E_LEG indexLeg )
@@ -113,11 +128,14 @@ Boolean DrvLegSetXYZ( E_LEG indexLeg, Int16S x, Int16S y, Int16S z, Int16U speed
 		}
 	
 		//set servos position
-		DrvServoSetTarget(indexHanche,		(Int16S)round(gama)		+ legs[ indexLeg ].coxaAngle->mid	,	speed );
-		DrvServoSetTarget(indexGenoux,		(Int16S)(round(alpha))	+ legs[ indexLeg ].femurAngle->mid	,	speed );
-		DrvServoSetTarget(indexCheville,	(Int16S)(round(beta) )	+ legs[ indexLeg ].tibiaAngle->mid	,	speed );
-	
-		return TRUE;
+		uint8_t reponse = 0;
+		reponse = DrvServoSetTarget(indexHanche,	(Int16S)round(gama)		+ legs.leg[ indexLeg ].coxaAngle->mid	,	speed );
+		reponse *= 10U;
+		reponse += DrvServoSetTarget(indexGenoux,	(Int16S)(round(alpha))	+ legs.leg[ indexLeg ].femurAngle->mid	,	speed );
+		reponse *= 10U;
+		reponse += DrvServoSetTarget(indexCheville,	(Int16S)(round(beta) )	+ legs.leg[ indexLeg ].tibiaAngle->mid	,	speed );
+		
+		return reponse == 111U ? TRUE : FALSE;
 	}
 	return FALSE;
 }
@@ -139,16 +157,39 @@ Boolean DrvLegSetPosition( E_LEG indexLeg, Int16S coxaAngle, Int16S femurAngle, 
 	return FALSE;
 }
 
+Boolean DrvLegIsInitialized( void )
+{
+	return !legs.isInitializing ? TRUE : FALSE;
+}
+
 Boolean DrvLegUpdate( void )
 {
-	//update servos every 15 ms
-	//if ((DrvTickGetTimeMs() - prevMillisServosUpdate) > 1U)
+	//if servos are initializing so activate servos step by step with step of 500
+	if ((DrvTickGetTimeMs() - prevMillisServosUpdate) > SERVO_REFRESH_PERIOD)
 	{
-		//update each servo
-		//DrvServoUpdate();
-		//prevMillisServosUpdate = DrvTickGetTimeMs();
+		//if initializing time
+		if(legs.isInitializing == TRUE)
+		{
+			//count up to SERVO_INITIALIZE_STEP
+			servosInitializingPeriod++;
+			if(servosInitializingPeriod * SERVO_REFRESH_PERIOD > SERVO_INITIALIZE_STEP)
+			{
+				//reset counter
+				servosInitializingPeriod = 0U;
+				//enable servo
+				DrvServoActivate(servoIndex,TRUE);
+				//prepare for next servo
+				servoIndex++;
+				
+				if(servoIndex == NB_SERVOS )
+				{
+					//initialization done
+					legs.isInitializing = FALSE;
+				}
+			}
+		}
+		prevMillisServosUpdate = DrvTickGetTimeMs();
 	}
-	DrvServoUpdate();
 	return TRUE;
 } 
 
@@ -163,101 +204,101 @@ Boolean DrvLegUpdate( void )
  */
 static Boolean DrvLegSetOffset ( void ) 
 {		
-	legs[ E_LEG_U_L ].coxaAngle->currentPosition		= LEG_COXA_U_L_MID ;
-	legs[ E_LEG_U_L ].coxaAngle->targetPosition		= LEG_COXA_U_L_MID ;
-	legs[ E_LEG_U_L ].coxaAngle->mid			= LEG_COXA_U_L_MID ;
-	legs[ E_LEG_U_L ].coxaAngle->min			= LEG_COXA_U_L_MIN ;
-	legs[ E_LEG_U_L ].coxaAngle->max			= LEG_COXA_U_L_MAX ;
-	legs[ E_LEG_U_L ].femurAngle->currentPosition			= LEG_FEMUR_U_L_MIN ;
-	legs[ E_LEG_U_L ].femurAngle->targetPosition		= LEG_FEMUR_U_L_MIN ;
-	legs[ E_LEG_U_L ].femurAngle->mid			= LEG_FEMUR_U_L_MID ;
-	legs[ E_LEG_U_L ].femurAngle->min			= LEG_FEMUR_U_L_MIN ;
-	legs[ E_LEG_U_L ].femurAngle->max			= LEG_FEMUR_U_L_MAX ;
-	legs[ E_LEG_U_L ].tibiaAngle->currentPosition		= LEG_TIBIA_U_L_MAX ;
-	legs[ E_LEG_U_L ].tibiaAngle->targetPosition		= LEG_TIBIA_U_L_MAX ;
-	legs[ E_LEG_U_L ].tibiaAngle->mid			= LEG_TIBIA_U_L_MID ;
-	legs[ E_LEG_U_L ].tibiaAngle->min			= LEG_TIBIA_U_L_MIN ;
-	legs[ E_LEG_U_L ].tibiaAngle->max			= LEG_TIBIA_U_L_MAX ;
-		
-	legs[ E_LEG_M_L ].coxaAngle->currentPosition		= LEG_COXA_M_L_MID ;
-	legs[ E_LEG_M_L ].coxaAngle->targetPosition		= LEG_COXA_M_L_MID ;
-	legs[ E_LEG_M_L ].coxaAngle->mid			= LEG_COXA_M_L_MID ;
-	legs[ E_LEG_M_L ].coxaAngle->min			= LEG_COXA_M_L_MIN ;
-	legs[ E_LEG_M_L ].coxaAngle->max			= LEG_COXA_M_L_MAX ;
-	legs[ E_LEG_M_L ].femurAngle->currentPosition		= LEG_FEMUR_M_L_MAX ;
-	legs[ E_LEG_M_L ].femurAngle->targetPosition		= LEG_FEMUR_M_L_MAX ;
-	legs[ E_LEG_M_L ].femurAngle->mid			= LEG_FEMUR_M_L_MID ;
-	legs[ E_LEG_M_L ].femurAngle->min			= LEG_FEMUR_M_L_MIN ;
-	legs[ E_LEG_M_L ].femurAngle->max			= LEG_FEMUR_M_L_MAX ;
-	legs[ E_LEG_M_L ].tibiaAngle->currentPosition		= LEG_TIBIA_M_L_MAX ;
-	legs[ E_LEG_M_L ].tibiaAngle->targetPosition		= LEG_TIBIA_M_L_MAX ;
-	legs[ E_LEG_M_L ].tibiaAngle->mid			= LEG_TIBIA_M_L_MID ;
-	legs[ E_LEG_M_L ].tibiaAngle->min			= LEG_TIBIA_M_L_MIN ;
-	legs[ E_LEG_M_L ].tibiaAngle->max			= LEG_TIBIA_M_L_MAX ;
-		
-	legs[ E_LEG_B_L ].coxaAngle->currentPosition		= LEG_COXA_B_L_MID ;
-	legs[ E_LEG_B_L ].coxaAngle->targetPosition		= LEG_COXA_B_L_MID ;
-	legs[ E_LEG_B_L ].coxaAngle->mid			= LEG_COXA_B_L_MID ;
-	legs[ E_LEG_B_L ].coxaAngle->min			= LEG_COXA_B_L_MIN ;
-	legs[ E_LEG_B_L ].coxaAngle->max			= LEG_COXA_B_L_MAX ;
-	legs[ E_LEG_B_L ].femurAngle->currentPosition		= LEG_FEMUR_B_L_MAX ;
-	legs[ E_LEG_B_L ].femurAngle->targetPosition		= LEG_FEMUR_B_L_MAX ;
-	legs[ E_LEG_B_L ].femurAngle->mid			= LEG_FEMUR_B_L_MID ;
-	legs[ E_LEG_B_L ].femurAngle->min			= LEG_FEMUR_B_L_MIN ;
-	legs[ E_LEG_B_L ].femurAngle->max			= LEG_FEMUR_B_L_MAX ;
-	legs[ E_LEG_B_L ].tibiaAngle->currentPosition		= LEG_TIBIA_B_L_MAX ;
-	legs[ E_LEG_B_L ].tibiaAngle->targetPosition		= LEG_TIBIA_B_L_MAX ;
-	legs[ E_LEG_B_L ].tibiaAngle->mid			= LEG_TIBIA_B_L_MID ;
-	legs[ E_LEG_B_L ].tibiaAngle->min			= LEG_TIBIA_B_L_MIN ;
-	legs[ E_LEG_B_L ].tibiaAngle->max			= LEG_TIBIA_B_L_MAX ;
-		
-	legs[ E_LEG_U_R ].coxaAngle->currentPosition		= LEG_COXA_U_R_MID ;
-	legs[ E_LEG_U_R ].coxaAngle->targetPosition		= LEG_COXA_U_R_MID ;
-	legs[ E_LEG_U_R ].coxaAngle->mid			= LEG_COXA_U_R_MID ;
-	legs[ E_LEG_U_R ].coxaAngle->min			= LEG_COXA_U_R_MIN ;
-	legs[ E_LEG_U_R ].coxaAngle->max			= LEG_COXA_U_R_MAX ;
-	legs[ E_LEG_U_R ].femurAngle->currentPosition			= LEG_FEMUR_U_R_MIN ;
-	legs[ E_LEG_U_R ].femurAngle->targetPosition		= LEG_FEMUR_U_R_MIN ;
-	legs[ E_LEG_U_R ].femurAngle->mid			= LEG_FEMUR_U_R_MID ;
-	legs[ E_LEG_U_R ].femurAngle->min			= LEG_FEMUR_U_R_MIN ;
-	legs[ E_LEG_U_R ].femurAngle->max			= LEG_FEMUR_U_R_MAX ;
-	legs[ E_LEG_U_R ].tibiaAngle->currentPosition		= LEG_TIBIA_U_R_MIN ;
-	legs[ E_LEG_U_R ].tibiaAngle->targetPosition		= LEG_TIBIA_U_R_MIN ;
-	legs[ E_LEG_U_R ].tibiaAngle->mid			= LEG_TIBIA_U_R_MID ;
-	legs[ E_LEG_U_R ].tibiaAngle->min			= LEG_TIBIA_U_R_MIN ;
-	legs[ E_LEG_U_R ].tibiaAngle->max			= LEG_TIBIA_U_R_MAX ;
-				  
-	legs[ E_LEG_M_R ].coxaAngle->currentPosition		= LEG_COXA_M_R_MID ;
-	legs[ E_LEG_M_R ].coxaAngle->targetPosition		= LEG_COXA_M_R_MID ;
-	legs[ E_LEG_M_R ].coxaAngle->mid			= LEG_COXA_M_R_MID ;
-	legs[ E_LEG_M_R ].coxaAngle->min			= LEG_COXA_M_R_MIN ;
-	legs[ E_LEG_M_R ].coxaAngle->max			= LEG_COXA_M_R_MAX ;
-	legs[ E_LEG_M_R ].femurAngle->currentPosition		= LEG_FEMUR_M_R_MIN ;
-	legs[ E_LEG_M_R ].femurAngle->targetPosition		= LEG_FEMUR_M_R_MIN ;
-	legs[ E_LEG_M_R ].femurAngle->mid			= LEG_FEMUR_M_R_MID ;
-	legs[ E_LEG_M_R ].femurAngle->min			= LEG_FEMUR_M_R_MIN ;
-	legs[ E_LEG_M_R ].femurAngle->max			= LEG_FEMUR_M_R_MAX ;
-	legs[ E_LEG_M_R ].tibiaAngle->currentPosition		= LEG_TIBIA_M_R_MIN ;
-	legs[ E_LEG_M_R ].tibiaAngle->targetPosition		= LEG_TIBIA_M_R_MIN ;
-	legs[ E_LEG_M_R ].tibiaAngle->mid			= LEG_TIBIA_M_R_MID ;
-	legs[ E_LEG_M_R ].tibiaAngle->min			= LEG_TIBIA_M_R_MIN ;
-	legs[ E_LEG_M_R ].tibiaAngle->max			= LEG_TIBIA_M_R_MAX ;
-				  
-	legs[ E_LEG_B_R ].coxaAngle->currentPosition		= LEG_COXA_B_R_MID ;
-	legs[ E_LEG_B_R ].coxaAngle->targetPosition		= LEG_COXA_B_R_MID ;
-	legs[ E_LEG_B_R ].coxaAngle->mid			= LEG_COXA_B_R_MID ;
-	legs[ E_LEG_B_R ].coxaAngle->min			= LEG_COXA_B_R_MIN ;
-	legs[ E_LEG_B_R ].coxaAngle->max			= LEG_COXA_B_R_MAX ;
-	legs[ E_LEG_B_R ].femurAngle->currentPosition		= LEG_FEMUR_B_R_MIN ;
-	legs[ E_LEG_B_R ].femurAngle->targetPosition		= LEG_FEMUR_B_R_MIN ;
-	legs[ E_LEG_B_R ].femurAngle->mid			= LEG_FEMUR_B_R_MID ;
-	legs[ E_LEG_B_R ].femurAngle->min			= LEG_FEMUR_B_R_MIN ;
-	legs[ E_LEG_B_R ].femurAngle->max			= LEG_FEMUR_B_R_MAX ;
-	legs[ E_LEG_B_R ].tibiaAngle->currentPosition		= LEG_TIBIA_B_R_MIN ;
-	legs[ E_LEG_B_R ].tibiaAngle->targetPosition		= LEG_TIBIA_B_R_MIN ;
-	legs[ E_LEG_B_R ].tibiaAngle->mid			= LEG_TIBIA_B_R_MID ;
-	legs[ E_LEG_B_R ].tibiaAngle->min			= LEG_TIBIA_B_R_MIN ;
-	legs[ E_LEG_B_R ].tibiaAngle->max			= LEG_TIBIA_B_R_MAX ;
+	legs.leg[ E_LEG_U_L ].coxaAngle->currentPosition		= LEG_COXA_U_L_MID ;
+	legs.leg[ E_LEG_U_L ].coxaAngle->targetPosition		= LEG_COXA_U_L_MID ;
+	legs.leg[ E_LEG_U_L ].coxaAngle->mid			= LEG_COXA_U_L_MID ;
+	legs.leg[ E_LEG_U_L ].coxaAngle->min			= LEG_COXA_U_L_MIN ;
+	legs.leg[ E_LEG_U_L ].coxaAngle->max			= LEG_COXA_U_L_MAX ;
+	legs.leg[ E_LEG_U_L ].femurAngle->currentPosition			= LEG_FEMUR_U_L_MID ;
+	legs.leg[ E_LEG_U_L ].femurAngle->targetPosition		= LEG_FEMUR_U_L_MID ;
+	legs.leg[ E_LEG_U_L ].femurAngle->mid			= LEG_FEMUR_U_L_MID ;
+	legs.leg[ E_LEG_U_L ].femurAngle->min			= LEG_FEMUR_U_L_MIN ;
+	legs.leg[ E_LEG_U_L ].femurAngle->max			= LEG_FEMUR_U_L_MAX ;
+	legs.leg[ E_LEG_U_L ].tibiaAngle->currentPosition		= LEG_TIBIA_U_L_MAX ;
+	legs.leg[ E_LEG_U_L ].tibiaAngle->targetPosition		= LEG_TIBIA_U_L_MAX ;
+	legs.leg[ E_LEG_U_L ].tibiaAngle->mid			= LEG_TIBIA_U_L_MID ;
+	legs.leg[ E_LEG_U_L ].tibiaAngle->min			= LEG_TIBIA_U_L_MIN ;
+	legs.leg[ E_LEG_U_L ].tibiaAngle->max			= LEG_TIBIA_U_L_MAX ;
+	
+	legs.leg[ E_LEG_M_L ].coxaAngle->currentPosition		= LEG_COXA_M_L_MID ;
+	legs.leg[ E_LEG_M_L ].coxaAngle->targetPosition		= LEG_COXA_M_L_MID ;
+	legs.leg[ E_LEG_M_L ].coxaAngle->mid			= LEG_COXA_M_L_MID ;
+	legs.leg[ E_LEG_M_L ].coxaAngle->min			= LEG_COXA_M_L_MIN ;
+	legs.leg[ E_LEG_M_L ].coxaAngle->max			= LEG_COXA_M_L_MAX ;
+	legs.leg[ E_LEG_M_L ].femurAngle->currentPosition		= LEG_FEMUR_M_L_MID ;
+	legs.leg[ E_LEG_M_L ].femurAngle->targetPosition		= LEG_FEMUR_M_L_MID ;
+	legs.leg[ E_LEG_M_L ].femurAngle->mid			= LEG_FEMUR_M_L_MID ;
+	legs.leg[ E_LEG_M_L ].femurAngle->min			= LEG_FEMUR_M_L_MIN ;
+	legs.leg[ E_LEG_M_L ].femurAngle->max			= LEG_FEMUR_M_L_MAX ;
+	legs.leg[ E_LEG_M_L ].tibiaAngle->currentPosition		= LEG_TIBIA_M_L_MAX ;
+	legs.leg[ E_LEG_M_L ].tibiaAngle->targetPosition		= LEG_TIBIA_M_L_MAX ;
+	legs.leg[ E_LEG_M_L ].tibiaAngle->mid			= LEG_TIBIA_M_L_MID ;
+	legs.leg[ E_LEG_M_L ].tibiaAngle->min			= LEG_TIBIA_M_L_MIN ;
+	legs.leg[ E_LEG_M_L ].tibiaAngle->max			= LEG_TIBIA_M_L_MAX ;
+	
+	legs.leg[ E_LEG_B_L ].coxaAngle->currentPosition		= LEG_COXA_B_L_MID ;
+	legs.leg[ E_LEG_B_L ].coxaAngle->targetPosition		= LEG_COXA_B_L_MID ;
+	legs.leg[ E_LEG_B_L ].coxaAngle->mid			= LEG_COXA_B_L_MID ;
+	legs.leg[ E_LEG_B_L ].coxaAngle->min			= LEG_COXA_B_L_MIN ;
+	legs.leg[ E_LEG_B_L ].coxaAngle->max			= LEG_COXA_B_L_MAX ;
+	legs.leg[ E_LEG_B_L ].femurAngle->currentPosition		= LEG_FEMUR_B_L_MID ;
+	legs.leg[ E_LEG_B_L ].femurAngle->targetPosition		= LEG_FEMUR_B_L_MID ;
+	legs.leg[ E_LEG_B_L ].femurAngle->mid			= LEG_FEMUR_B_L_MID ;
+	legs.leg[ E_LEG_B_L ].femurAngle->min			= LEG_FEMUR_B_L_MIN ;
+	legs.leg[ E_LEG_B_L ].femurAngle->max			= LEG_FEMUR_B_L_MAX ;
+	legs.leg[ E_LEG_B_L ].tibiaAngle->currentPosition		= LEG_TIBIA_B_L_MAX ;
+	legs.leg[ E_LEG_B_L ].tibiaAngle->targetPosition		= LEG_TIBIA_B_L_MAX ;
+	legs.leg[ E_LEG_B_L ].tibiaAngle->mid			= LEG_TIBIA_B_L_MID ;
+	legs.leg[ E_LEG_B_L ].tibiaAngle->min			= LEG_TIBIA_B_L_MIN ;
+	legs.leg[ E_LEG_B_L ].tibiaAngle->max			= LEG_TIBIA_B_L_MAX ;
+	
+	legs.leg[ E_LEG_U_R ].coxaAngle->currentPosition		= LEG_COXA_U_R_MID ;
+	legs.leg[ E_LEG_U_R ].coxaAngle->targetPosition		= LEG_COXA_U_R_MID ;
+	legs.leg[ E_LEG_U_R ].coxaAngle->mid			= LEG_COXA_U_R_MID ;
+	legs.leg[ E_LEG_U_R ].coxaAngle->min			= LEG_COXA_U_R_MIN ;
+	legs.leg[ E_LEG_U_R ].coxaAngle->max			= LEG_COXA_U_R_MAX ;
+	legs.leg[ E_LEG_U_R ].femurAngle->currentPosition			= LEG_FEMUR_U_R_MID ;
+	legs.leg[ E_LEG_U_R ].femurAngle->targetPosition		= LEG_FEMUR_U_R_MID ;
+	legs.leg[ E_LEG_U_R ].femurAngle->mid			= LEG_FEMUR_U_R_MID ;
+	legs.leg[ E_LEG_U_R ].femurAngle->min			= LEG_FEMUR_U_R_MIN ;
+	legs.leg[ E_LEG_U_R ].femurAngle->max			= LEG_FEMUR_U_R_MAX ;
+	legs.leg[ E_LEG_U_R ].tibiaAngle->currentPosition		= LEG_TIBIA_U_R_MIN ;
+	legs.leg[ E_LEG_U_R ].tibiaAngle->targetPosition		= LEG_TIBIA_U_R_MIN ;
+	legs.leg[ E_LEG_U_R ].tibiaAngle->mid			= LEG_TIBIA_U_R_MID ;
+	legs.leg[ E_LEG_U_R ].tibiaAngle->min			= LEG_TIBIA_U_R_MIN ;
+	legs.leg[ E_LEG_U_R ].tibiaAngle->max			= LEG_TIBIA_U_R_MAX ;
+			  
+	legs.leg[ E_LEG_M_R ].coxaAngle->currentPosition		= LEG_COXA_M_R_MID ;
+	legs.leg[ E_LEG_M_R ].coxaAngle->targetPosition		= LEG_COXA_M_R_MID ;
+	legs.leg[ E_LEG_M_R ].coxaAngle->mid			= LEG_COXA_M_R_MID ;
+	legs.leg[ E_LEG_M_R ].coxaAngle->min			= LEG_COXA_M_R_MIN ;
+	legs.leg[ E_LEG_M_R ].coxaAngle->max			= LEG_COXA_M_R_MAX ;
+	legs.leg[ E_LEG_M_R ].femurAngle->currentPosition		= LEG_FEMUR_M_R_MID ;
+	legs.leg[ E_LEG_M_R ].femurAngle->targetPosition		= LEG_FEMUR_M_R_MID ;
+	legs.leg[ E_LEG_M_R ].femurAngle->mid			= LEG_FEMUR_M_R_MID ;
+	legs.leg[ E_LEG_M_R ].femurAngle->min			= LEG_FEMUR_M_R_MIN ;
+	legs.leg[ E_LEG_M_R ].femurAngle->max			= LEG_FEMUR_M_R_MAX ;
+	legs.leg[ E_LEG_M_R ].tibiaAngle->currentPosition		= LEG_TIBIA_M_R_MIN ;
+	legs.leg[ E_LEG_M_R ].tibiaAngle->targetPosition		= LEG_TIBIA_M_R_MIN ;
+	legs.leg[ E_LEG_M_R ].tibiaAngle->mid			= LEG_TIBIA_M_R_MID ;
+	legs.leg[ E_LEG_M_R ].tibiaAngle->min			= LEG_TIBIA_M_R_MIN ;
+	legs.leg[ E_LEG_M_R ].tibiaAngle->max			= LEG_TIBIA_M_R_MAX ;
+			  
+	legs.leg[ E_LEG_B_R ].coxaAngle->currentPosition		= LEG_COXA_B_R_MID ;
+	legs.leg[ E_LEG_B_R ].coxaAngle->targetPosition		= LEG_COXA_B_R_MID ;
+	legs.leg[ E_LEG_B_R ].coxaAngle->mid			= LEG_COXA_B_R_MID ;
+	legs.leg[ E_LEG_B_R ].coxaAngle->min			= LEG_COXA_B_R_MIN ;
+	legs.leg[ E_LEG_B_R ].coxaAngle->max			= LEG_COXA_B_R_MAX ;
+	legs.leg[ E_LEG_B_R ].femurAngle->currentPosition		= LEG_FEMUR_B_R_MID ;
+	legs.leg[ E_LEG_B_R ].femurAngle->targetPosition		= LEG_FEMUR_B_R_MID ;
+	legs.leg[ E_LEG_B_R ].femurAngle->mid			= LEG_FEMUR_B_R_MID ;
+	legs.leg[ E_LEG_B_R ].femurAngle->min			= LEG_FEMUR_B_R_MIN ;
+	legs.leg[ E_LEG_B_R ].femurAngle->max			= LEG_FEMUR_B_R_MAX ;
+	legs.leg[ E_LEG_B_R ].tibiaAngle->currentPosition		= LEG_TIBIA_B_R_MIN ;
+	legs.leg[ E_LEG_B_R ].tibiaAngle->targetPosition		= LEG_TIBIA_B_R_MIN ;
+	legs.leg[ E_LEG_B_R ].tibiaAngle->mid			= LEG_TIBIA_B_R_MID ;
+	legs.leg[ E_LEG_B_R ].tibiaAngle->min			= LEG_TIBIA_B_R_MIN ;
+	legs.leg[ E_LEG_B_R ].tibiaAngle->max			= LEG_TIBIA_B_R_MAX ;
 		
 	return TRUE;
 }

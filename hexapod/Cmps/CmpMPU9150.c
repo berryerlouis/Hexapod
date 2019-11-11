@@ -50,7 +50,7 @@ Boolean CmpMPU9150Init(Int8U addr)
 	
     //setFullScaleAccelRange
     DrvTwiReadReg( addr, MPU9150_ACCEL_CONFIG, &reg );
-    reg |= (MPU9150_ACCEL_FS_8 << 3U);
+    reg |= (MPU9150_ACCEL_FS_2 << 3U);
 	DrvTwiWriteReg(addr, MPU9150_ACCEL_CONFIG, reg);
 	
 	//setBandWidthLowPassFilter
@@ -67,7 +67,7 @@ Boolean CmpMPU9150Init(Int8U addr)
 }
 
 
-Boolean CmpMPU9150IsInitialized(void)
+Boolean CmpMPU9150IsCalibrated(void)
 {	
 	Boolean oSuccess = FALSE;
 	if((accOffsetIndex == NB_SAMPLES) && (gyrOffsetIndex == NB_SAMPLES))

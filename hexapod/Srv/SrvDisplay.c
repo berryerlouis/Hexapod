@@ -224,7 +224,7 @@ Boolean SrvDisplayScreenShowProgressBar ( uint8_t percentage )
 	#define WAITBAR_HEIGHT	5U
 	
 	//every 10ms progress bar value increment
-	if ((DrvTickGetTimeMs() - prevMillisDisplay) > 10U)
+	if ((DrvTickGetTimeMs() - prevMillisDisplay) > 30U)
 	{
 		prevMillisDisplay = DrvTickGetTimeMs();
 		//stop at percentage

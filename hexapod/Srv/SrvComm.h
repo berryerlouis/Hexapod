@@ -21,16 +21,18 @@
 #define COMM_HEADER_MESSAGE		'0'   //header
 		
 #define COMM_COMMAND_VERSION			'0'   //version
-#define COMM_COMMAND_SERVO_READ			'1'   //servomotors read
-#define COMM_COMMAND_SERVO_WRITE		'2'   //servomotors write
-#define COMM_COMMAND_SERVO_MIN_READ		'3'   //servomotors read
-#define COMM_COMMAND_SERVO_MIN_WRITE	'4'   //servomotors write
-#define COMM_COMMAND_SERVO_MAX_READ		'5'   //servomotors read
-#define COMM_COMMAND_SERVO_MAX_WRITE	'6'   //servomotors write
-#define COMM_COMMAND_LEG_WRITE			'7'   //write leg position
-#define COMM_COMMAND_SET_POSITION		'8'   //set position
-#define COMM_COMMAND_SET_WALK			'9'   //set walk
-#define COMM_COMMAND_SET_MOVE			'A'   //set move
+#define COMM_COMMAND_ENABLE_SERVO		'1'   //servomotors read
+#define COMM_COMMAND_GET_SERVO_ENABLE	'2'   //servomotors read
+#define COMM_COMMAND_SERVO_READ			'3'   //servomotors read
+#define COMM_COMMAND_SERVO_WRITE		'4'   //servomotors write
+#define COMM_COMMAND_SERVO_MIN_READ		'5'   //servomotors read
+#define COMM_COMMAND_SERVO_MIN_WRITE	'6'   //servomotors write
+#define COMM_COMMAND_SERVO_MAX_READ		'7'   //servomotors read
+#define COMM_COMMAND_SERVO_MAX_WRITE	'8'   //servomotors write
+#define COMM_COMMAND_LEG_WRITE			'9'   //write leg position
+#define COMM_COMMAND_SET_POSITION		'A'   //set position
+#define COMM_COMMAND_SET_WALK			'B'   //set walk
+#define COMM_COMMAND_SET_MOVE			'C'   //set move
 
 ////////////////////////////////////////PUBLIC STRUCTURES/////////////////////////////////////////
 typedef struct

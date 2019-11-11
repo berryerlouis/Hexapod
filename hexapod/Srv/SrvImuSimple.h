@@ -1,46 +1,41 @@
 /*
- * SrvBody.h
+ * SrvImuSimple.h
  *
  * Created: 27/07/2017 16:04:46
  *  Author: berryer
  */ 
 
 
-#ifndef SRVBODY_H_
-#define SRVBODY_H_
+#ifndef SRVIMUSIMPLE_H_
+#define SRVIMUSIMPLE_H_
 
 #include "Conf/ConfHard.h"
 #include "Tools/tools_typedefs.h"
 
-#include "Drv/DrvLeg.h"
 #include "Cmps/CmpMPU9150.h"
-#include "SrvBattery.h"
-#include "SrvWalk.h"
 
 ////////////////////////////////////////INCLUDES//////////////////////////////////////////////////
 
 ////////////////////////////////////////PUBLIC ENUM///////////////////////////////////////////////
-typedef enum
-{
-	E_BODY_STAR,
-	E_BODY_STRAIGHT,
-	E_BODY_UNKNOWNN,
-} E_BODY_POSITION;
+
 ////////////////////////////////////////PUBLIC DEFINES////////////////////////////////////////////
 
 ////////////////////////////////////////PUBLIC STRUCTURES/////////////////////////////////////////
-struct SBody 
+typedef struct  
 {
-	SLeg *legs;
-	SBatteryInfo *battery;
+	Boolean enable;
 	SMpu9150Acc acc;
 	SMpu9150Gyr gyr;
 	SMpu9150Tmp tmp;
-}body;
+	uint8_t accthreshold;
+}SImuSimple;
 ////////////////////////////////////////PUBLIC FUNCTIONS//////////////////////////////////////////
 //Fonction d'initialisation
-Boolean SrvBodyInit ( void ) ;
+Boolean SrvImuSimpleInit ( void ) ;
 //Fonction de dispatching d'evenements
-void SrvBodyUpdate (void) ;
-
-#endif //SRVBODY_H_
+void SrvImuSimpleUpdate (void) ;
+//Get the sensor pointer
+SImuSimple* SrvImuSimpleGetSensor (void) ;
+// activate the sensor
+Boolean SrvImuSimpleActivate( Boolean enable) ;
+#endif //SRVIMUSIMPLE_H_

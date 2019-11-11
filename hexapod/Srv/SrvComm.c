@@ -9,6 +9,7 @@
 #include "Drv/DrvUart.h"
 #include "Drv/DrvServo.h"
 #include "Drv/DrvLeg.h"
+#include "Drv/DrvTick.h"
 #include "SrvComm.h"
 #include "SrvWalk.h"
 #include "SrvDisplay.h"
@@ -40,6 +41,7 @@ Int16U nbDataAvailable = 0U;
 commMessageParsingState status = COMM_START;
 commMessage inMessage;
 
+uint32_t prevMillisPositionUpdate = 0U;
 /************************************************************************/
 /*init de la communication                                              */
 /************************************************************************/
@@ -58,6 +60,15 @@ Boolean SrvCommInit (void)
 void SrvCommUpdate ( void ) 
 {
 	SrvCommDecodeMessage();
+	if ((DrvTickGetTimeMs() - prevMillisPositionUpdate) > 250U)
+	{
+		inMessage.command = COMM_COMMAND_SERVO_READ;
+		inMessage.data[ 0U ] = 1;
+		inMessage.data[ 1U ] = 8;
+		SrvCommExecuteMessage();
+		//for next time
+		prevMillisPositionUpdate = DrvTickGetTimeMs();
+	}
 }
 
 //permits to execute the incoming data
@@ -67,7 +78,7 @@ static Boolean SrvCommExecuteMessage( void )
 	uint8_t servoId = 0xFFU;
 	uint8_t legId = 0xFFU;
 	SServo *servo;
-	uint8_t response [20U] = { 0U };
+	uint8_t response [100U] = { 0U };
 		
 	//check command 
 	if( inMessage.command ==  COMM_COMMAND_VERSION)
@@ -79,6 +90,43 @@ static Boolean SrvCommExecuteMessage( void )
 		//can send data
 		oSuccess = TRUE;
 	}
+	else if( inMessage.command ==  COMM_COMMAND_ENABLE_SERVO)
+	{
+		servoId = (uint8_t)((inMessage.data [ 0U ] * 10U) + inMessage.data[ 1U ]);
+		//if legs
+		if(servoId < NB_LEGS * NB_SERVOS_PER_LEG)
+		{
+			Boolean activate = inMessage.data[ 2U ];
+			//can send data
+			DrvServoActivate(servoId, activate);
+			oSuccess = TRUE;
+		}
+	}
+	else if( inMessage.command ==  COMM_COMMAND_GET_SERVO_ENABLE)
+	{	
+		servoId = (uint8_t)((inMessage.data [ 0U ] * 10U) + inMessage.data[ 1U ]);
+		//if legs
+		if(servoId < NB_LEGS * NB_SERVOS_PER_LEG)
+		{
+			//can send data
+			servo = DrvServoGetStruture(servoId); 
+			
+			response[ 0U ] = '0'; //header
+			response[ 1U ] = COMM_COMMAND_GET_SERVO_ENABLE; //command
+			if( servoId >= 10)
+			{
+				itoa(servoId,(char*)&response[ 2U ],10); //servo id
+			}
+			else if( servoId >= 0)
+			{
+				response[ 2U ] = '0';
+				itoa(servoId,(char*)&response[ 3U ],10); //servo id
+			}
+			response[ 4U ] = servo->enable ? '1' : '0';
+			SrvCommWriteMessage(response, 5U);
+			oSuccess = TRUE;
+		}	
+	}
 	else if( inMessage.command ==  COMM_COMMAND_SERVO_READ)
 	{
 		servoId = (uint8_t)((inMessage.data[ 0U ] * 10U) + inMessage.data[ 1U ]);
@@ -89,8 +137,40 @@ static Boolean SrvCommExecuteMessage( void )
 				
 			response[ 0U ] = '0'; //header
 			response[ 1U ] = COMM_COMMAND_SERVO_READ; //command
-			formatMessage(servoId, servo->targetPosition, servo->movingTime, response);
+			
+			formatMessage(servoId, servo->targetPosition - servo->mid + 90, servo->movingTime, response);
 			SrvCommWriteMessage(response, 11U);
+			//can send data
+			oSuccess = TRUE;
+		}
+		else if(servoId == NB_LEGS * NB_SERVOS_PER_LEG)
+		{
+				
+			response[ 0U ] = '0'; //header
+			response[ 1U ] = COMM_COMMAND_SERVO_READ; //command
+			response[ 2U ] = '1'; //servoId
+			response[ 3U ] = '8'; //command
+			
+			for( uint8_t servoId = 0U; servoId < NB_LEGS * NB_SERVOS_PER_LEG ; servoId++ )
+			{ 
+				servo = DrvServoGetStruture(servoId);  
+				if( servo->targetPosition - servo->mid + 90 >= 100)
+				{
+					itoa(servo->targetPosition - servo->mid + 90,(char*)&response[ (3U * servoId) + 4U ],10);
+				}
+				else if( servo->targetPosition - servo->mid + 90 >= 10)
+				{
+					response[ (3U * servoId) + 4U ] = '0';
+					itoa(servo->targetPosition - servo->mid + 90,(char*)&response[ (3U * servoId) + 5U ],10);
+				}
+				else if( servo->targetPosition - servo->mid + 90 >= 0)
+				{
+					response[ (3U * servoId) + 4U ] = '0';
+					response[ (3U * servoId) + 5U ] = '0';
+					itoa(servo->targetPosition - servo->mid + 90,(char*)&response[ (3U * servoId) + 6U ],10);
+				}
+			}
+			SrvCommWriteMessage(response, 4U + 18U * 3U);
 			//can send data
 			oSuccess = TRUE;
 		}
@@ -101,12 +181,11 @@ static Boolean SrvCommExecuteMessage( void )
 		//if legs
 		if(servoId < NB_LEGS * NB_SERVOS_PER_LEG)
 		{
+			servo = DrvServoGetStruture(servoId);  
 			int16_t servoPos =  inMessage.data[ 2U ] * 100 + inMessage.data[ 3U ] * 10 + inMessage.data[ 4U ];
 			uint16_t delay = inMessage.data[ 5U ] * 1000 + inMessage.data[ 6U ] * 100 + inMessage.data[ 7U ] * 10 + inMessage.data[ 8U ];
-			
-			DrvServoSetTarget(servoId,servoPos,delay);
 			//can send data
-			oSuccess = TRUE;
+			oSuccess = DrvServoSetTarget(servoId,servoPos + servo->mid - 90 ,delay);
 		}
 	}
 	else if( inMessage.command ==  COMM_COMMAND_SERVO_MIN_READ)
@@ -119,7 +198,7 @@ static Boolean SrvCommExecuteMessage( void )
 				
 			response[ 0U ] = '0'; //header
 			response[ 1U ] = COMM_COMMAND_SERVO_MIN_READ; //command
-			formatMessageMinMax(servoId, servo->min, response);
+			formatMessageMinMax(servoId, servo->min , response);
 			SrvCommWriteMessage(response, 7U);
 			//can send data
 			oSuccess = TRUE;
@@ -135,7 +214,7 @@ static Boolean SrvCommExecuteMessage( void )
 				
 			response[ 0U ] = '0'; //header
 			response[ 1U ] = COMM_COMMAND_SERVO_MAX_READ; //command
-			formatMessageMinMax(servoId, servo->max, response);
+			formatMessageMinMax(servoId, servo->max , response);
 			SrvCommWriteMessage(response, 7U);
 			//can send data
 			oSuccess = TRUE;
