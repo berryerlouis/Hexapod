@@ -19,7 +19,7 @@ static void SrvWalkLegsStep( E_LEG movingLeg1, E_LEG movingLeg2, E_LEG movingLeg
 static void SrvWalkStop ( void );
 
 
-static Boolean SrvWalkMoveLeg ( E_LEG movingLeg, Int16U speed );
+static Boolean SrvWalkMoveLeg ( E_LEG movingLeg, Int8U step, Int16U speed );
 
 ////////////////////////////////////////PRIVATE VARIABLES/////////////////////////////////////////
 
@@ -195,15 +195,57 @@ static void SrvWalkLegsStep( E_LEG movingLeg1, E_LEG movingLeg2, E_LEG movingLeg
 
 static void SrvWalkTripod ( E_WALK walk )
 {	
-	
+	static Int8U step[2U] = {0U,2U};
+	static Int8U sequence = 0U;
+	 
 	if( walk == E_WALK_FW )
 	{
-		for(E_LEG indexLeg = 0 ; indexLeg < E_NB_LEGS ; indexLeg++)
+		Int8U success = FALSE;
+		success |= (SrvWalkMoveLeg(E_LEG_U_L,step[0],walkingDelay) << 0);
+		success |= (SrvWalkMoveLeg(E_LEG_M_L,step[1],walkingDelay) << 1);
+		success |= (SrvWalkMoveLeg(E_LEG_B_L,step[0],walkingDelay) << 2);
+		success |= (SrvWalkMoveLeg(E_LEG_U_R,step[1],walkingDelay) << 3);
+		success |= (SrvWalkMoveLeg(E_LEG_M_R,step[0],walkingDelay) << 4);
+		success |= (SrvWalkMoveLeg(E_LEG_B_R,step[1],walkingDelay) << 5);
+				
+		if(success || 0b00010101)
+		{
+			if(step[0]!= 2)
+			{
+				step[0]++;
+			}
+			if((step[0] == 2)&&(step[1]== 2))
+			{
+				step[1]++;
+			}
+			if((step[0]) == NB_WALK_STEPS )
+			{
+				step[0] = 0U;
+			}
+		}
+		if(success || 0b00101010)
+		{
+			if(step[1]!= 2)
+			{
+				step[1]++;
+			}
+			if((step[1] == 2)&&(step[0]== 2))
+			{
+				step[0]++;
+			}
+			if((step[1]) == NB_WALK_STEPS )
+			{
+				step[1] = 0U;
+			}
+		}
+	}
+		
+		/*for(E_LEG indexLeg = 0 ; indexLeg < E_NB_LEGS ; indexLeg++)
 		{
 			Int16U speed = walkingDelay; 
-			if((stepLeg[indexLeg].step) != 2 )
+			if((stepLeg[indexLeg].step) == 2U )
 			{
-				speed = walkingDelay / 4;
+				speed = walkingDelay * 1U;
 			}
 			if(SrvWalkMoveLeg(indexLeg,speed))
 			{
@@ -213,16 +255,16 @@ static void SrvWalkTripod ( E_WALK walk )
 					stepLeg[indexLeg].step = 0U;
 				}
 			}
-		}
-	}
-	else
+		}*/
+	//}
+	/*else
 	{
 		for(E_LEG indexLeg = 0 ; indexLeg < E_NB_LEGS ; indexLeg++)
 		{
 			Int16U speed = walkingDelay; 
-			if((stepLeg[indexLeg].step) != 1 )
+			if((stepLeg[indexLeg].step) == 1U )
 			{
-				speed = walkingDelay / 4;
+				speed = walkingDelay * 3U;
 			}
 			if(SrvWalkMoveLeg(indexLeg,speed))
 			{
@@ -233,24 +275,12 @@ static void SrvWalkTripod ( E_WALK walk )
 				stepLeg[indexLeg].step--;
 			}
 		}
-	}
-	
-	
+	}*/
 }	
-
-
-
-
-
-
-
-
-
-
 
 static void SrvWalkWave ( E_WALK walk )
 {
-	static executeAll = FALSE;
+	/*static executeAll = FALSE;
 	static E_LEG movingLeg = E_LEG_U_L;
 	//Int8U gaitsTabWave		[]= {0,0,0,0,0,1, 
 								 //0,0,0,0,1,0,
@@ -319,17 +349,8 @@ static void SrvWalkWave ( E_WALK walk )
 				executeAll = FALSE;
 			}
 		}
-	}
+	}*/
 }
-
-
-
-
-
-
-
-
-
 	
 Int8U movingLegIndex = 0;
 static void SrvWalkRipple ( E_WALK walk )
@@ -407,9 +428,7 @@ static void SrvWalkStop ( void )
 	}
 }
 
-
-
-static Boolean SrvWalkMoveLeg ( E_LEG movingLeg, Int16U speed )
+static Boolean SrvWalkMoveLeg ( E_LEG movingLeg,Int8U step, Int16U speed )
 {
 	
 	Int8U indexHanche = 0U + (movingLeg * 3U);
@@ -424,43 +443,46 @@ static Boolean SrvWalkMoveLeg ( E_LEG movingLeg, Int16U speed )
 	{
 		if(movingLeg == E_LEG_U_L)
 		{
-			reponse = DrvServoSetTarget(indexHanche,	DrvServoGetStruture(indexHanche)->mid + legsXTripodLeft[stepLeg[movingLeg].step] + 20,	stepLeg[movingLeg].speed );
+			reponse = DrvServoSetTarget(indexHanche,	DrvServoGetStruture(indexHanche)->mid + legsXTripodLeft[step] + 20,	stepLeg[movingLeg].speed );
 		}
 		else if(movingLeg == E_LEG_B_L)
 		{
-			reponse = DrvServoSetTarget(indexHanche,	DrvServoGetStruture(indexHanche)->mid + legsXTripodLeft[stepLeg[movingLeg].step] - 20,	stepLeg[movingLeg].speed );
+			reponse = DrvServoSetTarget(indexHanche,	DrvServoGetStruture(indexHanche)->mid + legsXTripodLeft[step] - 20,	stepLeg[movingLeg].speed );
 		}
 		else
 		{
-			reponse = DrvServoSetTarget(indexHanche,	DrvServoGetStruture(indexHanche)->mid + legsXTripodLeft[stepLeg[movingLeg].step] ,	stepLeg[movingLeg].speed );
+			reponse = DrvServoSetTarget(indexHanche,	DrvServoGetStruture(indexHanche)->mid + legsXTripodLeft[step] ,	stepLeg[movingLeg].speed );
 		}
 		reponse *= 10U;
-		reponse += DrvServoSetTarget(indexGenoux,	DrvServoGetStruture(indexGenoux)->mid + legsYTripodLeft[stepLeg[movingLeg].step],	stepLeg[movingLeg].speed );
+		reponse += DrvServoSetTarget(indexGenoux,	DrvServoGetStruture(indexGenoux)->mid + legsYTripodLeft[step],	stepLeg[movingLeg].speed );
 		reponse *= 10U;
-		reponse += DrvServoSetTarget(indexCheville,	DrvServoGetStruture(indexCheville)->mid + legsZTripodLeft[stepLeg[movingLeg].step],	stepLeg[movingLeg].speed );
+		reponse += DrvServoSetTarget(indexCheville,	DrvServoGetStruture(indexCheville)->mid + legsZTripodLeft[step],	stepLeg[movingLeg].speed );
 	}
 	else
 	{
 		if(movingLeg == E_LEG_U_R)
 		{
-			reponse = DrvServoSetTarget(indexHanche,	DrvServoGetStruture(indexHanche)->mid + legsXTripodRight[stepLeg[movingLeg].step] - 20,	stepLeg[movingLeg].speed );
+			reponse = DrvServoSetTarget(indexHanche,	DrvServoGetStruture(indexHanche)->mid + legsXTripodRight[step] - 20,	stepLeg[movingLeg].speed );
 		}
 		else if(movingLeg == E_LEG_B_R)
 		{
-			reponse = DrvServoSetTarget(indexHanche,	DrvServoGetStruture(indexHanche)->mid + legsXTripodRight[stepLeg[movingLeg].step] + 20,	stepLeg[movingLeg].speed );
+			reponse = DrvServoSetTarget(indexHanche,	DrvServoGetStruture(indexHanche)->mid + legsXTripodRight[step] + 20,	stepLeg[movingLeg].speed );
 		}
 		else
 		{
-			reponse = DrvServoSetTarget(indexHanche,	DrvServoGetStruture(indexHanche)->mid + legsXTripodRight[stepLeg[movingLeg].step] ,	stepLeg[movingLeg].speed );
+			reponse = DrvServoSetTarget(indexHanche,	DrvServoGetStruture(indexHanche)->mid + legsXTripodRight[step] ,	stepLeg[movingLeg].speed );
 		}
 		reponse *= 10U;
-		reponse += DrvServoSetTarget(indexGenoux,	DrvServoGetStruture(indexGenoux)->mid + legsYTripodRight[stepLeg[movingLeg].step],	stepLeg[movingLeg].speed );
+		reponse += DrvServoSetTarget(indexGenoux,	DrvServoGetStruture(indexGenoux)->mid + legsYTripodRight[step],	stepLeg[movingLeg].speed );
 		reponse *= 10U;
-		reponse += DrvServoSetTarget(indexCheville,	DrvServoGetStruture(indexCheville)->mid + legsZTripodRight[stepLeg[movingLeg].step], stepLeg[movingLeg].speed );
+		reponse += DrvServoSetTarget(indexCheville,	DrvServoGetStruture(indexCheville)->mid + legsZTripodRight[step], stepLeg[movingLeg].speed );
 	}
 	if(reponse == 111U)
 	{
-		return TRUE;
+		if(DrvServoCheckPosition(indexHanche) && DrvServoCheckPosition(indexGenoux) && DrvServoCheckPosition(indexCheville))
+		{
+			return TRUE;
+		}
 	}
 	return FALSE;	
 }
