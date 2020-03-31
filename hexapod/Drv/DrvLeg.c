@@ -49,6 +49,8 @@ Boolean DrvLegInit( void )
 	for(Int8U i = 0U ; i < NB_LEGS ; i++ )
 	{
 		legs.leg[i].id				= i ;
+		legs.leg[i].enable			= TRUE ;
+		legs.leg[i].initialized		= FALSE ;
 		legs.leg[i].coxaAngle		= DrvServoGetStruture(i * 3) ;
 		legs.leg[i].coxaAngle->id	= (i * 3);
 		legs.leg[i].femurAngle		= DrvServoGetStruture((i * 3) + 1) ;
@@ -68,12 +70,12 @@ SLegs* DrvLegGetLegs( void )
 	return &legs;
 }
 
-SLeg* DrvLegGetLeg( E_LEG indexLeg )
+SLeg* DrvLegGetLeg( ELeg indexLeg )
 {
 	return &legs.leg[indexLeg];
 }
 
-Boolean DrvLegCheckTarget( E_LEG indexLeg )
+Boolean DrvLegCheckTarget( ELeg indexLeg )
 {
 	Int8U indexEpaule = 0U + (indexLeg * 3U);
 	Int8U indexCoude  = 1U + (indexLeg * 3U);
@@ -89,17 +91,21 @@ Boolean DrvLegCheckTarget( E_LEG indexLeg )
 	return FALSE;
 }
 
-Boolean DrvLegGetXYZ(E_LEG indexLeg, Int16S *x, Int16S *y, Int16S *z )
+Boolean DrvLegGetXYZ(ELeg indexLeg, Int16S *x, Int16S *y, Int16S *z )
 {
 	x[0] = legs.leg[ indexLeg ].x;
 	y[0] = legs.leg[ indexLeg ].y;
 	z[0] = legs.leg[ indexLeg ].z;
 	return TRUE;
 }
-Boolean DrvLegSetXYZ( E_LEG indexLeg, Int16S x, Int16S y, Int16S z, Int16U speed )
+Boolean DrvLegSetXYZ( ELeg indexLeg, Int16S x, Int16S y, Int16S z, Int16U speed )
 {	
 	//http://te.unib.ac.id/lecturer/indraagustian/2014/05/3dof-inverse-kinematic-for-armleg-of-robot-use-arduino/
-	if(indexLeg < E_NB_LEGS)
+	if(
+		(indexLeg < E_NB_LEGS) &&
+		(legs.leg[indexLeg].initialized == TRUE )&&
+		(legs.leg[indexLeg].enable == TRUE )
+	)
 	{
 		legs.leg[ indexLeg ].x = x;
 		legs.leg[ indexLeg ].y = y;
@@ -112,16 +118,16 @@ Boolean DrvLegSetXYZ( E_LEG indexLeg, Int16S x, Int16S y, Int16S z, Int16U speed
 	
 		//add size of members
 		x += 0U;
-		y += LEG_COCYX_LENGHT;
-		z += (LEG_TIBIA_LENGHT - LEG_FEMUR_LENGHT);
+		y += LEG_COCYX_LENGTH;
+		z += (LEG_TIBIA_LENGTH - LEG_FEMUR_LENGTH);
 		
 		//compute angles from distances
 		L1 = (float)sqrt((x * x) + (y * y));
 		gama = (float)atan((float)x / (float)y);
-		L = (float)sqrt(((L1 - LEG_COCYX_LENGHT) * (L1 - LEG_COCYX_LENGHT)) + (z * z));
-		beta = (float)acos(((LEG_TIBIA_LENGHT * LEG_TIBIA_LENGHT) + (LEG_FEMUR_LENGHT * LEG_FEMUR_LENGHT) - (L * L)) / (2 * LEG_TIBIA_LENGHT * LEG_FEMUR_LENGHT));
+		L = (float)sqrt(((L1 - LEG_COCYX_LENGTH) * (L1 - LEG_COCYX_LENGTH)) + (z * z));
+		beta = (float)acos(((LEG_TIBIA_LENGTH * LEG_TIBIA_LENGTH) + (LEG_FEMUR_LENGTH * LEG_FEMUR_LENGTH) - (L * L)) / (2 * LEG_TIBIA_LENGTH * LEG_FEMUR_LENGTH));
 		alpha1 = (float)acos(z / L);
-		alpha2 = (float)acos(((LEG_FEMUR_LENGHT * LEG_FEMUR_LENGHT) + (L * L) - (LEG_TIBIA_LENGHT * LEG_TIBIA_LENGHT)) / (2 * LEG_FEMUR_LENGHT * L));
+		alpha2 = (float)acos(((LEG_FEMUR_LENGTH * LEG_FEMUR_LENGTH) + (L * L) - (LEG_TIBIA_LENGTH * LEG_TIBIA_LENGTH)) / (2 * LEG_FEMUR_LENGTH * L));
 		alpha = alpha1 + alpha2;
 	
 		gama  = (gama * 180) / M_PI;
@@ -130,17 +136,22 @@ Boolean DrvLegSetXYZ( E_LEG indexLeg, Int16S x, Int16S y, Int16S z, Int16U speed
 	
 		//set servos position
 		uint8_t reponse = 0;
+		
+		//we have to split left and right side because of servo min and max are reverted between the 2 sides
+		//left side
 		if((indexLeg == E_LEG_U_L)||(indexLeg == E_LEG_M_L)||(indexLeg == E_LEG_B_L))
 		{
 			alpha = SetRange(alpha,0,180,legs.leg[ indexLeg ].femurAngle->min,legs.leg[ indexLeg ].femurAngle->max);
 			beta = SetRange(beta,0,180,legs.leg[ indexLeg ].tibiaAngle->max,legs.leg[ indexLeg ].tibiaAngle->min);
 		}
+		//right side
 		else
 		{
 			alpha = SetRange(alpha,0,180,legs.leg[ indexLeg ].femurAngle->max,legs.leg[ indexLeg ].femurAngle->min);
 			beta = SetRange(beta,0,180,legs.leg[ indexLeg ].tibiaAngle->min,legs.leg[ indexLeg ].tibiaAngle->max);
 		}
 		
+		//same for the gama angle
 		if((indexLeg == E_LEG_U_L)||(indexLeg == E_LEG_B_R))
 		{
 			gama += legs.leg[ indexLeg ].coxaAngle->min;
@@ -154,6 +165,7 @@ Boolean DrvLegSetXYZ( E_LEG indexLeg, Int16S x, Int16S y, Int16S z, Int16U speed
 			gama += legs.leg[ indexLeg ].coxaAngle->mid;
 		}
 		
+		//send to servo
 		reponse = DrvServoSetTarget(indexHanche,	(Int16S)round(gama)	,	speed );
 		reponse *= 10U;
 		reponse += DrvServoSetTarget(indexGenoux,	(Int16S)(round(alpha)),	speed );
@@ -165,9 +177,13 @@ Boolean DrvLegSetXYZ( E_LEG indexLeg, Int16S x, Int16S y, Int16S z, Int16U speed
 	return FALSE;
 }
 
-Boolean DrvLegSetPosition( E_LEG indexLeg, Int16S coxaAngle, Int16S femurAngle, Int16S tibiaAngle, Int16U speed )
+Boolean DrvLegSetPosition( ELeg indexLeg, Int16S coxaAngle, Int16S femurAngle, Int16S tibiaAngle, Int16U speed )
 {
-	if(indexLeg < E_NB_LEGS)
+	if(
+		(indexLeg < E_NB_LEGS) &&
+		(legs.leg[indexLeg].initialized == TRUE )&&
+		(legs.leg[indexLeg].enable == TRUE )
+	)
 	{
 		//index of servos
 		Int8U indexHanche = 0U + (indexLeg * 3U);
@@ -189,7 +205,7 @@ Boolean DrvLegIsInitialized( void )
 
 Boolean DrvLegUpdate( void )
 {
-	//if servos are initializing so activate servos step by step with step of 500
+	//if servos are initializing : activating servos step by step each 500 ms
 	if ((DrvTickGetTimeMs() - prevMillisServosUpdate) > SERVO_REFRESH_PERIOD)
 	{
 		//if initializing time
@@ -203,6 +219,8 @@ Boolean DrvLegUpdate( void )
 				servosInitializingPeriod = 0U;
 				//enable servo
 				DrvServoActivate(servoIndex,TRUE);
+				//leg is now initialized
+				legs.leg[servoIndex / NB_SERVOS].initialized = TRUE ;
 				//prepare for next servo
 				servoIndex++;
 				

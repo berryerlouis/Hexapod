@@ -440,7 +440,7 @@ static Boolean SrvCommExecuteClusterServo( void )
 			//prepare output string
 			servo = DrvServoGetStruture(servoId);
 			uint8_t nbData = SrvCommPrepareMessage(COMM_CLUSTER_SERVOS,COMM_CLUSTER_SERVOS_COMMAND_SERVO_READ, 4U);
-			uint8_t mid = servo->targetPosition - servo->mid + 90;
+			uint8_t mid = servo->targetPosition;
 			nbData += sprintf((char*)&response[ nbData ],"%02X%02X",servoId,mid);
 			return SrvCommWriteMessage(nbData);
 		}
@@ -452,10 +452,10 @@ static Boolean SrvCommExecuteClusterServo( void )
 		if(servoId < NB_LEGS * NB_SERVOS_PER_LEG)
 		{
 			servo = DrvServoGetStruture(servoId);
-			int16_t servoPos =  (inMessage.data[ 2U ] * 16 + inMessage.data[ 3U ] ) - 90;
+			int16_t servoPos =  (inMessage.data[ 2U ] * 16 + inMessage.data[ 3U ] );
 			uint16_t delay = inMessage.data[ 4U ] * 4096 + inMessage.data[ 5U ] * 256 + inMessage.data[ 6U ] * 16 + inMessage.data[ 7U ];
 			//can send data
-			return DrvServoSetTarget(servoId,servoPos + servo->mid , delay);
+			return DrvServoSetTarget(servoId,servoPos, delay);
 		}
 	}
 	else if(( inMessage.command ==  COMM_CLUSTER_SERVOS_COMMAND_SERVO_MIN_READ) && (inMessage.size == 2U))
@@ -467,7 +467,7 @@ static Boolean SrvCommExecuteClusterServo( void )
 			//prepare output string
 			servo = DrvServoGetStruture(servoId);
 			uint8_t nbData = SrvCommPrepareMessage(COMM_CLUSTER_SERVOS,COMM_CLUSTER_SERVOS_COMMAND_SERVO_MIN_READ, 4U);
-			uint8_t min = servo->min - servo->mid + 90;
+			uint8_t min = servo->min;
 			nbData += sprintf((char*)&response[ nbData ],"%02X%02X",servoId,min);
 			return SrvCommWriteMessage(nbData);
 		}
@@ -482,7 +482,7 @@ static Boolean SrvCommExecuteClusterServo( void )
 			//prepare output string
 			servo = DrvServoGetStruture(servoId);
 			uint8_t nbData = SrvCommPrepareMessage(COMM_CLUSTER_SERVOS,COMM_CLUSTER_SERVOS_COMMAND_SERVO_MAX_READ, 4U);
-			uint8_t max = servo->max - servo->mid + 90;
+			uint8_t max = servo->max;
 			nbData += sprintf((char*)&response[ nbData ],"%02X%02X",servoId,max);
 			return SrvCommWriteMessage(nbData);
 		}
@@ -494,7 +494,7 @@ static Boolean SrvCommExecuteClusterServo( void )
 		for( uint8_t servoId = 0U; servoId < NB_LEGS * NB_SERVOS_PER_LEG ; servoId++ )
 		{
 			servo = DrvServoGetStruture(servoId);
-			uint8_t mid = servo->targetPosition - servo->mid + 90;
+			uint8_t mid = servo->targetPosition;
 			nbData += sprintf((char*)&response[ nbData ],"%02X",mid);
 		}
 		return SrvCommWriteMessage(nbData);

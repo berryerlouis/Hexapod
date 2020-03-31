@@ -17,11 +17,11 @@
 static void SrvWalkTripod ( E_WALK walk );
 static void SrvWalkWave ( E_WALK walk );
 static void SrvWalkRipple ( E_WALK walk );
-static void SrvWalkLegsStep( E_LEG movingLeg1, E_LEG movingLeg2, E_LEG movingLeg3,Int16U speed);
+static void SrvWalkLegsStep( ELeg movingLeg1, ELeg movingLeg2, ELeg movingLeg3,Int16U speed);
 static void SrvWalkStop ( void );
 
 
-static Boolean SrvWalkMoveLeg ( E_LEG movingLeg, Int8U step, Int16U speed );
+static Boolean SrvWalkMoveLeg ( ELeg movingLeg, Int8U step, Int16U speed );
 
 ////////////////////////////////////////PRIVATE VARIABLES/////////////////////////////////////////
 
@@ -177,7 +177,7 @@ Boolean SrvWalkSetGait( E_GAIT gait, uint16_t delay )
 
 ////////////////////////////////////////PRIVATE FUNCTIONS/////////////////////////////////////////
 
-static void SrvWalkLegsStep( E_LEG movingLeg1, E_LEG movingLeg2, E_LEG movingLeg3,Int16U speed)
+static void SrvWalkLegsStep( ELeg movingLeg1, ELeg movingLeg2, ELeg movingLeg3,Int16U speed)
 {
 	//decrease delay per 2 for the first movement
 	//if(stepLeg[movingLeg1].step == 0)speed = (speed * 2U) / 3U;
@@ -414,7 +414,7 @@ static void SrvWalkWave ( E_WALK walk )
 Int8U movingLegIndex = 0;
 static void SrvWalkRipple ( E_WALK walk )
 {
-	E_LEG moveLegs[] = {
+	ELeg moveLegs[] = {
 		E_LEG_U_L,
 		E_LEG_M_R,
 		E_LEG_B_L,
@@ -487,7 +487,7 @@ static void SrvWalkStop ( void )
 	}
 }
 
-static Boolean SrvWalkMoveLeg ( E_LEG movingLeg,Int8U step, Int16U speed )
+static Boolean SrvWalkMoveLeg ( ELeg movingLeg,Int8U step, Int16U speed )
 {
 	
 	Int8U indexHanche = 0U + (movingLeg * 3U);
