@@ -66,11 +66,11 @@ Boolean DrvUartInit( void )
 		DrvIoSetPinInput(i2cPins[ E_UART_1 ][UART_RX_PIN]);
 		
 		#ifdef E_UART_1_BAUD_RATE
-			UBRR1 = ComputeBaudRate(E_UART_1_BAUD_RATE);
+			UBRR1 = ComputeBaudRateDoubleSpeed(E_UART_1_BAUD_RATE);
 		#else
-			UBRR1 = ComputeBaudRate(9600);
+			UBRR1 = ComputeBaudRateDoubleSpeed(9600);
 		#endif
-		//BIT_HIGH(UCSR1A,U2X1);		//double speed mode
+		BIT_HIGH(UCSR1A,U2X1);		//double speed mode
 		BIT_HIGH(UCSR1B,RXEN1);		//enable RX
 		BIT_HIGH(UCSR1B,TXEN1);		//enable TX
 		BIT_HIGH(UCSR1C,UCSZ10);	//8 bits, no parity, 1 stop
@@ -86,24 +86,35 @@ Boolean DrvUartInit( void )
 Boolean DrvUartSetBaudRate(Int8U indexUart, Int32U baud)
 {
 	#if E_UART_0 == 0U
-		BIT_LOW(UCSR0B,RXEN0);		//disable RX
-		BIT_LOW(UCSR0B,TXEN0);		//disable TX
-		BIT_LOW(UCSR0B,RXCIE0);	//disable RX interrupt
+		UCSR0A = 0x00U;
+		UCSR0B = 0x00U;
+		UCSR0C = 0x00U;
 		UBRR0 = ComputeBaudRateDoubleSpeed(baud);
+		BIT_HIGH(UCSR0A,U2X0);		//double speed mode
 		BIT_HIGH(UCSR0B,RXEN0);		//enable RX
 		BIT_HIGH(UCSR0B,TXEN0);		//enable TX
+		BIT_HIGH(UCSR0C,UCSZ00);	//8 bits, no parity, 1 stop
+		BIT_LOW(UCSR0B,TXCIE0);		//disable TX interrupt
+		BIT_LOW(UCSR0B,UDRIE0);		//disable UDR interrupt
 		BIT_HIGH(UCSR0B,RXCIE0);	//enable RX interrupt
 	#endif
 	
 	#ifdef E_UART_1
-		BIT_LOW(UCSR1B,RXEN1);		//disable RX
-		BIT_LOW(UCSR1B,TXEN1);		//disable TX
-		BIT_LOW(UCSR1B,RXCIE1);	//disable RX interrupt
-		UBRR1 = ComputeBaudRate(baud);
+		UCSR1A = 0x00U;
+		UCSR1B = 0x00U;
+		UCSR1C = 0x00U;
+		UBRR1 = ComputeBaudRateDoubleSpeed(baud);
+		BIT_HIGH(UCSR1A,U2X1);		//double speed mode
 		BIT_HIGH(UCSR1B,RXEN1);		//enable RX
 		BIT_HIGH(UCSR1B,TXEN1);		//enable TX
+		BIT_HIGH(UCSR1C,UCSZ10);	//8 bits, no parity, 1 stop
+		BIT_HIGH(UCSR1B,RXCIE1);	//enable RX interrupt
+		BIT_LOW(UCSR1B,TXCIE1);		//disable TX interrupt
+		BIT_LOW(UCSR1B,UDRIE1);		//disable UDR interrupt
 		BIT_HIGH(UCSR1B,RXCIE1);	//enable RX interrupt
 	#endif
+	
+	return TRUE;
 }
 
 //rempli le buffer d'emission

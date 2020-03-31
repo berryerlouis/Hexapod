@@ -229,11 +229,11 @@ Boolean DrvLegUpdate( void )
  */
 static Boolean DrvLegSetOffset ( void ) 
 {		
-	legs.leg[ E_LEG_U_L ].coxaAngle->currentPosition		= LEG_COXA_U_L_MIN ;
-	legs.leg[ E_LEG_U_L ].coxaAngle->targetPosition		= LEG_COXA_U_L_MIN ;
-	legs.leg[ E_LEG_U_L ].coxaAngle->mid			= LEG_COXA_U_L_MID ;
-	legs.leg[ E_LEG_U_L ].coxaAngle->min			= LEG_COXA_U_L_MIN ;
-	legs.leg[ E_LEG_U_L ].coxaAngle->max			= LEG_COXA_U_L_MAX ;
+	legs.leg[ E_LEG_U_L ].coxaAngle->currentPosition		= LEG_COCYX_U_L_MIN ;
+	legs.leg[ E_LEG_U_L ].coxaAngle->targetPosition		= LEG_COCYX_U_L_MIN ;
+	legs.leg[ E_LEG_U_L ].coxaAngle->mid			= LEG_COCYX_U_L_MID ;
+	legs.leg[ E_LEG_U_L ].coxaAngle->min			= LEG_COCYX_U_L_MIN ;
+	legs.leg[ E_LEG_U_L ].coxaAngle->max			= LEG_COCYX_U_L_MAX ;
 	legs.leg[ E_LEG_U_L ].femurAngle->currentPosition		= LEG_FEMUR_U_L_MAX ;
 	legs.leg[ E_LEG_U_L ].femurAngle->targetPosition		= LEG_FEMUR_U_L_MAX ;
 	legs.leg[ E_LEG_U_L ].femurAngle->mid			= LEG_FEMUR_U_L_MID ;
@@ -245,11 +245,11 @@ static Boolean DrvLegSetOffset ( void )
 	legs.leg[ E_LEG_U_L ].tibiaAngle->min			= LEG_TIBIA_U_L_MIN ;
 	legs.leg[ E_LEG_U_L ].tibiaAngle->max			= LEG_TIBIA_U_L_MAX ;
 	
-	legs.leg[ E_LEG_M_L ].coxaAngle->currentPosition		= LEG_COXA_M_L_MID ;
-	legs.leg[ E_LEG_M_L ].coxaAngle->targetPosition		= LEG_COXA_M_L_MID ;
-	legs.leg[ E_LEG_M_L ].coxaAngle->mid			= LEG_COXA_M_L_MID ;
-	legs.leg[ E_LEG_M_L ].coxaAngle->min			= LEG_COXA_M_L_MIN ;
-	legs.leg[ E_LEG_M_L ].coxaAngle->max			= LEG_COXA_M_L_MAX ;
+	legs.leg[ E_LEG_M_L ].coxaAngle->currentPosition		= LEG_COCYX_M_L_MID ;
+	legs.leg[ E_LEG_M_L ].coxaAngle->targetPosition		= LEG_COCYX_M_L_MID ;
+	legs.leg[ E_LEG_M_L ].coxaAngle->mid			= LEG_COCYX_M_L_MID ;
+	legs.leg[ E_LEG_M_L ].coxaAngle->min			= LEG_COCYX_M_L_MIN ;
+	legs.leg[ E_LEG_M_L ].coxaAngle->max			= LEG_COCYX_M_L_MAX ;
 	legs.leg[ E_LEG_M_L ].femurAngle->currentPosition		= LEG_FEMUR_M_L_MAX ;
 	legs.leg[ E_LEG_M_L ].femurAngle->targetPosition		= LEG_FEMUR_M_L_MAX ;
 	legs.leg[ E_LEG_M_L ].femurAngle->mid			= LEG_FEMUR_M_L_MID ;
@@ -261,11 +261,11 @@ static Boolean DrvLegSetOffset ( void )
 	legs.leg[ E_LEG_M_L ].tibiaAngle->min			= LEG_TIBIA_M_L_MIN ;
 	legs.leg[ E_LEG_M_L ].tibiaAngle->max			= LEG_TIBIA_M_L_MAX ;
 	
-	legs.leg[ E_LEG_B_L ].coxaAngle->currentPosition		= LEG_COXA_B_L_MAX ;
-	legs.leg[ E_LEG_B_L ].coxaAngle->targetPosition		= LEG_COXA_B_L_MAX ;
-	legs.leg[ E_LEG_B_L ].coxaAngle->mid			= LEG_COXA_B_L_MID ;
-	legs.leg[ E_LEG_B_L ].coxaAngle->min			= LEG_COXA_B_L_MIN ;
-	legs.leg[ E_LEG_B_L ].coxaAngle->max			= LEG_COXA_B_L_MAX ;
+	legs.leg[ E_LEG_B_L ].coxaAngle->currentPosition		= LEG_COCYX_B_L_MAX ;
+	legs.leg[ E_LEG_B_L ].coxaAngle->targetPosition		= LEG_COCYX_B_L_MAX ;
+	legs.leg[ E_LEG_B_L ].coxaAngle->mid			= LEG_COCYX_B_L_MID ;
+	legs.leg[ E_LEG_B_L ].coxaAngle->min			= LEG_COCYX_B_L_MIN ;
+	legs.leg[ E_LEG_B_L ].coxaAngle->max			= LEG_COCYX_B_L_MAX ;
 	legs.leg[ E_LEG_B_L ].femurAngle->currentPosition		= LEG_FEMUR_B_L_MAX ;
 	legs.leg[ E_LEG_B_L ].femurAngle->targetPosition		= LEG_FEMUR_B_L_MAX ;
 	legs.leg[ E_LEG_B_L ].femurAngle->mid			= LEG_FEMUR_B_L_MID ;
@@ -277,11 +277,11 @@ static Boolean DrvLegSetOffset ( void )
 	legs.leg[ E_LEG_B_L ].tibiaAngle->min			= LEG_TIBIA_B_L_MIN ;
 	legs.leg[ E_LEG_B_L ].tibiaAngle->max			= LEG_TIBIA_B_L_MAX ;
 	
-	legs.leg[ E_LEG_U_R ].coxaAngle->currentPosition		= LEG_COXA_U_R_MAX ;
-	legs.leg[ E_LEG_U_R ].coxaAngle->targetPosition		= LEG_COXA_U_R_MAX ;
-	legs.leg[ E_LEG_U_R ].coxaAngle->mid			= LEG_COXA_U_R_MID ;
-	legs.leg[ E_LEG_U_R ].coxaAngle->min			= LEG_COXA_U_R_MIN ;
-	legs.leg[ E_LEG_U_R ].coxaAngle->max			= LEG_COXA_U_R_MAX ;
+	legs.leg[ E_LEG_U_R ].coxaAngle->currentPosition		= LEG_COCYX_U_R_MAX ;
+	legs.leg[ E_LEG_U_R ].coxaAngle->targetPosition		= LEG_COCYX_U_R_MAX ;
+	legs.leg[ E_LEG_U_R ].coxaAngle->mid			= LEG_COCYX_U_R_MID ;
+	legs.leg[ E_LEG_U_R ].coxaAngle->min			= LEG_COCYX_U_R_MIN ;
+	legs.leg[ E_LEG_U_R ].coxaAngle->max			= LEG_COCYX_U_R_MAX ;
 	legs.leg[ E_LEG_U_R ].femurAngle->currentPosition		= LEG_FEMUR_U_R_MIN ;
 	legs.leg[ E_LEG_U_R ].femurAngle->targetPosition		= LEG_FEMUR_U_R_MIN ;
 	legs.leg[ E_LEG_U_R ].femurAngle->mid			= LEG_FEMUR_U_R_MID ;
@@ -293,11 +293,11 @@ static Boolean DrvLegSetOffset ( void )
 	legs.leg[ E_LEG_U_R ].tibiaAngle->min			= LEG_TIBIA_U_R_MIN ;
 	legs.leg[ E_LEG_U_R ].tibiaAngle->max			= LEG_TIBIA_U_R_MAX ;
 			  
-	legs.leg[ E_LEG_M_R ].coxaAngle->currentPosition		= LEG_COXA_M_R_MID ;
-	legs.leg[ E_LEG_M_R ].coxaAngle->targetPosition		= LEG_COXA_M_R_MID ;
-	legs.leg[ E_LEG_M_R ].coxaAngle->mid			= LEG_COXA_M_R_MID ;
-	legs.leg[ E_LEG_M_R ].coxaAngle->min			= LEG_COXA_M_R_MIN ;
-	legs.leg[ E_LEG_M_R ].coxaAngle->max			= LEG_COXA_M_R_MAX ;
+	legs.leg[ E_LEG_M_R ].coxaAngle->currentPosition		= LEG_COCYX_M_R_MID ;
+	legs.leg[ E_LEG_M_R ].coxaAngle->targetPosition		= LEG_COCYX_M_R_MID ;
+	legs.leg[ E_LEG_M_R ].coxaAngle->mid			= LEG_COCYX_M_R_MID ;
+	legs.leg[ E_LEG_M_R ].coxaAngle->min			= LEG_COCYX_M_R_MIN ;
+	legs.leg[ E_LEG_M_R ].coxaAngle->max			= LEG_COCYX_M_R_MAX ;
 	legs.leg[ E_LEG_M_R ].femurAngle->currentPosition		= LEG_FEMUR_M_R_MIN ;
 	legs.leg[ E_LEG_M_R ].femurAngle->targetPosition		= LEG_FEMUR_M_R_MIN ;
 	legs.leg[ E_LEG_M_R ].femurAngle->mid			= LEG_FEMUR_M_R_MID ;
@@ -309,11 +309,11 @@ static Boolean DrvLegSetOffset ( void )
 	legs.leg[ E_LEG_M_R ].tibiaAngle->min			= LEG_TIBIA_M_R_MIN ;
 	legs.leg[ E_LEG_M_R ].tibiaAngle->max			= LEG_TIBIA_M_R_MAX ;
 			  
-	legs.leg[ E_LEG_B_R ].coxaAngle->currentPosition		= LEG_COXA_B_R_MIN ;
-	legs.leg[ E_LEG_B_R ].coxaAngle->targetPosition		= LEG_COXA_B_R_MIN ;
-	legs.leg[ E_LEG_B_R ].coxaAngle->mid			= LEG_COXA_B_R_MID ;
-	legs.leg[ E_LEG_B_R ].coxaAngle->min			= LEG_COXA_B_R_MIN ;
-	legs.leg[ E_LEG_B_R ].coxaAngle->max			= LEG_COXA_B_R_MAX ;
+	legs.leg[ E_LEG_B_R ].coxaAngle->currentPosition		= LEG_COCYX_B_R_MIN ;
+	legs.leg[ E_LEG_B_R ].coxaAngle->targetPosition		= LEG_COCYX_B_R_MIN ;
+	legs.leg[ E_LEG_B_R ].coxaAngle->mid			= LEG_COCYX_B_R_MID ;
+	legs.leg[ E_LEG_B_R ].coxaAngle->min			= LEG_COCYX_B_R_MIN ;
+	legs.leg[ E_LEG_B_R ].coxaAngle->max			= LEG_COCYX_B_R_MAX ;
 	legs.leg[ E_LEG_B_R ].femurAngle->currentPosition		= LEG_FEMUR_B_R_MIN ;
 	legs.leg[ E_LEG_B_R ].femurAngle->targetPosition		= LEG_FEMUR_B_R_MIN ;
 	legs.leg[ E_LEG_B_R ].femurAngle->mid			= LEG_FEMUR_B_R_MID ;
