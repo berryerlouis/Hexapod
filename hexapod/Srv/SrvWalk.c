@@ -6,7 +6,9 @@
 #include "SrvWalk.h"
 
 ////////////////////////////////////////PRIVATE DEFINES///////////////////////////////////////////
-#define NB_WALK_STEPS	4U
+#define NB_WALK_STEPS_TRIPOD	6U
+#define NB_WALK_STEPS_WAVE		9U
+
 ////////////////////////////////////////PRIVATE STRUCTURES////////////////////////////////////////
 
 ////////////////////////////////////////PRIVATE FUNCTIONS/////////////////////////////////////////
@@ -25,20 +27,12 @@ static Boolean SrvWalkMoveLeg ( E_LEG movingLeg, Int8U step, Int16U speed );
 
 E_GAIT gaiting = E_GAITS_WAVE;
 E_WALK walking = E_WALK_STOP;
+Boolean isStopped = FALSE;
 Int16U walkingDelay = 1000U;
 
 //period of step
 uint32_t prevMillisWalkUpdate = 0U;
 Int8U updateLeg		= 0U;
-
-typedef struct
-{
-	Int8U wait;
-	Int8U step;
-	Int16U speed;
-}S_StepLeg;
-
-S_StepLeg stepLeg[NB_LEGS];
 
 Int16S legsXTripodLeft	[]= { 5,	5,		-5, -5 };
 Int16S legsYTripodLeft	[]= { -25,	-40,	-40, -25 };
@@ -48,6 +42,31 @@ Int16S legsXTripodRight[]= { 	-5, -5   ,5,		5,	 };
 Int16S legsYTripodRight[]= { 	15, 30   ,30,	15,	 };
 Int16S legsZTripodRight[]= { 	-20, -30 ,-30,	-20,};
 
+static Int8U stepLegsTripod[NB_WALK_STEPS_TRIPOD][2U] = {
+	{0U,2U},
+	{1U,2U},
+	{1U,3U},
+	{2U,0U},
+	{2U,1U},
+	{3U,1U}};
+							
+static Int8U stepLegsWave[NB_WALK_STEPS_WAVE][NB_LEGS] = {
+						{1U,0U,3U,2U,2U,2U},
+						{1U,1U,0U,3U,2U,2U},
+						{1U,1U,1U,0U,3U,2U},
+						{1U,1U,1U,1U,0U,3U},
+						{1U,1U,1U,1U,1U,0U},
+						{1U,1U,1U,1U,1U,1U},
+		
+						{2U,2U,2U,2U,2U,2U},
+		
+						{3U,2U,2U,2U,2U,2U},
+						{0U,3U,2U,2U,2U,2U}};
+									
+static Int8U sequenceStepWave = 0U;
+static Int8U sequenceStepTripod = 0U;
+static Int8U evenLegs[3U] = {0,2,4};
+static Int8U oddLegs[3U] = {1,3,5};
 
 ////////////////////////////////////////PUBILC FUNCTIONS//////////////////////////////////////////
 
@@ -57,6 +76,9 @@ Boolean SrvWalkInit ( void )
 {
     Boolean oSuccess = TRUE;
 	DrvLegInit();
+	sequenceStepWave = 0U;
+	sequenceStepTripod = 0U;
+	isStopped = FALSE;
 	SrvWalkSetWalk(E_WALK_STOP, 500U);
 	SrvWalkSetGait(E_GAITS_TRIPOD, 500U);
     return oSuccess;
@@ -71,8 +93,10 @@ void SrvWalkUpdate ( void )
 		//only if different STOP
 		if( walking !=  E_WALK_STOP )
 		{
+			//bot moves
+			isStopped = FALSE;
 			//update walk step
-			if ((DrvTickGetTimeMs() - prevMillisWalkUpdate) > walkingDelay)
+			//if ((DrvTickGetTimeMs() - prevMillisWalkUpdate) >= walkingDelay)
 			{
 				if( gaiting == E_GAITS_TRIPOD )
 				{
@@ -87,12 +111,18 @@ void SrvWalkUpdate ( void )
 					//SrvWalkRipple(walking);
 				}
 				//for next time
-				prevMillisWalkUpdate = DrvTickGetTimeMs();
+				//prevMillisWalkUpdate = DrvTickGetTimeMs();
 			}
 		}
 		else
 		{
-			SrvWalkStop();
+			//do it once
+			if(isStopped == FALSE)
+			{
+				SrvWalkStop();
+				//bot stopped
+				isStopped = TRUE;
+			}
 		}
 	}
 	//update legs
@@ -107,6 +137,15 @@ Boolean SrvWalkSetWalk( E_WALK walk, uint16_t delay )
 	{
 		walking = walk;
 		walkingDelay = delay;
+		sequenceStepWave = 0U;
+		if( walk == E_WALK_FW )
+		{
+			sequenceStepTripod=0U;
+		}
+		if( walk == E_WALK_RV )
+		{
+			sequenceStepTripod=5U;
+		}
 		oSuccess = TRUE;
 	}
 	else
@@ -114,6 +153,7 @@ Boolean SrvWalkSetWalk( E_WALK walk, uint16_t delay )
 		walkingDelay = delay;
 		oSuccess = TRUE;
 	}
+	isStopped = FALSE;
     return oSuccess;
 }
 
@@ -124,30 +164,7 @@ Boolean SrvWalkSetGait( E_GAIT gait, uint16_t delay )
 	if(gaiting != gait)
 	{
 		gaiting = gait;
-		walkingDelay = delay;
-		if( gaiting == E_GAITS_TRIPOD )
-		{
-			stepLeg[E_LEG_U_L].step = 0;
-			stepLeg[E_LEG_M_L].step = 2;
-			stepLeg[E_LEG_B_L].step = 0;
-			stepLeg[E_LEG_U_R].step = 2;
-			stepLeg[E_LEG_M_R].step = 0;
-			stepLeg[E_LEG_B_R].step = 2;
-		}
-		else if( gaiting == E_GAITS_WAVE )
-		{
-			stepLeg[E_LEG_U_L].step = 0;
-			stepLeg[E_LEG_M_L].step = 0;
-			stepLeg[E_LEG_B_L].step = 0;
-			stepLeg[E_LEG_U_R].step = 0;
-			stepLeg[E_LEG_M_R].step = 0;
-			stepLeg[E_LEG_B_R].step = 0;
-		}
-		else
-		{
-			
-		}
-		
+		walkingDelay = delay;		
 		oSuccess = TRUE;
 	}
 	else
@@ -193,163 +210,205 @@ static void SrvWalkLegsStep( E_LEG movingLeg1, E_LEG movingLeg2, E_LEG movingLeg
 	}*/
 }
 
+		
 static void SrvWalkTripod ( E_WALK walk )
 {	
-	static Int8U step[2U] = {0U,2U};
-	static Int8U sequence = 0U;
-	 
-	if( walk == E_WALK_FW )
-	{
-		Int8U success = FALSE;
-		success |= (SrvWalkMoveLeg(E_LEG_U_L,step[0],walkingDelay) << 0);
-		success |= (SrvWalkMoveLeg(E_LEG_M_L,step[1],walkingDelay) << 1);
-		success |= (SrvWalkMoveLeg(E_LEG_B_L,step[0],walkingDelay) << 2);
-		success |= (SrvWalkMoveLeg(E_LEG_U_R,step[1],walkingDelay) << 3);
-		success |= (SrvWalkMoveLeg(E_LEG_M_R,step[0],walkingDelay) << 4);
-		success |= (SrvWalkMoveLeg(E_LEG_B_R,step[1],walkingDelay) << 5);
-				
-		if(success || 0b00010101)
-		{
-			if(step[0]!= 2)
-			{
-				step[0]++;
-			}
-			if((step[0] == 2)&&(step[1]== 2))
-			{
-				step[1]++;
-			}
-			if((step[0]) == NB_WALK_STEPS )
-			{
-				step[0] = 0U;
-			}
-		}
-		if(success || 0b00101010)
-		{
-			if(step[1]!= 2)
-			{
-				step[1]++;
-			}
-			if((step[1] == 2)&&(step[0]== 2))
-			{
-				step[0]++;
-			}
-			if((step[1]) == NB_WALK_STEPS )
-			{
-				step[1] = 0U;
-			}
-		}
-	}
-		
-		/*for(E_LEG indexLeg = 0 ; indexLeg < E_NB_LEGS ; indexLeg++)
-		{
-			Int16U speed = walkingDelay; 
-			if((stepLeg[indexLeg].step) == 2U )
-			{
-				speed = walkingDelay * 1U;
-			}
-			if(SrvWalkMoveLeg(indexLeg,speed))
-			{
-				stepLeg[indexLeg].step++;
-				if((stepLeg[indexLeg].step) == NB_WALK_STEPS )
-				{
-					stepLeg[indexLeg].step = 0U;
-				}
-			}
-		}*/
-	//}
-	/*else
-	{
-		for(E_LEG indexLeg = 0 ; indexLeg < E_NB_LEGS ; indexLeg++)
-		{
-			Int16U speed = walkingDelay; 
-			if((stepLeg[indexLeg].step) == 1U )
-			{
-				speed = walkingDelay * 3U;
-			}
-			if(SrvWalkMoveLeg(indexLeg,speed))
-			{
-				if((stepLeg[indexLeg].step) == 0U )
-				{
-					stepLeg[indexLeg].step = NB_WALK_STEPS;
-				}
-				stepLeg[indexLeg].step--;
-			}
-		}
-	}*/
-}	
-
-static void SrvWalkWave ( E_WALK walk )
-{
-	/*static executeAll = FALSE;
-	static E_LEG movingLeg = E_LEG_U_L;
-	//Int8U gaitsTabWave		[]= {0,0,0,0,0,1, 
-								 //0,0,0,0,1,0,
-								 //0,0,0,1,0,0,
-								 //0,0,1,0,0,0,
-								 //0,1,0,0,0,0,
-								 //1,0,0,0,0,0};				
+	Int8U success = 0U;
+	Boolean nextStep = FALSE;
 	
 	if( walk == E_WALK_FW )
 	{
-		if(SrvWalkMoveLeg(movingLeg, walkingDelay/2))
+		switch (sequenceStepTripod)
 		{
-			if(executeAll == TRUE )
-			{
-				SrvWalkMoveLeg(E_LEG_U_L, walkingDelay);
-				SrvWalkMoveLeg(E_LEG_M_L, walkingDelay);
-				SrvWalkMoveLeg(E_LEG_B_L, walkingDelay);
-				SrvWalkMoveLeg(E_LEG_U_R, walkingDelay);
-				SrvWalkMoveLeg(E_LEG_M_R, walkingDelay);
-				SrvWalkMoveLeg(E_LEG_B_R, walkingDelay);
-				executeAll = FALSE;
-			}
-			stepLeg[movingLeg].step++;
-			if((stepLeg[movingLeg].step) == 2U )
-			{
-				movingLeg++;
-				if(movingLeg == E_NB_LEGS)
+			case 0://{0U,2U},
+				for(Int8U i = 0U ; i < 3U ; i++)
 				{
-					movingLeg = E_LEG_U_L;
-					executeAll = TRUE;
+					success |= (SrvWalkMoveLeg(evenLegs[i],stepLegsTripod[0][0], walkingDelay ) << (i*2U));
+					success |= (SrvWalkMoveLeg(oddLegs[i],stepLegsTripod[0][1], walkingDelay * 3U)  << ((i*2U) + 1U));
 				}
-			}
-			if((stepLeg[movingLeg].step) == NB_WALK_STEPS )
-			{
-				stepLeg[movingLeg].step = 0U;
-			}
+				if((success & 0x15U) == 0x15U)
+				{
+					nextStep = TRUE;
+				}
+			break;
+			
+			case 1://{1U,2U},
+				for(Int8U i = 0U ; i < 3U ; i++)
+				{
+					success |= (SrvWalkMoveLeg(evenLegs[i],stepLegsTripod[1][0], walkingDelay ) << (i*2U));
+					success |= (SrvWalkMoveLeg(oddLegs[i],stepLegsTripod[1][1], walkingDelay * 3U) << ((i*2U) + 1U));
+				}
+				if(success == 0x3FU) 
+				{
+					nextStep = TRUE;
+				}
+			break;
+			
+			case 2://{1U,3U},
+				for(Int8U i = 0U ; i < 3U ; i++)
+				{
+					success |= (SrvWalkMoveLeg(evenLegs[i],stepLegsTripod[2][0], walkingDelay ) << (i*2U));
+					success |= (SrvWalkMoveLeg(oddLegs[i],stepLegsTripod[2][1], walkingDelay ) << ((i*2U) + 1U));
+				}
+				if(success == 0x3FU) 
+				{
+					nextStep = TRUE;
+				}
+			break;
+			
+			case 3://{2U,0U},
+				for(Int8U i = 0U ; i < 3U ; i++)
+				{
+					success |= (SrvWalkMoveLeg(evenLegs[i],stepLegsTripod[3][0], walkingDelay * 3U ) << (i*2U));
+					success |= (SrvWalkMoveLeg(oddLegs[i],stepLegsTripod[3][1], walkingDelay ) << ((i*2U) + 1U));
+				}
+				if((success & 0x2AU) == 0x2AU) 
+				{
+					nextStep = TRUE;
+				}
+			break;
+			
+			case 4://{2U,1U},
+				for(Int8U i = 0U ; i < 3U ; i++)
+				{
+					success |= (SrvWalkMoveLeg(evenLegs[i],stepLegsTripod[4][0], walkingDelay * 3U ) << (i*2U));
+					success |= (SrvWalkMoveLeg(oddLegs[i],stepLegsTripod[4][1], walkingDelay ) << ((i*2U) + 1U));
+				}
+				if(success == 0x3FU) 
+				{
+					nextStep = TRUE;
+				}
+			break;
+			
+			case 5://{3U,1U},
+				for(Int8U i = 0U ; i < 3U ; i++)
+				{
+					success |= (SrvWalkMoveLeg(evenLegs[i],stepLegsTripod[5][0], walkingDelay ) << (i*2U));
+					success |= (SrvWalkMoveLeg(oddLegs[i],stepLegsTripod[5][1], walkingDelay ) << ((i*2U) + 1U));
+				}
+				if(success == 0x3FU) 
+				{
+					sequenceStepTripod = 0;
+				}
+			break;
+			default : 
+			break;
 		}
 	}
 	else if( walk == E_WALK_RV )
 	{
-		if(SrvWalkMoveLeg(movingLeg, walkingDelay/2))
-		{			
-			if((stepLeg[movingLeg].step) == 2U )
-			{
-				movingLeg++;
-				if(movingLeg == E_NB_LEGS)
+		switch (sequenceStepTripod)
+		{
+			case 0://{0U,2U},
+				for(Int8U i = 0U ; i < 3U ; i++)
 				{
-					movingLeg = E_LEG_U_L;
-					executeAll = TRUE;
-					
-					SrvWalkMoveLeg(E_LEG_U_L, walkingDelay);
-					SrvWalkMoveLeg(E_LEG_M_L, walkingDelay);
-					SrvWalkMoveLeg(E_LEG_B_L, walkingDelay);
-					SrvWalkMoveLeg(E_LEG_U_R, walkingDelay);
-					SrvWalkMoveLeg(E_LEG_M_R, walkingDelay);
-					SrvWalkMoveLeg(E_LEG_B_R, walkingDelay);
+					success |= (SrvWalkMoveLeg(evenLegs[i],stepLegsTripod[0][0], walkingDelay ) << (i*2U));
+					success |= (SrvWalkMoveLeg(oddLegs[i],stepLegsTripod[0][1], walkingDelay * 3U)  << ((i*2U) + 1U));
 				}
-			}
-			if((stepLeg[movingLeg].step) == 0U )
+				if((success & 0x15U) == 0x15U)
+				{
+					nextStep = TRUE;
+				}
+			break;
+			
+			case 1://{1U,2U},
+				for(Int8U i = 0U ; i < 3U ; i++)
+				{
+					success |= (SrvWalkMoveLeg(evenLegs[i],stepLegsTripod[1][0], walkingDelay ) << (i*2U));
+					success |= (SrvWalkMoveLeg(oddLegs[i],stepLegsTripod[1][1], walkingDelay * 3U) << ((i*2U) + 1U));
+				}
+				if(success == 0x3FU) 
+				{
+					nextStep = TRUE;
+				}
+			break;
+			
+			case 2://{1U,3U},
+				for(Int8U i = 0U ; i < 3U ; i++)
+				{
+					success |= (SrvWalkMoveLeg(evenLegs[i],stepLegsTripod[2][0], walkingDelay ) << (i*2U));
+					success |= (SrvWalkMoveLeg(oddLegs[i],stepLegsTripod[2][1], walkingDelay ) << ((i*2U) + 1U));
+				}
+				if(success == 0x3FU) 
+				{
+					nextStep = TRUE;
+				}
+			break;
+			
+			case 3://{2U,0U},
+				for(Int8U i = 0U ; i < 3U ; i++)
+				{
+					success |= (SrvWalkMoveLeg(evenLegs[i],stepLegsTripod[3][0], walkingDelay * 3U ) << (i*2U));
+					success |= (SrvWalkMoveLeg(oddLegs[i],stepLegsTripod[3][1], walkingDelay ) << ((i*2U) + 1U));
+				}
+				if((success & 0x2AU) == 0x2AU) 
+				{
+					nextStep = TRUE;
+				}
+			break;
+			
+			case 4://{2U,1U},
+				for(Int8U i = 0U ; i < 3U ; i++)
+				{
+					success |= (SrvWalkMoveLeg(evenLegs[i],stepLegsTripod[4][0], walkingDelay * 3U ) << (i*2U));
+					success |= (SrvWalkMoveLeg(oddLegs[i],stepLegsTripod[4][1], walkingDelay ) << ((i*2U) + 1U));
+				}
+				if(success == 0x3FU) 
+				{
+					nextStep = TRUE;
+				}
+			break;
+			
+			case 5://{3U,1U},
+				for(Int8U i = 0U ; i < 3U ; i++)
+				{
+					success |= (SrvWalkMoveLeg(evenLegs[i],stepLegsTripod[5][0], walkingDelay ) << (i*2U));
+					success |= (SrvWalkMoveLeg(oddLegs[i],stepLegsTripod[5][1], walkingDelay ) << ((i*2U) + 1U));
+				}
+				if(success == 0x3FU) 
+				{
+					sequenceStepTripod = 5;
+				}
+			break;
+			default : 
+			break;
+		}
+	}
+	
+	if(nextStep == TRUE)
+	{
+		if( walk == E_WALK_FW )
+		{
+			sequenceStepTripod == 6U ? sequenceStepTripod = 0U : sequenceStepTripod++;
+		}
+		if( walk == E_WALK_RV )
+		{
+			sequenceStepTripod == 255U ? sequenceStepTripod = 5U : sequenceStepTripod--;
+		}
+	}
+}	
+
+static void SrvWalkWave ( E_WALK walk )
+{
+	Int8U success = FALSE;
+	if( walk == E_WALK_FW )
+	{
+		success |= (SrvWalkMoveLeg(E_LEG_U_L,stepLegsWave[sequenceStepWave][E_LEG_U_L], walkingDelay) << 0);
+		success |= (SrvWalkMoveLeg(E_LEG_M_L,stepLegsWave[sequenceStepWave][E_LEG_M_L], walkingDelay) << 1);
+		success |= (SrvWalkMoveLeg(E_LEG_B_L,stepLegsWave[sequenceStepWave][E_LEG_B_L], walkingDelay) << 2);
+		success |= (SrvWalkMoveLeg(E_LEG_U_R,stepLegsWave[sequenceStepWave][E_LEG_U_R], walkingDelay) << 3);
+		success |= (SrvWalkMoveLeg(E_LEG_M_R,stepLegsWave[sequenceStepWave][E_LEG_M_R], walkingDelay) << 4);
+		success |= (SrvWalkMoveLeg(E_LEG_B_R,stepLegsWave[sequenceStepWave][E_LEG_B_R], walkingDelay) << 5);
+		
+		if(success == 0x3FU)
+		{
+			sequenceStepWave++;
+			if(sequenceStepWave == NB_WALK_STEPS_WAVE )
 			{
-				stepLeg[movingLeg].step = NB_WALK_STEPS;
-			}
-			stepLeg[movingLeg].step--;
-			if(executeAll == TRUE )
-			{
-				executeAll = FALSE;
+				sequenceStepWave = 0U;
 			}
 		}
-	}*/
+	}
 }
 	
 Int8U movingLegIndex = 0;
@@ -376,7 +435,7 @@ static void SrvWalkRipple ( E_WALK walk )
 				legsYTab[stepLeg[moveLegs[movingLegIndex]].step],
 				legsZTab[stepLeg[moveLegs[movingLegIndex]].step],
 				walkingDelay);*/
-	if(DrvLegCheckTarget(moveLegs[movingLegIndex]))
+	/*if(DrvLegCheckTarget(moveLegs[movingLegIndex]))
 	{
 		stepLeg[moveLegs[movingLegIndex]].step++;
 		if((stepLeg[moveLegs[movingLegIndex]].step) == 3)
@@ -405,7 +464,7 @@ static void SrvWalkRipple ( E_WALK walk )
 				movingLegIndex = 0;
 			}
 		}
-	}
+	}*/
 }
 //Stop
 static void SrvWalkStop ( void )
@@ -419,12 +478,12 @@ static void SrvWalkStop ( void )
 	 DrvLegCheckTarget(E_LEG_B_R))
 	 ))
 	{
-		DrvLegSetPosition(E_LEG_U_L, LEG_COXA_U_L_MID, LEG_FEMUR_U_L_MID, LEG_TIBIA_U_L_MAX, 500);
-		DrvLegSetPosition(E_LEG_M_L, LEG_COXA_M_L_MID, LEG_FEMUR_M_L_MID, LEG_TIBIA_M_L_MAX, 500);
-		DrvLegSetPosition(E_LEG_B_L, LEG_COXA_B_L_MID, LEG_FEMUR_B_L_MID, LEG_TIBIA_B_L_MAX, 500);
-		DrvLegSetPosition(E_LEG_U_R, LEG_COXA_U_R_MID, LEG_FEMUR_U_R_MID, LEG_TIBIA_U_R_MIN, 500);
-		DrvLegSetPosition(E_LEG_M_R, LEG_COXA_M_R_MID, LEG_FEMUR_M_R_MID, LEG_TIBIA_M_R_MIN, 500);
-		DrvLegSetPosition(E_LEG_B_R, LEG_COXA_B_R_MID, LEG_FEMUR_B_R_MID, LEG_TIBIA_B_R_MIN, 500);
+		DrvLegSetPosition(E_LEG_U_L, LEG_COXA_U_L_MIN, LEG_FEMUR_U_L_MAX, LEG_TIBIA_U_L_MAX, 500);
+		DrvLegSetPosition(E_LEG_M_L, LEG_COXA_M_L_MID, LEG_FEMUR_M_L_MAX, LEG_TIBIA_M_L_MAX, 500);
+		DrvLegSetPosition(E_LEG_B_L, LEG_COXA_B_L_MAX, LEG_FEMUR_B_L_MAX, LEG_TIBIA_B_L_MAX, 500);
+		DrvLegSetPosition(E_LEG_U_R, LEG_COXA_U_R_MAX, LEG_FEMUR_U_R_MIN, LEG_TIBIA_U_R_MIN, 500);
+		DrvLegSetPosition(E_LEG_M_R, LEG_COXA_M_R_MID, LEG_FEMUR_M_R_MIN, LEG_TIBIA_M_R_MIN, 500);
+		DrvLegSetPosition(E_LEG_B_R, LEG_COXA_B_R_MIN, LEG_FEMUR_B_R_MIN, LEG_TIBIA_B_R_MIN, 500);
 	}
 }
 
@@ -435,47 +494,45 @@ static Boolean SrvWalkMoveLeg ( E_LEG movingLeg,Int8U step, Int16U speed )
 	Int8U indexGenoux  = 1U + (movingLeg * 3U);
 	Int8U indexCheville = 2U + (movingLeg * 3U);
 	
-	//set delay
-	stepLeg[movingLeg].speed = speed;
 	//set servos position
 	uint8_t reponse = 0;
 	if(movingLeg < E_LEG_U_R)
 	{
 		if(movingLeg == E_LEG_U_L)
 		{
-			reponse = DrvServoSetTarget(indexHanche,	DrvServoGetStruture(indexHanche)->mid + legsXTripodLeft[step] + 20,	stepLeg[movingLeg].speed );
+			reponse = DrvServoSetTarget(indexHanche,	DrvServoGetStruture(indexHanche)->mid + legsXTripodLeft[step] + 20,	speed );
 		}
 		else if(movingLeg == E_LEG_B_L)
 		{
-			reponse = DrvServoSetTarget(indexHanche,	DrvServoGetStruture(indexHanche)->mid + legsXTripodLeft[step] - 20,	stepLeg[movingLeg].speed );
+			reponse = DrvServoSetTarget(indexHanche,	DrvServoGetStruture(indexHanche)->mid + legsXTripodLeft[step] - 20,	speed );
 		}
 		else
 		{
-			reponse = DrvServoSetTarget(indexHanche,	DrvServoGetStruture(indexHanche)->mid + legsXTripodLeft[step] ,	stepLeg[movingLeg].speed );
+			reponse = DrvServoSetTarget(indexHanche,	DrvServoGetStruture(indexHanche)->mid + legsXTripodLeft[step] ,	speed );
 		}
 		reponse *= 10U;
-		reponse += DrvServoSetTarget(indexGenoux,	DrvServoGetStruture(indexGenoux)->mid + legsYTripodLeft[step],	stepLeg[movingLeg].speed );
+		reponse += DrvServoSetTarget(indexGenoux,	DrvServoGetStruture(indexGenoux)->mid + legsYTripodLeft[step],	speed );
 		reponse *= 10U;
-		reponse += DrvServoSetTarget(indexCheville,	DrvServoGetStruture(indexCheville)->mid + legsZTripodLeft[step],	stepLeg[movingLeg].speed );
+		reponse += DrvServoSetTarget(indexCheville,	DrvServoGetStruture(indexCheville)->mid + legsZTripodLeft[step],	speed );
 	}
 	else
 	{
 		if(movingLeg == E_LEG_U_R)
 		{
-			reponse = DrvServoSetTarget(indexHanche,	DrvServoGetStruture(indexHanche)->mid + legsXTripodRight[step] - 20,	stepLeg[movingLeg].speed );
+			reponse = DrvServoSetTarget(indexHanche,	DrvServoGetStruture(indexHanche)->mid + legsXTripodRight[step] - 20,	speed );
 		}
 		else if(movingLeg == E_LEG_B_R)
 		{
-			reponse = DrvServoSetTarget(indexHanche,	DrvServoGetStruture(indexHanche)->mid + legsXTripodRight[step] + 20,	stepLeg[movingLeg].speed );
+			reponse = DrvServoSetTarget(indexHanche,	DrvServoGetStruture(indexHanche)->mid + legsXTripodRight[step] + 20,	speed );
 		}
 		else
 		{
-			reponse = DrvServoSetTarget(indexHanche,	DrvServoGetStruture(indexHanche)->mid + legsXTripodRight[step] ,	stepLeg[movingLeg].speed );
+			reponse = DrvServoSetTarget(indexHanche,	DrvServoGetStruture(indexHanche)->mid + legsXTripodRight[step] ,	speed );
 		}
 		reponse *= 10U;
-		reponse += DrvServoSetTarget(indexGenoux,	DrvServoGetStruture(indexGenoux)->mid + legsYTripodRight[step],	stepLeg[movingLeg].speed );
+		reponse += DrvServoSetTarget(indexGenoux,	DrvServoGetStruture(indexGenoux)->mid + legsYTripodRight[step],	speed );
 		reponse *= 10U;
-		reponse += DrvServoSetTarget(indexCheville,	DrvServoGetStruture(indexCheville)->mid + legsZTripodRight[step], stepLeg[movingLeg].speed );
+		reponse += DrvServoSetTarget(indexCheville,	DrvServoGetStruture(indexCheville)->mid + legsZTripodRight[step], speed );
 	}
 	if(reponse == 111U)
 	{

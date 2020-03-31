@@ -16,18 +16,24 @@
 
 ////////////////////////////////////////PRIVATE FUNCTIONS/////////////////////////////////////////
 
+Boolean CmpNRF24L01WriteRegister( Int8U reg, Int8U data );
+Boolean CmpNRF24L01WriteBufferRegister( Int8U reg, Int8U *data, Int8U len );
+Boolean CmpNRF24L01ReadBufferRegister( Int8U reg, Int8U *data, Int8U len );
+Boolean CmpNRF24L01ReadRegister( Int8U reg, Int8U data );
 ////////////////////////////////////////PRIVATE VARIABLES/////////////////////////////////////////
-
+Int8U NRF24L01status = 0U;
 /////////////////////////////////////////PUBLIC FUNCTIONS/////////////////////////////////////////
-Boolean CmpNRF24L01Init( Int8U addr, EIoPin CS )
+Boolean CmpNRF24L01Init( EIoPin CS )
 {
 	Boolean oSuccess = TRUE;
 	
-	// init SPI
-	DrvSpiInit();
 	// chip select
-	DrvIoSetPinOutput(CS);
-	
+	DrvSpiSetCS(CS);
+	NRF24L01status = CmpNRF24L01GetStatus();
+	if(NRF24L01status)
+	{
+		BIT_HIGH(SPCR,SPE);				 // Enable SPI
+	}
 	return oSuccess;
 }
 
@@ -63,3 +69,24 @@ Boolean CmpNRF24L01Reset( Int8U addr )
 	return oSuccess;
 }
 
+Int8U CmpNRF24L01GetStatus( void )
+{
+	return DrvSpiSendData(NRF24L01_NOP);
+}
+
+Boolean CmpNRF24L01WriteRegister( Int8U reg, Int8U data )
+{
+	return DrvSpiWriteReg(NRF24L01_W_REGISTER | (NRF24L01_REGISTER_MASK & reg), data);
+}
+Boolean CmpNRF24L01WriteBufferRegister( Int8U reg, Int8U *data, Int8U len )
+{
+	return DrvSpiWriteRegBuf(NRF24L01_W_REGISTER | (NRF24L01_REGISTER_MASK & reg), data, len);
+}
+Boolean CmpNRF24L01ReadRegister( Int8U reg, Int8U data )
+{
+	return DrvSpiReadReg(NRF24L01_R_REGISTER | (NRF24L01_REGISTER_MASK & reg), &data);
+}
+Boolean CmpNRF24L01ReadBufferRegister( Int8U reg, Int8U *data, Int8U len )
+{
+	return DrvSpiReadRegBuf(NRF24L01_R_REGISTER | (NRF24L01_REGISTER_MASK & reg), data, len);
+}

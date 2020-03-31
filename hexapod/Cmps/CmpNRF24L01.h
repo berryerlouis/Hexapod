@@ -123,7 +123,8 @@
 
 ////////////////////////////////////////PUBLIC FUNCTIONS/////////////////////////////////////////
 
-Boolean CmpNRF24L01Init( Int8U addr, EIoPin CS );
+Boolean CmpNRF24L01Init( EIoPin CS );
+Int8U CmpNRF24L01GetStatus( void );
 Boolean CmpNRF24L01Reset( Int8U addr );
 Boolean CmpNRF24L01SetDataRate( Int8U speed );
 void CmpNRF24L01PowerUp( void );

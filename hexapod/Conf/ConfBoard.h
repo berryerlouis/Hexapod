@@ -12,8 +12,8 @@
 
 ////////////////////////////////////////PUBLIC VERSION CODE/////////////////////////////////////////
 //version 1.0
-#define VERSION_SOFTWARE				'1' 
-#define VERSION_HARDWARE				'1'
+#define VERSION_SOFTWARE				0x01U 
+#define VERSION_HARDWARE				0x01U
 
 ////////////////////////////////////////PUBLIC PROCESSOR BOARD////////////////////////////////////
 //set processor 
@@ -91,7 +91,7 @@ typedef enum
 typedef enum
 {
 	E_UART_0,
-	E_UART_1,
+	//E_UART_1,
 	//Alaways at end
 	E_NB_UARTS,
 	E_UART_NONE
@@ -103,7 +103,7 @@ typedef enum
 #if E_UART_1 == 0U
 	#define E_UART_1_BAUD_RATE	115200UL
 #endif
-//set output Uart used
+//set output I2c used
 typedef enum
 {
 	E_I2C_0,
@@ -112,8 +112,16 @@ typedef enum
 	E_I2C_NONE
 }EI2c;
 
-#if E_I2C_0 == 0U
-	#define E_I2C_0_SPEED	400000UL
+//set output Spi used
+typedef enum
+{
+	E_SPI_0,
+	//Alaways at end
+	E_NB_SPIS,
+	E_SPI_NONE
+}ESpi;
+#if E_SPI_0 == 0U
+	#define E_SPI_0_SPEED	20000000UL
 #endif
 
 ////////////////////////////////////////PUBLIC SENSORS BOARD///////////////////////////////////////

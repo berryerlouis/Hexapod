@@ -70,6 +70,8 @@
 										EIO_PIN_A_4  /*E_US_1			*/\
 									}
 /////////////////////////////////////////////PUBLIC UART///////////////////////////////////////////
+#define UART_RX_PIN	0U
+#define UART_TX_PIN	1U
 //tableau des UART actifs
 #define UART_0_PINS					{\
 										EIO_PIN_D_0, /*E_UART_1_RX		*/\
@@ -82,6 +84,8 @@
 
 
 /////////////////////////////////////////////PUBLIC I2C////////////////////////////////////////////
+#define I2C_SCL_PIN	0U
+#define I2C_SDA_PIN	1U
 //tableau des I2C actifs
 #define I2C_PINS					{\
 										EIO_PIN_C_0, /*SCL				*/\
@@ -89,6 +93,9 @@
 									}
 									
 /////////////////////////////////////////////PUBLIC SPI////////////////////////////////////////////
+#define SPI_MOSI_PIN	0U
+#define SPI_MISO_PIN	1U
+#define SPI_CLK_PIN		2U
 //tableau des I2C actifs
 #define SPI_PINS					{\
 										EIO_PIN_B_5, /*MOSI				*/\

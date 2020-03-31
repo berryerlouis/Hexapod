@@ -40,7 +40,7 @@ Boolean DrvServoInit( void )
 		servos[ index ].min = SERVO_ANGLE_MIN;
 		servos[ index ].mid = SERVO_ANGLE_MID;
 		servos[ index ].max = SERVO_ANGLE_MAX;
-		servos[ index ].ease = E_SERVO_EASE_SINUS_IN;
+		servos[ index ].ease = E_SERVO_EASE_LINEAR;
 	}
 	
 	//initialize the 2 components PCA9685
@@ -107,34 +107,40 @@ Boolean DrvServoCheckPosition( Int8U index )
 }
 
 //set the position
-volatile static Int16S angle;
+Int16S angle;
+Int32U prevMillisServoUpdate;
+SPCA9685Pwm pwm[NB_SERVOS];
 void DrvServoUpdate ( void )
 {
-	//fill the pwm for each servos
-	SPCA9685Pwm pwm[NB_SERVOS];
-	for (Int8U index = 0U; index < NB_SERVOS ; index++)
+	if ((DrvTickGetTimeMs() - prevMillisServoUpdate) > 15U)
 	{
-		//servo activate
-		if(servos[ index ].enable == TRUE)
+		//fill the pwm for each servos
+		for (Int8U index = 0U; index < NB_SERVOS ; index++)
 		{
-			DrvServoComputeAngle(index);
-			angle = servos[index].currentPosition;
-		
-			//convert -90deg to 90deg => 0deg to 180deg
-			angle += 90;
-			angle = SetRangeInt16(angle, SERVO_ANGLE_MIN, SERVO_ANGLE_MAX, 114, 522);
-			pwm[index].on = 0U;
-			pwm[index].off = angle;
+			//servo activate
+			if(servos[ index ].enable == TRUE)
+			{
+				DrvServoComputeAngle(index);
+				angle = servos[index].currentPosition;
+				
+				//convert -90deg to 90deg => 0deg to 180deg
+				angle += 90;
+				angle = SetRangeInt16(angle, SERVO_ANGLE_MIN, SERVO_ANGLE_MAX, 114, 522);
+				pwm[index].on = 0U;
+				pwm[index].off = angle;
+			}
+			else
+			{
+				pwm[index].on = 0U;
+				pwm[index].off = 4096;
+			}
 		}
-		else
-		{
-			pwm[index].on = 0U;
-			pwm[index].off = 4096;
-		}
+		//send to each component
+		CmpPCA9685SetAllPWM(PCA9685_ADDRESS_1,pwm,NB_SERVOS/2U);
+		CmpPCA9685SetAllPWM(PCA9685_ADDRESS_0,&pwm[NB_SERVOS/2U],NB_SERVOS/2U);
+		//for next time
+		prevMillisServoUpdate = DrvTickGetTimeMs();
 	}
-	//send to each component
-	CmpPCA9685SetAllPWM(PCA9685_ADDRESS_1,pwm,NB_SERVOS/2U);
-	CmpPCA9685SetAllPWM(PCA9685_ADDRESS_0,&pwm[NB_SERVOS/2U],NB_SERVOS/2U);	
 }
 
 // get the servo strucutre
@@ -175,6 +181,7 @@ void DrvServoComputeAngle ( Int8U index )
 	
 	if(currentTime >= duration)
 	{
+		servos[index].startPosition = servos[ index ].targetPosition;
 		servos[index].currentPosition = servos[ index ].targetPosition;
 		if(servos[index].callback != NULL)
 		{

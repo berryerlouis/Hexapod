@@ -14,12 +14,6 @@
 
 ////////////////////////////////////////////PUBLIC DEFINES/////////////////////////////////////////
 
-#define UART_PINS					{\
-											UART_0_PINS, /*E_UART_0			*/\
-											UART_1_PINS  /*E_UART_1			*/\
-}
-
-
 //////////////////////////////////////////PUBLIC PTR FCTS//////////////////////////////////////////
 //callback fire when data is received
 typedef void (*DrvUartCallbackReceiveDataISR) (Int8U data);
@@ -32,6 +26,7 @@ typedef void (*DrvUartCallbackReceiveDataISR) (Int8U data);
 // Init du Drv Uart 
 Boolean DrvUartInit( void ) ;
 
+Boolean DrvUartSetBaudRate(Int8U indexUart, Int32U baud);
 Int8U DrvUartDataUsedTXBuff(Int8U indexUart);
 Int8U DrvUartDataAvailable(Int8U indexUart);
 Boolean DrvUartFillTxBuffer(Int8U indexUart, Int8U datum);

@@ -44,17 +44,10 @@ typedef Int8U Boolean;
 #define NB_AXIS		3U
 typedef struct
 {
-	union 
-	{
-		struct
-		{
-			Int16S x;
-			Int16S y;
-			Int16S z;
-		};
-		Int16S axes[NB_AXIS];
-	};
-}Axis;
+	Int16S x;
+	Int16S y;
+	Int16S z;
+}SAxis;
 
 typedef struct
 {
@@ -68,7 +61,7 @@ typedef struct
 		};
 		Int32S axes[NB_AXIS];
 	};
-}Axis32;
+}SAxis32;
 
 typedef struct
 {
@@ -110,6 +103,28 @@ typedef struct
 #endif
 
 
+static inline uint8_t asciiHexToInt(char ch)
+{
+	uint8_t num=0;
+	if(ch>='0' && ch<='9')
+	{
+		num=ch-0x30;
+	}
+	else
+	{
+		switch(ch)
+		{
+			case 'A': case 'a': num=10; break;
+			case 'B': case 'b': num=11; break;
+			case 'C': case 'c': num=12; break;
+			case 'D': case 'd': num=13; break;
+			case 'E': case 'e': num=14; break;
+			case 'F': case 'f': num=15; break;
+			default: num=0;
+		}
+	}
+	return num;
+}
 
 
 static inline float SetRange(float x, float in_min, float in_max, float out_min, float out_max)
@@ -179,8 +194,8 @@ static inline void swap_endianness(void *buf, Int8U size)
 /*
  * Basic Macros
  */
-#define ToDeg(x) (x * 57.2957795F)		//	180/M_PI  
-#define ToRad(x) (x * 0.0174532925F)	//	M_PI/180
+#define ToDeg(x) (x * 180.0F) / M_PI		//	180/M_PI  
+#define ToRad(x) (x * M_PI)	/ 180.0F//	M_PI/180
 
 #define BIT_READ( reg , bit )		(reg  & _BV(bit)) > 0U ? 1U : 0U
 #define BIT_HIGH( reg , bit )		reg |=  _BV(bit)

@@ -11,6 +11,7 @@
 #include "Drv/DrvLed.h"
 #include "Drv/DrvUart.h"
 #include "Drv/DrvTwi.h"
+#include "Drv/DrvSpi.h"
 
 
 #include "SrvHeartbeat.h"
@@ -57,6 +58,11 @@ SCoreDriver coreDrivers [] =
 		DrvTwiInit,
 		0UL,
 	},
+	/*{
+		5U,
+		DrvSpiInit,
+		0UL,
+	}*/
 };
 
 #define NB_CORE_DRIVERS (Int8U)((Int8U)sizeof(coreDrivers)/sizeof(SCoreDriver))

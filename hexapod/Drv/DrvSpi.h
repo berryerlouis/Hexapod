@@ -14,7 +14,6 @@
 
 ////////////////////////////////////////////PUBLIC DEFINES/////////////////////////////////////////
 
-
 //////////////////////////////////////////PUBLIC PTR FCTS//////////////////////////////////////////
 //callback fire when data is received
 typedef void (*DrvSpiCallbackReceiveDataISR) (Int8U data);
@@ -28,10 +27,18 @@ typedef void (*DrvSpiCallbackReceiveDataISR) (Int8U data);
 // Init du Drv Spi 
 Boolean DrvSpiInit( void ) ;
 
-//envoie des data sur la liaison serie
-Boolean DrvSpiSendData( uint8_t dataToSend );
+//set CS pin
+Boolean DrvSpiSetCS( EIoPin pin );
+//envoie et recoie des data sur la liaison SPI
+Int8U DrvSpiSendData( Int8U dataToSend );
+//read register
+Boolean DrvSpiReadReg( Int8U slave_register, Int8U *data ) ;
+//write register
+Boolean DrvSpiWriteReg( Int8U slave_register, Int8U data ) ;
+//read many register
+Boolean DrvSpiReadRegBuf(Int8U slave_register, Int8U *buffer, Int8U buffer_size) ;
+//write many register
+Boolean DrvSpiWriteRegBuf(Int8U slave_register, Int8U *buffer, Int8U buffer_size) ;
 
-//recoit une donnee de la liaison serie
-Int8U DrvSpiReadData( void );
 #endif /* DRV_SPI_H_ */
 

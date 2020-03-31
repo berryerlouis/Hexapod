@@ -10,10 +10,12 @@
 #include "DrvUart.h"
 
 ////////////////////////////////////////PRIVATE DEFINES///////////////////////////////////////////
-#define MAX_BUFFER	255U
+#define MAX_BUFFER	512U
 
 #define ComputeBaudRate( baud )				( CONF_FOSC_HZ / ( baud * 16 ))  
 #define ComputeBaudRateDoubleSpeed( baud )	( CONF_FOSC_HZ / ( baud * (16/2))) - 1 
+
+
 ////////////////////////////////////////PRIVATE STRUCTURES////////////////////////////////////////
 typedef struct
 {
@@ -31,6 +33,7 @@ typedef struct
 
 ////////////////////////////////////////PRIVATE VARIABLES/////////////////////////////////////////
 static volatile UartRingBuffer uartRingBuffer[ E_NB_UARTS ];
+EIoPin uartPins[ E_NB_UARTS][2U] = {UART_0_PINS} ;
 	
 /////////////////////////////////////////PUBLIC FUNCTIONS/////////////////////////////////////////
 // Init du Drv Uart 
@@ -38,6 +41,10 @@ Boolean DrvUartInit( void )
 {
 	Boolean oSuccess = FALSE;
 	#if E_UART_0 == 0U
+	
+		DrvIoSetPinOutput(uartPins[ E_UART_0 ][UART_TX_PIN]);
+		DrvIoSetPinInput(uartPins[ E_UART_0 ][UART_RX_PIN]);
+	
 		#ifdef E_UART_0_BAUD_RATE
 			UBRR0 = ComputeBaudRateDoubleSpeed(E_UART_0_BAUD_RATE);	
 		#else
@@ -53,7 +60,11 @@ Boolean DrvUartInit( void )
 		oSuccess = TRUE;
 	#endif
 	
-	#if E_UART_1 == 0U
+	#ifdef E_UART_1
+	
+		DrvIoSetPinOutput(i2cPins[ E_UART_1 ][UART_TX_PIN]);
+		DrvIoSetPinInput(i2cPins[ E_UART_1 ][UART_RX_PIN]);
+		
 		#ifdef E_UART_1_BAUD_RATE
 			UBRR1 = ComputeBaudRate(E_UART_1_BAUD_RATE);
 		#else
@@ -72,6 +83,28 @@ Boolean DrvUartInit( void )
 	return oSuccess;
 }
 
+Boolean DrvUartSetBaudRate(Int8U indexUart, Int32U baud)
+{
+	#if E_UART_0 == 0U
+		BIT_LOW(UCSR0B,RXEN0);		//disable RX
+		BIT_LOW(UCSR0B,TXEN0);		//disable TX
+		BIT_LOW(UCSR0B,RXCIE0);	//disable RX interrupt
+		UBRR0 = ComputeBaudRateDoubleSpeed(baud);
+		BIT_HIGH(UCSR0B,RXEN0);		//enable RX
+		BIT_HIGH(UCSR0B,TXEN0);		//enable TX
+		BIT_HIGH(UCSR0B,RXCIE0);	//enable RX interrupt
+	#endif
+	
+	#ifdef E_UART_1
+		BIT_LOW(UCSR1B,RXEN1);		//disable RX
+		BIT_LOW(UCSR1B,TXEN1);		//disable TX
+		BIT_LOW(UCSR1B,RXCIE1);	//disable RX interrupt
+		UBRR1 = ComputeBaudRate(baud);
+		BIT_HIGH(UCSR1B,RXEN1);		//enable RX
+		BIT_HIGH(UCSR1B,TXEN1);		//enable TX
+		BIT_HIGH(UCSR1B,RXCIE1);	//enable RX interrupt
+	#endif
+}
 
 //rempli le buffer d'emission
 Boolean DrvUartFillTxBuffer(Int8U indexUart, Int8U datum)

@@ -17,12 +17,15 @@ static void SrvUltrasonShowLeds (void) ;
 ////////////////////////////////////////PRIVATE VARIABLES/////////////////////////////////////////
 uint32_t prevMillisUpdateUltrason = 0UL;
 Boolean usToggle = FALSE;
+uint8_t usthreshold = US_THRESHOLD_DISTANCE;
 ////////////////////////////////////////PUBILC FUNCTIONS//////////////////////////////////////////
 
 //Fonction d'initialisation
 Boolean SrvUltrasonInit ( void ) 
 {
 	usToggle = FALSE;
+	usthreshold = US_THRESHOLD_DISTANCE;
+	prevMillisUpdateUltrason = 0UL;
 	return CmpSRF04Init();
 }
 //Fonction de dispatching d'evenements
@@ -51,6 +54,18 @@ void SrvUltrasonUpdate (void)
 uint16_t SrvUltrasonGetDistance (E_US us)
 {
 	return CmpSRF04GetDistance(us);
+}
+
+// set threshold
+Boolean SrvUltrasonSetThreshold( uint8_t threshold )
+{
+	usthreshold = threshold;
+	return TRUE;
+}
+// get threshold
+uint8_t SrvUltrasonGetThreshold( void )
+{
+	return usthreshold;
 }
 
 

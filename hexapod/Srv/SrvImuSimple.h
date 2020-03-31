@@ -26,8 +26,12 @@ typedef struct
 	Boolean enable;
 	SMpu9150Acc acc;
 	SMpu9150Gyr gyr;
-	SMpu9150Tmp tmp;
+	SMpu9150Tmp tmp; 
+	SMpu9150GCmps cmps;
 	uint8_t accthreshold;
+	Int16S roll;
+	Int16S pitch;
+	Int16S yaw;
 }SImuSimple;
 ////////////////////////////////////////PUBLIC FUNCTIONS//////////////////////////////////////////
 //Fonction d'initialisation
@@ -38,4 +42,14 @@ void SrvImuSimpleUpdate (void) ;
 SImuSimple* SrvImuSimpleGetSensor (void) ;
 // activate the sensor
 Boolean SrvImuSimpleActivate( Boolean enable) ;
+// set threshold
+Boolean SrvImuSimpleSetThreshold( uint8_t accthreshold ) ;
+// get threshold
+uint8_t SrvImuSimpleGetThreshold( void ) ;
+// get roll
+Int16S SrvImuSimpleGetRoll( void ) ;
+// get pitch
+Int16S SrvImuSimpleGetPitch( void ) ;
+// get yaw
+Int16S SrvImuSimpleGetYaw( void ) ;
 #endif //SRVIMUSIMPLE_H_
