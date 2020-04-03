@@ -515,7 +515,6 @@ static Boolean SrvCommExecuteClusterLeg( void )
 			uint32_t delay = inMessage.data[ 7U ] * 4096 + inMessage.data[ 8U ] * 256 + inMessage.data[ 9U ] * 16 + inMessage.data[ 10U ];
 			return DrvLegSetXYZ(legId,x,y,z, delay);
 		}
-		return FALSE;
 	}
 	else if(( inMessage.command == COMM_CLUSTER_LEG_COMMAND_GET_LEG_XYZ) && (inMessage.size == 0U))
 	{
