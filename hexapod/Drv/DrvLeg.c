@@ -141,8 +141,12 @@ Boolean DrvLegSetXYZ( ELeg indexLeg, Int16S x, Int16S y, Int16S z, Int16U speed 
 		//left side
 		if((indexLeg == E_LEG_U_L)||(indexLeg == E_LEG_M_L)||(indexLeg == E_LEG_B_L))
 		{
-			alpha = SetRange(alpha,0,180,legs.leg[ indexLeg ].femurAngle->min,legs.leg[ indexLeg ].femurAngle->max);
-			beta = SetRange(beta,0,180,legs.leg[ indexLeg ].tibiaAngle->max,legs.leg[ indexLeg ].tibiaAngle->min);
+			alpha = SetLimits(alpha,legs.leg[ indexLeg ].femurAngle->min,legs.leg[ indexLeg ].femurAngle->max);
+			
+			//invert beta
+			Int16S invBeta;
+			invBeta = -1 * beta + 180;
+			beta = SetLimits(invBeta,legs.leg[ indexLeg ].tibiaAngle->max,legs.leg[ indexLeg ].tibiaAngle->min);
 		}
 		//right side
 		else

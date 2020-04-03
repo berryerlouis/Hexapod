@@ -17,19 +17,24 @@
 
 //length in cm of leg's member
 #define LEG_COCYX_LENGTH		30U		//horizontal
-#define LEG_FEMUR_LENGTH		85U		//vertical
+#define LEG_FEMUR_LENGTH		90U		//vertical
 #define LEG_TIBIA_LENGTH		125U	//knee
 
 //leg upper left
-#define LEG_COCYX_U_L_MIN	6 //
-#define LEG_COCYX_U_L_MID	21
-#define LEG_COCYX_U_L_MAX	36
-#define LEG_FEMUR_U_L_MIN	-80
-#define LEG_FEMUR_U_L_MID	-35
-#define LEG_FEMUR_U_L_MAX	10 //
-#define LEG_TIBIA_U_L_MIN	-68
-#define LEG_TIBIA_U_L_MID	2
-#define LEG_TIBIA_U_L_MAX	72 //
+#define LEG_COCYX_U_L_OFT	6
+#define LEG_COCYX_U_L_MIN	LEG_COCYX_U_L_OFT //
+#define LEG_COCYX_U_L_MID	LEG_COCYX_U_L_OFT + (LEG_COCYX_LENGTH/2)
+#define LEG_COCYX_U_L_MAX	LEG_COCYX_U_L_OFT + LEG_COCYX_LENGTH
+
+#define LEG_FEMUR_U_L_OFT	10
+#define LEG_FEMUR_U_L_MIN	LEG_FEMUR_U_L_OFT - LEG_FEMUR_LENGTH
+#define LEG_FEMUR_U_L_MID	LEG_FEMUR_U_L_OFT - (LEG_FEMUR_LENGTH/2)
+#define LEG_FEMUR_U_L_MAX	LEG_FEMUR_U_L_OFT //
+
+#define LEG_TIBIA_U_L_OFT	72
+#define LEG_TIBIA_U_L_MIN	LEG_TIBIA_U_L_OFT - LEG_TIBIA_LENGTH
+#define LEG_TIBIA_U_L_MID	LEG_TIBIA_U_L_OFT - (LEG_TIBIA_LENGTH/2)
+#define LEG_TIBIA_U_L_MAX	LEG_TIBIA_U_L_OFT //
 
 //leg middle left
 #define LEG_COCYX_M_L_MIN	-3

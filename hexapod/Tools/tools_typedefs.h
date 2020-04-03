@@ -136,9 +136,9 @@ static inline float SetRangeInt16(Int16U x, Int16U in_min, Int16U in_max, Int16U
 {
 	return ((Int32U)(x - in_min) * (out_max - out_min)) / (in_max - in_min) + out_min;
 }
-
-static inline float SetLimits(float val, float min, float max) 
-{ 
+	
+static inline float SetLimits(float val, float min, float max)
+{
 	if(val > max)
 	{
 		val = max;
@@ -148,8 +148,7 @@ static inline float SetLimits(float val, float min, float max)
 		val = min;
 	}
 	return val;
-}	
-
+}
 static inline Int16S SetLimitsInt16S(Int16S val, Int16S min, Int16S max)
 {
 	if(val > max)
