@@ -85,7 +85,9 @@ typedef enum
 #define COMM_CLUSTER_SERVOS_COMMAND_SERVO_READ_ALL		0x08U  //servomotors read
 
 //COMM_CLUSTER_LEG
-#define COMM_CLUSTER_LEG_COMMAND_SET_LEG_XYZ			0x00U   //set x y z on leg
+#define COMM_CLUSTER_LEG_COMMAND_GET_LEG_XYZ			0x00U   //get x y z on leg
+#define COMM_CLUSTER_LEG_COMMAND_SET_LEG_XYZ			0x01U   //set x y z on leg
+
 
 //COMM_CLUSTER_DISPLAY
 

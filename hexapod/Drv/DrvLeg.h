@@ -167,7 +167,7 @@ Boolean DrvLegInit( void );
 Boolean DrvLegUpdate( void );
 SLegs* DrvLegGetLegs( void );
 Boolean DrvLegIsInitialized( void );
-SLeg* DrvLegGetLeg( ELeg indexLeg );
+SLeg* DrvLegGetStruct( ELeg indexLeg );
 Boolean DrvLegSetXYZ( ELeg indexLeg, Int16S x, Int16S y, Int16S z, Int16U speed );
 Boolean DrvLegGetXYZ( ELeg indexLeg, Int16S *x, Int16S *y, Int16S *z );
 Boolean DrvLegSetPosition( ELeg indexLeg, Int16S coxaAngle, Int16S femurAngle, Int16S tibiaAngle, Int16U speed );

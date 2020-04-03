@@ -70,7 +70,7 @@ SLegs* DrvLegGetLegs( void )
 	return &legs;
 }
 
-SLeg* DrvLegGetLeg( ELeg indexLeg )
+SLeg* DrvLegGetStruct( ELeg indexLeg )
 {
 	return &legs.leg[indexLeg];
 }

@@ -440,8 +440,8 @@ static Boolean SrvCommExecuteClusterServo( void )
 			//prepare output string
 			servo = DrvServoGetStruture(servoId);
 			uint8_t nbData = SrvCommPrepareMessage(COMM_CLUSTER_SERVOS,COMM_CLUSTER_SERVOS_COMMAND_SERVO_READ, 4U);
-			uint8_t mid = servo->targetPosition;
-			nbData += sprintf((char*)&response[ nbData ],"%02X%02X",servoId,mid);
+			int8_t servoPos = servo->targetPosition - servo->offset;
+			nbData += sprintf((char*)&response[ nbData ],"%02X%02X",servoId,servoPos);
 			return SrvCommWriteMessage(nbData);
 		}
 	}
@@ -452,7 +452,7 @@ static Boolean SrvCommExecuteClusterServo( void )
 		if(servoId < NB_LEGS * NB_SERVOS_PER_LEG)
 		{
 			servo = DrvServoGetStruture(servoId);
-			int16_t servoPos =  (inMessage.data[ 2U ] * 16 + inMessage.data[ 3U ] );
+			int8_t servoPos =  (int8_t)((int8_t)inMessage.data[ 2U ] * 16 + (int8_t)inMessage.data[ 3U ] );
 			uint16_t delay = inMessage.data[ 4U ] * 4096 + inMessage.data[ 5U ] * 256 + inMessage.data[ 6U ] * 16 + inMessage.data[ 7U ];
 			//can send data
 			return DrvServoSetTarget(servoId,servoPos, delay);
@@ -467,14 +467,13 @@ static Boolean SrvCommExecuteClusterServo( void )
 			//prepare output string
 			servo = DrvServoGetStruture(servoId);
 			uint8_t nbData = SrvCommPrepareMessage(COMM_CLUSTER_SERVOS,COMM_CLUSTER_SERVOS_COMMAND_SERVO_MIN_READ, 4U);
-			uint8_t min = servo->min;
+			int8_t min = servo->min  - servo->offset;
 			nbData += sprintf((char*)&response[ nbData ],"%02X%02X",servoId,min);
 			return SrvCommWriteMessage(nbData);
 		}
 	}
 	else if(( inMessage.command ==  COMM_CLUSTER_SERVOS_COMMAND_SERVO_MAX_READ) && (inMessage.size == 2U))
 	{
-			
 		servoId = (uint8_t)((inMessage.data[ 0U ] * 16U) + inMessage.data[ 1U ]);
 		//if legs
 		if(servoId < NB_LEGS * NB_SERVOS_PER_LEG)
@@ -482,7 +481,7 @@ static Boolean SrvCommExecuteClusterServo( void )
 			//prepare output string
 			servo = DrvServoGetStruture(servoId);
 			uint8_t nbData = SrvCommPrepareMessage(COMM_CLUSTER_SERVOS,COMM_CLUSTER_SERVOS_COMMAND_SERVO_MAX_READ, 4U);
-			uint8_t max = servo->max;
+			int8_t max = servo->max - servo->offset;
 			nbData += sprintf((char*)&response[ nbData ],"%02X%02X",servoId,max);
 			return SrvCommWriteMessage(nbData);
 		}
@@ -494,7 +493,7 @@ static Boolean SrvCommExecuteClusterServo( void )
 		for( uint8_t servoId = 0U; servoId < NB_LEGS * NB_SERVOS_PER_LEG ; servoId++ )
 		{
 			servo = DrvServoGetStruture(servoId);
-			uint8_t mid = servo->targetPosition;
+			int8_t mid = servo->targetPosition - servo->offset;
 			nbData += sprintf((char*)&response[ nbData ],"%02X",mid);
 		}
 		return SrvCommWriteMessage(nbData);
@@ -503,15 +502,32 @@ static Boolean SrvCommExecuteClusterServo( void )
 }
 static Boolean SrvCommExecuteClusterLeg( void )
 {
+	uint8_t legId = NB_LEGS;
+	SLeg *leg;
 	if(( inMessage.command == COMM_CLUSTER_LEG_COMMAND_SET_LEG_XYZ) && (inMessage.size == 11U))
 	{
-		//prepare output string
-		uint8_t legId = inMessage.data[ 0U ];
-		int16_t x = inMessage.data[ 1U ] * 16 + inMessage.data[ 2U ];
-		int16_t y = inMessage.data[ 3U ] * 16 + inMessage.data[ 4U ];
-		int16_t z = inMessage.data[ 5U ] * 16 + inMessage.data[ 6U ];
-		int32_t delay = inMessage.data[ 7U ] * 4096 + inMessage.data[ 8U ] * 256 + inMessage.data[ 9U ] * 16 + inMessage.data[ 10U ];
-		return DrvLegSetXYZ(legId,x,y,z, delay);
+		legId = inMessage.data[ 0U ];
+		if(legId < NB_LEGS)
+		{
+			int8_t x = inMessage.data[ 1U ] * 16 + inMessage.data[ 2U ];
+			int8_t y = inMessage.data[ 3U ] * 16 + inMessage.data[ 4U ];
+			int8_t z = inMessage.data[ 5U ] * 16 + inMessage.data[ 6U ];
+			uint32_t delay = inMessage.data[ 7U ] * 4096 + inMessage.data[ 8U ] * 256 + inMessage.data[ 9U ] * 16 + inMessage.data[ 10U ];
+			return DrvLegSetXYZ(legId,x,y,z, delay);
+		}
+		return FALSE;
+	}
+	else if(( inMessage.command == COMM_CLUSTER_LEG_COMMAND_GET_LEG_XYZ) && (inMessage.size == 0U))
+	{
+		legId = inMessage.data[ 0U ];
+		if(legId < NB_LEGS)
+		{
+			//prepare output string
+			leg = DrvLegGetStruct(legId);
+			uint8_t nbData = SrvCommPrepareMessage(COMM_CLUSTER_LEG,COMM_CLUSTER_LEG_COMMAND_GET_LEG_XYZ, 4U);
+			nbData += sprintf((char*)&response[ nbData ],"%01X%02X%02X%02X",legId,leg->x,leg->y, leg->z);
+			return SrvCommWriteMessage(nbData);
+		}
 	}
 	return FALSE;
 }
