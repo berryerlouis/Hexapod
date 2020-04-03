@@ -37,6 +37,7 @@ Boolean DrvServoInit( void )
 		servos[ index ].movingTime = 0U;
 		servos[ index ].startTime = 0U;
 		servos[ index ].callback = NULL;
+		servos[ index ].offset = 0;
 		servos[ index ].min = SERVO_ANGLE_MIN;
 		servos[ index ].mid = SERVO_ANGLE_MID;
 		servos[ index ].max = SERVO_ANGLE_MAX;
