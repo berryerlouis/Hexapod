@@ -19,6 +19,7 @@
 #include "SrvWalk.h"
 #include "SrvComm.h"
 #include "SrvBody.h"
+#include "SrvBodyMove.h"
 #include "SrvDisplay.h"
 #include "SrvBattery.h"
 #include "SrvUltrason.h"
@@ -134,11 +135,18 @@ SCoreService coreServices [] =
 	},
 	{
 		9U,
+		SrvBodyMoveInit,
+		SrvBodyMoveUpdate,
+		0UL,
+		0UL
+	},
+	/*{
+		9U,
 		SrvDisplayInit,
 		SrvDisplayUpdate,
 		0UL,
 		0UL
-	},
+	},*/
 };
 
 #define NB_CORE_SERVICES (Int8U)((Int8U)sizeof(coreServices)/sizeof(SCoreService))
@@ -204,7 +212,6 @@ Boolean SrvCoreLoop ( void )
 		core.services[i].updateTime = DrvTickGetTimeUs() - now;
 		//get the max time
 		core.services[i].updateTimeMax = MAX(core.services[i].updateTime,core.services[i].updateTimeMax);
-		
 		
 	}
 	//get loop update time

@@ -14,7 +14,8 @@
 ////////////////////////////////////////PRIVATE FUNCTIONS/////////////////////////////////////////
 
 ////////////////////////////////////////PRIVATE VARIABLES/////////////////////////////////////////
-
+Int32U timerLed[E_NB_LEDS];
+Boolean timerEnable[E_NB_LEDS];
 ////////////////////////////////////////PUBILC FUNCTIONS//////////////////////////////////////////
 //Fonction d'initialisation
 //return : TRUE si ok
@@ -42,14 +43,16 @@ Boolean SrvIhmInit ( void )
 void SrvIhmUpdate ( void )
 {
 	//test the button status
-	if(DrvButtonPushed(E_BUTTON_SETUP) == TRUE)
+	//if(DrvButtonPushed(E_BUTTON_SETUP) == TRUE)
+
+	
+	for(ELed led = E_LED_0 ; led < E_NB_LEDS ; led ++)
 	{
-		
-	}
-	else
-	{
-		
-		
+		if((timerEnable[led] == TRUE) && (timerLed[led] < DrvTickGetTimeMs()))
+		{
+			DrvLedSetState(led, E_LED_STATE_OFF);
+			timerEnable[led] = FALSE;
+		}
 	}
 }
 
@@ -61,13 +64,28 @@ void SrvIhmPlatformInitDone ( void )
 	DrvLedSetState(E_LED_3, E_LED_STATE_OFF);
 }
 
-//platform Arm
-void SrvIhmPlatformLedLeft ( ELedState state )
+//platform Set Left LED Time On
+void SrvIhmPlatformLeftLedTimeOn ( ELedState state, Int16U delayMs )
+{
+	timerLed[E_LED_2] = delayMs + DrvTickGetTimeMs();
+	timerEnable[E_LED_2] = TRUE;
+	DrvLedSetState(E_LED_2, state);
+}
+//platform Set Right LED Time On
+void SrvIhmPlatformRightLedTimeOn ( ELedState state, Int16U delayMs )
+{
+	timerLed[E_LED_3] = delayMs + DrvTickGetTimeMs();
+	timerEnable[E_LED_3] = TRUE;
+	DrvLedSetState(E_LED_3, state);
+}
+
+//platform Set Left LED
+void SrvIhmPlatformLeftLed ( ELedState state )
 {
 	DrvLedSetState(E_LED_2, state);
 }
-//platform Disarm
-void SrvIhmPlatformLedRight ( ELedState state )
+//platform Set Right LED
+void SrvIhmPlatformRightLed ( ELedState state )
 {
 	DrvLedSetState(E_LED_3, state);
 }

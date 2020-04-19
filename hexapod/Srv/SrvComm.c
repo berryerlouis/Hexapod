@@ -16,7 +16,7 @@
 #include "SrvComm.h"
 #include "SrvWalk.h"
 #include "SrvDisplay.h"
-#include "SrvBody.h"
+#include "SrvBodyMove.h"
 
 
 ////////////////////////////////////////PRIVATE DEFINES///////////////////////////////////////////
@@ -63,6 +63,8 @@ volatile commMessageParsingState status = COMM_START;
 volatile commMessage inMessage;
 volatile char response [100U] = { 0U };
 uint32_t prevMillisPositionUpdate = 0U;
+
+EUART uartUsing = E_UART_0;
 /************************************************************************/
 /*init de la communication                                              */
 /************************************************************************/
@@ -78,12 +80,13 @@ Boolean SrvCommInit (void)
 		inMessage.data[loop] = 0U;
 	}
 	#ifdef HC_05_MODE_AT
-		//DrvUartSetBaudRate(E_UART_0, 38400);
-		DrvUartFillTxBuffer(E_UART_0,'A');
-		DrvUartFillTxBuffer(E_UART_0,'T');
-		DrvUartFillTxBuffer(E_UART_0,'\r');
-		DrvUartFillTxBuffer(E_UART_0,'\n');
-		DrvUartSendData(E_UART_0);
+		uartUsing = uartUsing;
+		//DrvUartSetBaudRate(uartUsing, 38400);
+		DrvUartFillTxBuffer(uartUsing,'A');
+		DrvUartFillTxBuffer(uartUsing,'T');
+		DrvUartFillTxBuffer(uartUsing,'\r');
+		DrvUartFillTxBuffer(uartUsing,'\n');
+		DrvUartSendData(uartUsing);
 	#endif
 	
 	return TRUE;
@@ -159,29 +162,29 @@ static int SrvCommPrepareMessage(ECluster cluster, uint8_t cmd,  uint8_t size)
 //send message
 static Boolean SrvCommWriteMessage(uint8_t len )
 {
-	DrvUartFillTxBuffer(E_UART_0,'<');
+	DrvUartFillTxBuffer(uartUsing,'<');
 	//fill buffer
 	for(Int16U loop = 0U; loop < len ; loop++)
 	{
 		//get pointer and loop on each useful data
-		DrvUartFillTxBuffer(E_UART_0,((Int8U *)response)[loop]);
+		DrvUartFillTxBuffer(uartUsing,((Int8U *)response)[loop]);
 	}
-	DrvUartFillTxBuffer(E_UART_0,'>');
+	DrvUartFillTxBuffer(uartUsing,'>');
 	
 	//can send over uart
-	return DrvUartSendData(E_UART_0);
+	return DrvUartSendData(uartUsing);
 }
 //permits to decode the incoming data
 uint8_t countData = 0U;
 static Boolean SrvCommDecodeMessage( void )
 {
-	nbDataAvailable = DrvUartDataAvailable(E_UART_0);
+	nbDataAvailable = DrvUartDataAvailable(uartUsing);
 	
 	//loop until the data is over
 	for(Int16U loop = 0U; loop < nbDataAvailable ; loop++)
 	{
 		//get the datum
-		volatile Int8U datum = DrvUartReadData(E_UART_0);
+		volatile Int8U datum = DrvUartReadData(uartUsing);
 		#ifdef HC_05_MODE_AT
 			inMessage.data[ inMessage.size ] = datum ;
 			inMessage.size++;
@@ -295,34 +298,46 @@ static Boolean SrvCommExecuteClusterBehavior( void )
 	{
 		//prepare output string
 		uint8_t nbData = SrvCommPrepareMessage(COMM_CLUSTER_BEHAVIOR,COMM_CLUSTER_BEHAVIOR_COMMAND_GET_BEHAVIOR, 1U);
-		nbData += sprintf((char*)&response[ nbData ],"%01X", SrvBodyGetBehavior());
+		nbData += sprintf((char*)&response[ nbData ],"%01X", SrvBodyMoveGetBehavior());
 		return SrvCommWriteMessage(nbData);
 	}
 	else if(( inMessage.command == COMM_CLUSTER_BEHAVIOR_COMMAND_SET_BEHAVIOR) && (inMessage.size == 5U))
 	{
 		//prepare output string
 		uint16_t delay = inMessage.data[ 1U ] * 4096 + inMessage.data[ 2U ] * 256 + inMessage.data[ 3U ] * 16 + inMessage.data[ 4U ];
-		return SrvBodySetBehavior(inMessage.data[ 0U ], delay);
+		return SrvBodyMoveSetBehavior(inMessage.data[ 0U ], delay);
 	}
-	else if(( inMessage.command == COMM_CLUSTER_BEHAVIOR_COMMAND_GET_ELEVATION) && (inMessage.size == 0U))
+	else if(( inMessage.command == COMM_CLUSTER_BEHAVIOR_COMMAND_SET_TRANSLATION_XYZ) && (inMessage.size == 10U))
 	{
 		//prepare output string
-		uint8_t nbData = SrvCommPrepareMessage(COMM_CLUSTER_BEHAVIOR,COMM_CLUSTER_BEHAVIOR_COMMAND_GET_ELEVATION, 2U);
-		nbData += sprintf((char*)&response[ nbData ],"%02X", SrvBodyGetElevation());
-		return SrvCommWriteMessage(nbData);
+		Int8S x = (Int8S)(inMessage.data[ 0U ] * 16 + inMessage.data[ 1U ] );
+		Int8S y = (Int8S)(inMessage.data[ 2U ] * 16 + inMessage.data[ 3U ] );
+		Int8S z = (Int8S)(inMessage.data[ 4U ] * 16 + inMessage.data[ 5U ] );
+		uint16_t delay = inMessage.data[ 6U ] * 4096 + inMessage.data[ 7U ] * 256 + inMessage.data[ 8U ] * 16 + inMessage.data[ 9U ];
+		return SrvBodyMoveSetTranslation(x,y,z,delay);
 	}
-	else if(( inMessage.command == COMM_CLUSTER_BEHAVIOR_COMMAND_SET_ELEVATION) && (inMessage.size == 6U))
+	else if(( inMessage.command == COMM_CLUSTER_BEHAVIOR_COMMAND_SET_POSITION_XYZ) && (inMessage.size == 10U))
 	{
 		//prepare output string
-		uint16_t delay = inMessage.data[ 2U ] * 4096 + inMessage.data[ 3U ] * 256 + inMessage.data[ 4U ] * 16 + inMessage.data[ 5U ];
-		return SrvBodySetElevation((uint8_t)((inMessage.data[ 0U ] * 16U) + inMessage.data[ 1U ]), delay);
+		Int8S roll = (Int8S)(inMessage.data[ 0U ] * 16 + inMessage.data[ 1U ] );
+		Int8S pitch = (Int8S)(inMessage.data[ 2U ] * 16 + inMessage.data[ 3U ] );
+		Int8S yaw = (Int8S)(inMessage.data[ 4U ] * 16 + inMessage.data[ 5U ] );
+		uint16_t delay = inMessage.data[ 6U ] * 4096 + inMessage.data[ 7U ] * 256 + inMessage.data[ 8U ] * 16 + inMessage.data[ 9U ];
+		return SrvBodyMoveSetRollPitchYaw(roll,pitch,yaw,delay);
 	}
-	else if(( inMessage.command == COMM_CLUSTER_BEHAVIOR_COMMAND_SET_POSITION_XY) && (inMessage.size == 4U))
+	else if(( inMessage.command == COMM_CLUSTER_BEHAVIOR_COMMAND_SET_WALK) && (inMessage.size == 5U))
 	{
 		//prepare output string
-		int16_t x = inMessage.data[ 0U ] * 16 + inMessage.data[ 1U ];
-		int16_t y = inMessage.data[ 2U ] * 16 + inMessage.data[ 3U ];
-		return SrvBodySetPosition(x,y);
+		E_WALK walk = (E_WALK)inMessage.data[ 0U ];
+		uint16_t delay = inMessage.data[ 1U ] * 4096 + inMessage.data[ 2U ] * 256 + inMessage.data[ 3U ] * 16 + inMessage.data[ 4U ];
+		return SrvWalkSetWalk(walk,delay);
+	}
+	else if(( inMessage.command == COMM_CLUSTER_BEHAVIOR_COMMAND_SET_GAIT) && (inMessage.size == 5U))
+	{
+		//prepare output string
+		E_GAIT gait = (E_WALK)inMessage.data[ 0U ];
+		uint16_t delay = inMessage.data[ 1U ] * 4096 + inMessage.data[ 2U ] * 256 + inMessage.data[ 3U ] * 16 + inMessage.data[ 4U ];
+		return SrvWalkSetGait(gait,delay);
 	}
 	
 	
@@ -440,7 +455,7 @@ static Boolean SrvCommExecuteClusterServo( void )
 			//prepare output string
 			servo = DrvServoGetStruture(servoId);
 			uint8_t nbData = SrvCommPrepareMessage(COMM_CLUSTER_SERVOS,COMM_CLUSTER_SERVOS_COMMAND_SERVO_READ, 4U);
-			int8_t servoPos = servo->targetPosition - servo->offset;
+			Int8U servoPos = (Int8U)(servo->targetPosition - servo->offset);
 			nbData += sprintf((char*)&response[ nbData ],"%02X%02X",servoId,servoPos);
 			return SrvCommWriteMessage(nbData);
 		}
@@ -452,7 +467,7 @@ static Boolean SrvCommExecuteClusterServo( void )
 		if(servoId < NB_LEGS * NB_SERVOS_PER_LEG)
 		{
 			servo = DrvServoGetStruture(servoId);
-			int8_t servoPos =  (int8_t)((int8_t)inMessage.data[ 2U ] * 16 + (int8_t)inMessage.data[ 3U ] );
+			Int8S servoPos = servo->offset + (Int8S)(inMessage.data[ 2U ] * 16 + inMessage.data[ 3U ] );
 			uint16_t delay = inMessage.data[ 4U ] * 4096 + inMessage.data[ 5U ] * 256 + inMessage.data[ 6U ] * 16 + inMessage.data[ 7U ];
 			//can send data
 			return DrvServoSetTarget(servoId,servoPos, delay);
@@ -467,7 +482,7 @@ static Boolean SrvCommExecuteClusterServo( void )
 			//prepare output string
 			servo = DrvServoGetStruture(servoId);
 			uint8_t nbData = SrvCommPrepareMessage(COMM_CLUSTER_SERVOS,COMM_CLUSTER_SERVOS_COMMAND_SERVO_MIN_READ, 4U);
-			int8_t min = servo->min  - servo->offset;
+			Int8U min = (Int8U)(servo->min - servo->offset);
 			nbData += sprintf((char*)&response[ nbData ],"%02X%02X",servoId,min);
 			return SrvCommWriteMessage(nbData);
 		}
@@ -481,7 +496,7 @@ static Boolean SrvCommExecuteClusterServo( void )
 			//prepare output string
 			servo = DrvServoGetStruture(servoId);
 			uint8_t nbData = SrvCommPrepareMessage(COMM_CLUSTER_SERVOS,COMM_CLUSTER_SERVOS_COMMAND_SERVO_MAX_READ, 4U);
-			int8_t max = servo->max - servo->offset;
+			Int8U max = (Int8U)(servo->max - servo->offset);
 			nbData += sprintf((char*)&response[ nbData ],"%02X%02X",servoId,max);
 			return SrvCommWriteMessage(nbData);
 		}
@@ -493,7 +508,7 @@ static Boolean SrvCommExecuteClusterServo( void )
 		for( uint8_t servoId = 0U; servoId < NB_LEGS * NB_SERVOS_PER_LEG ; servoId++ )
 		{
 			servo = DrvServoGetStruture(servoId);
-			int8_t mid = servo->targetPosition - servo->offset;
+			Int8U mid = (Int8U)(servo->targetPosition - servo->offset);
 			nbData += sprintf((char*)&response[ nbData ],"%02X",mid);
 		}
 		return SrvCommWriteMessage(nbData);
@@ -504,27 +519,30 @@ static Boolean SrvCommExecuteClusterLeg( void )
 {
 	uint8_t legId = NB_LEGS;
 	SLeg *leg;
-	if(( inMessage.command == COMM_CLUSTER_LEG_COMMAND_SET_LEG_XYZ) && (inMessage.size == 11U))
+	if(( inMessage.command == COMM_CLUSTER_LEG_COMMAND_SET_LEG_XYZ) && (inMessage.size == 17U))
 	{
 		legId = inMessage.data[ 0U ];
 		if(legId < NB_LEGS)
 		{
-			int8_t x = inMessage.data[ 1U ] * 16 + inMessage.data[ 2U ];
-			int8_t y = inMessage.data[ 3U ] * 16 + inMessage.data[ 4U ];
-			int8_t z = inMessage.data[ 5U ] * 16 + inMessage.data[ 6U ];
-			uint32_t delay = inMessage.data[ 7U ] * 4096 + inMessage.data[ 8U ] * 256 + inMessage.data[ 9U ] * 16 + inMessage.data[ 10U ];
-			return DrvLegSetXYZ(legId,x,y,z, delay);
+			Int16S x = inMessage.data[ 1U ] * 4096 + inMessage.data[ 2U ] * 256 + inMessage.data[ 3U ] * 16 + inMessage.data[ 4U ];
+			Int16S y = inMessage.data[ 5U ] * 4096 + inMessage.data[ 6U ] * 256 + inMessage.data[ 7U ] * 16 + inMessage.data[ 8U ];
+			Int16S z = inMessage.data[ 9U ] * 4096 + inMessage.data[ 10U ] * 256 + inMessage.data[ 11U ] * 16 + inMessage.data[ 12U ];
+			uint32_t delay = inMessage.data[ 13U ] * 4096 + inMessage.data[ 14U ] * 256 + inMessage.data[ 15U ] * 16 + inMessage.data[ 16U ];
+			return DrvLegSetTarget(legId,x,y,z, delay);
 		}
 	}
-	else if(( inMessage.command == COMM_CLUSTER_LEG_COMMAND_GET_LEG_XYZ) && (inMessage.size == 0U))
+	else if(( inMessage.command == COMM_CLUSTER_LEG_COMMAND_GET_LEG_XYZ) && (inMessage.size == 1U))
 	{
 		legId = inMessage.data[ 0U ];
 		if(legId < NB_LEGS)
 		{
 			//prepare output string
 			leg = DrvLegGetStruct(legId);
-			uint8_t nbData = SrvCommPrepareMessage(COMM_CLUSTER_LEG,COMM_CLUSTER_LEG_COMMAND_GET_LEG_XYZ, 4U);
-			nbData += sprintf((char*)&response[ nbData ],"%01X%02X%02X%02X",legId,leg->x,leg->y, leg->z);
+			uint8_t nbData = SrvCommPrepareMessage(COMM_CLUSTER_LEG,COMM_CLUSTER_LEG_COMMAND_GET_LEG_XYZ, 13U);
+			Int16S x = (Int16S)leg->currentPositionX;
+			Int16S y = (Int16S)leg->currentPositionY;
+			Int16S z = (Int16S)leg->currentPositionZ;
+			nbData += sprintf((char*)&response[ nbData ],"%01X%04X%04X%04X",legId,x,y,z);
 			return SrvCommWriteMessage(nbData);
 		}
 	}
@@ -547,83 +565,83 @@ static Boolean SrvCommExecuteMessageHC05( void )
 		if((hc05 == 0) &&(inMessage.size == 4)) // receive OK
 		{
 			hc05 = 1;
-			DrvUartFillTxBuffer(E_UART_0,'A');
-			DrvUartFillTxBuffer(E_UART_0,'T');
+			DrvUartFillTxBuffer(uartUsing,'A');
+			DrvUartFillTxBuffer(uartUsing,'T');
 			
-			DrvUartFillTxBuffer(E_UART_0,'+');
+			DrvUartFillTxBuffer(uartUsing,'+');
 			
-			DrvUartFillTxBuffer(E_UART_0,'N');
-			DrvUartFillTxBuffer(E_UART_0,'A');
-			DrvUartFillTxBuffer(E_UART_0,'M');
-			DrvUartFillTxBuffer(E_UART_0,'E');
+			DrvUartFillTxBuffer(uartUsing,'N');
+			DrvUartFillTxBuffer(uartUsing,'A');
+			DrvUartFillTxBuffer(uartUsing,'M');
+			DrvUartFillTxBuffer(uartUsing,'E');
 			
-			DrvUartFillTxBuffer(E_UART_0,'=');
+			DrvUartFillTxBuffer(uartUsing,'=');
 			
-			DrvUartFillTxBuffer(E_UART_0,'H');
-			DrvUartFillTxBuffer(E_UART_0,'e');
-			DrvUartFillTxBuffer(E_UART_0,'x');
-			DrvUartFillTxBuffer(E_UART_0,'a');
-			DrvUartFillTxBuffer(E_UART_0,'p');
-			DrvUartFillTxBuffer(E_UART_0,'o');
-			DrvUartFillTxBuffer(E_UART_0,'d');
+			DrvUartFillTxBuffer(uartUsing,'H');
+			DrvUartFillTxBuffer(uartUsing,'e');
+			DrvUartFillTxBuffer(uartUsing,'x');
+			DrvUartFillTxBuffer(uartUsing,'a');
+			DrvUartFillTxBuffer(uartUsing,'p');
+			DrvUartFillTxBuffer(uartUsing,'o');
+			DrvUartFillTxBuffer(uartUsing,'d');
 			
-			DrvUartFillTxBuffer(E_UART_0,'\r');
-			DrvUartFillTxBuffer(E_UART_0,'\n');
-			DrvUartSendData(E_UART_0);
+			DrvUartFillTxBuffer(uartUsing,'\r');
+			DrvUartFillTxBuffer(uartUsing,'\n');
+			DrvUartSendData(uartUsing);
 		}
 		else if((hc05 == 1) &&(inMessage.size == 4)) // receive OK
 		{
 			hc05 = 2;
-			DrvUartFillTxBuffer(E_UART_0,'A');
-			DrvUartFillTxBuffer(E_UART_0,'T');
+			DrvUartFillTxBuffer(uartUsing,'A');
+			DrvUartFillTxBuffer(uartUsing,'T');
 			
-			DrvUartFillTxBuffer(E_UART_0,'+');
+			DrvUartFillTxBuffer(uartUsing,'+');
 			
-			DrvUartFillTxBuffer(E_UART_0,'U');
-			DrvUartFillTxBuffer(E_UART_0,'A');
-			DrvUartFillTxBuffer(E_UART_0,'R');
-			DrvUartFillTxBuffer(E_UART_0,'T');
+			DrvUartFillTxBuffer(uartUsing,'U');
+			DrvUartFillTxBuffer(uartUsing,'A');
+			DrvUartFillTxBuffer(uartUsing,'R');
+			DrvUartFillTxBuffer(uartUsing,'T');
 			
-			DrvUartFillTxBuffer(E_UART_0,'=');
+			DrvUartFillTxBuffer(uartUsing,'=');
 			
-			DrvUartFillTxBuffer(E_UART_0,'1');
-			DrvUartFillTxBuffer(E_UART_0,'1');
-			DrvUartFillTxBuffer(E_UART_0,'5');
-			DrvUartFillTxBuffer(E_UART_0,'2');
-			DrvUartFillTxBuffer(E_UART_0,'0');
-			DrvUartFillTxBuffer(E_UART_0,'0');
-			DrvUartFillTxBuffer(E_UART_0,',');
-			DrvUartFillTxBuffer(E_UART_0,'0');
-			DrvUartFillTxBuffer(E_UART_0,',');
-			DrvUartFillTxBuffer(E_UART_0,'0');
+			DrvUartFillTxBuffer(uartUsing,'1');
+			DrvUartFillTxBuffer(uartUsing,'1');
+			DrvUartFillTxBuffer(uartUsing,'5');
+			DrvUartFillTxBuffer(uartUsing,'2');
+			DrvUartFillTxBuffer(uartUsing,'0');
+			DrvUartFillTxBuffer(uartUsing,'0');
+			DrvUartFillTxBuffer(uartUsing,',');
+			DrvUartFillTxBuffer(uartUsing,'0');
+			DrvUartFillTxBuffer(uartUsing,',');
+			DrvUartFillTxBuffer(uartUsing,'0');
 			
-			DrvUartFillTxBuffer(E_UART_0,'\r');
-			DrvUartFillTxBuffer(E_UART_0,'\n');
-			DrvUartSendData(E_UART_0);
+			DrvUartFillTxBuffer(uartUsing,'\r');
+			DrvUartFillTxBuffer(uartUsing,'\n');
+			DrvUartSendData(uartUsing);
 		}
 		else if((hc05 == 2) &&(inMessage.size == 4)) // receive OK
 		{
 			hc05 = 3;
-			DrvUartFillTxBuffer(E_UART_0,'A');
-			DrvUartFillTxBuffer(E_UART_0,'T');
+			DrvUartFillTxBuffer(uartUsing,'A');
+			DrvUartFillTxBuffer(uartUsing,'T');
 			
-			DrvUartFillTxBuffer(E_UART_0,'+');
+			DrvUartFillTxBuffer(uartUsing,'+');
 			
-			DrvUartFillTxBuffer(E_UART_0,'P');
-			DrvUartFillTxBuffer(E_UART_0,'S');
-			DrvUartFillTxBuffer(E_UART_0,'W');
-			DrvUartFillTxBuffer(E_UART_0,'D');
+			DrvUartFillTxBuffer(uartUsing,'P');
+			DrvUartFillTxBuffer(uartUsing,'S');
+			DrvUartFillTxBuffer(uartUsing,'W');
+			DrvUartFillTxBuffer(uartUsing,'D');
 			
-			DrvUartFillTxBuffer(E_UART_0,'=');
+			DrvUartFillTxBuffer(uartUsing,'=');
 			
-			DrvUartFillTxBuffer(E_UART_0,'4');
-			DrvUartFillTxBuffer(E_UART_0,'8');
-			DrvUartFillTxBuffer(E_UART_0,'5');
-			DrvUartFillTxBuffer(E_UART_0,'0');
+			DrvUartFillTxBuffer(uartUsing,'4');
+			DrvUartFillTxBuffer(uartUsing,'8');
+			DrvUartFillTxBuffer(uartUsing,'5');
+			DrvUartFillTxBuffer(uartUsing,'0');
 			
-			DrvUartFillTxBuffer(E_UART_0,'\r');
-			DrvUartFillTxBuffer(E_UART_0,'\n');
-			DrvUartSendData(E_UART_0);
+			DrvUartFillTxBuffer(uartUsing,'\r');
+			DrvUartFillTxBuffer(uartUsing,'\n');
+			DrvUartSendData(uartUsing);
 		}
 		inMessage.size = 0;
 	}

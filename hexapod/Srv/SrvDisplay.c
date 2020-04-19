@@ -99,7 +99,7 @@ void SrvDisplayUpdate (void)
 	
 	
 	//update every 20ms
-	if ((DrvTickGetTimeMs() - prevMillisUpdateDisplay) > 25U)
+	if ((DrvTickGetTimeMs() - prevMillisUpdateDisplay) > 500U)
 	{
 		prevMillisUpdateDisplay = DrvTickGetTimeMs();
 		CmpSSD1306Update();

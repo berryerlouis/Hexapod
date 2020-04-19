@@ -33,8 +33,12 @@ void SrvIhmHeartbeatCalm ( void );
 void SrvIhmHeartbeatStress ( void );
 //platform init done
 void SrvIhmPlatformInitDone ( void ) ;
-//platform Disarm
-void SrvIhmPlatformLedLeft ( ELedState state ) ;
-//platform Arm
-void SrvIhmPlatformLedRight ( ELedState state ) ;
+//platform Set Left LED Time On
+void SrvIhmPlatformLeftLedTimeOn ( ELedState state, Int16U delayMs );
+//platform Set Right LED Time On
+void SrvIhmPlatformRightLedTimeOn ( ELedState state, Int16U delayMs );
+//platform Set Left LED
+void SrvIhmPlatformLeftLed ( ELedState state );
+//platform Set Right LED
+void SrvIhmPlatformRightLed ( ELedState state );
 #endif //SRVIHM_H_

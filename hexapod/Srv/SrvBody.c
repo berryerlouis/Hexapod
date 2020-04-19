@@ -1,8 +1,13 @@
 ////////////////////////////////////////INCLUDES//////////////////////////////////////////////////
 #include "Conf/ConfHard.h"
 
+#include "../Drv/DrvTick.h"
+
 #include "SrvBody.h"
-#include "../Cmps/CmpNRF24L01.h"
+#include "SrvBodyMove.h"
+#include "SrvPID.h"
+#include "SrvFeeling.h"
+#include "SrvIhm.h"
 
 
 
@@ -11,13 +16,17 @@
 ////////////////////////////////////////PRIVATE STRUCTURES////////////////////////////////////////
 
 ////////////////////////////////////////PRIVATE FUNCTIONS/////////////////////////////////////////
-
+static void SrvBodyUltrasonCallback (E_US us, uint16_t distance);
 ////////////////////////////////////////PRIVATE VARIABLES/////////////////////////////////////////
 
 ////////////////////////////////////////PUBILC FUNCTIONS//////////////////////////////////////////
 SBody body;
 
 
+//variables de timming
+Int32U lastread_pid = 0U;
+Int32U prevMillisUpdateBreath = 0U;
+Int8U prevMillisUpdateBreathStep = 0U;
 //Fonction d'initialisation
 Boolean SrvBodyInit ( void ) 
 {
@@ -27,14 +36,20 @@ Boolean SrvBodyInit ( void )
 	
 	body.imu = SrvImuSimpleGetSensor();
 	
-	body.behavior = E_BODY_STOP;
+	body.us = SrvUltrasonGetStruct();
+	SrvUltrasonSetThreshold(US_THRESHOLD_DISTANCE);
+	SrvUltrasonSetCallbackThreshold(SrvBodyUltrasonCallback);
 	
-	body.elevation = 5;
+	body.move = SrvBodyMoveGetStruct();
 	
-	body.x = 0;
-	body.y = 0;
+	body.walk = SrvWalkgetStruct();
 	
-	//CmpNRF24L01Init(EIO_PIN_D_4);
+	body.initialized = FALSE;
+	
+	SrvPIDInit();
+	SrvPIDSetValues( 0, 0.5F, 0.0F, 0.1F );
+	SrvPIDSetValues( 1, 0.5F, 0.0F, 0.1F );
+	
 	
 	return TRUE;
 }
@@ -42,90 +57,49 @@ Boolean SrvBodyInit ( void )
 //Fonction de dispatching d'evenements
 void SrvBodyUpdate (void)
 {
+	if((body.move->initialized) && (body.walk->walking == E_WALK_STOP))
+	{
+		/*if ((DrvTickGetTimeMs() - prevMillisUpdateBreath) > 1000U)
+		{
+			if(prevMillisUpdateBreathStep == 0)
+			{
+				SrvBodyMoveSetElevation(45,1000);
+				prevMillisUpdateBreathStep = 1;
+			}
+			else
+			{
+				SrvBodyMoveSetElevation(50,1000);
+				prevMillisUpdateBreathStep = 0;
+			}
+			prevMillisUpdateBreath = DrvTickGetTimeMs();
+		}*/
+	}
+
+		
+	/*Int32U interval_pid = DrvTickGetTimeUs() - lastread_pid;
+		
+	Int16S errorRoll = SrvPIDCompute(0,bodyMove.imu->roll,bodyMove.x,interval_pid);
+	Int16S errorPitch = SrvPIDCompute(1,bodyMove.imu->pitch,bodyMove.y,interval_pid);
+	SrvBodySetPosition(errorRoll,errorPitch,200);
+	//get loop update time
+	lastread_pid = DrvTickGetTimeUs();	*/	
+	
 }
 
-//Set Position
-Boolean SrvBodySetPosition ( int8_t x, int8_t y )
+
+static void SrvBodyUltrasonCallback (E_US us, uint16_t distance)
 {
-	body.x = x;
-	body.y = y;
-	
-	DrvLegSetXYZ(E_LEG_U_L,10,50,body.elevation + body.x + body.y,500);
-	DrvLegSetXYZ(E_LEG_U_R,-10,50,body.elevation + body.x - body.y,500);
-	
-	DrvLegSetXYZ(E_LEG_M_L,0,50,body.elevation + body.y,500 );
-	DrvLegSetXYZ(E_LEG_M_R,0,50,body.elevation - body.y,500);
-	
-	DrvLegSetXYZ(E_LEG_B_L,-10,50,body.elevation - body.x + body.y,500);
-	DrvLegSetXYZ(E_LEG_B_R,10,50,body.elevation - body.x - body.y,500);
-	
-	return TRUE;
-}
-//Set Elevation
-Boolean SrvBodySetElevation ( uint8_t elev, uint16_t delay )
-{
-	body.elevation = elev;
-	int16_t x;
-	int16_t y;
-	int16_t z;
-	DrvLegGetXYZ(E_LEG_U_L,&x,&y,&z);
-	DrvLegSetXYZ(E_LEG_U_L,x,y,elev,delay);
-	DrvLegGetXYZ(E_LEG_M_L,&x,&y,&z);
-	DrvLegSetXYZ(E_LEG_M_L,x,y,elev,delay);
-	DrvLegGetXYZ(E_LEG_B_L,&x,&y,&z);
-	DrvLegSetXYZ(E_LEG_B_L,x,y,elev,delay);
-	DrvLegGetXYZ(E_LEG_U_R,&x,&y,&z);
-	DrvLegSetXYZ(E_LEG_U_R,x,y,elev,delay);
-	DrvLegGetXYZ(E_LEG_M_R,&x,&y,&z);
-	DrvLegSetXYZ(E_LEG_M_R,x,y,elev,delay);
-	DrvLegGetXYZ(E_LEG_B_R,&x,&y,&z);
-	DrvLegSetXYZ(E_LEG_B_R,x,y,elev,delay);
-	
-	return TRUE;
-}
-//Get Elevation
-uint8_t SrvBodyGetElevation ( void )
-{
-	return body.elevation;
-}
-//Get Behavior
-EBodyBehavior SrvBodyGetBehavior ( void )
-{
-	return body.behavior;
-}
-//Set Behavior
-Boolean SrvBodySetBehavior ( EBodyBehavior pos, uint16_t delay )
-{
-	body.behavior = pos;
-	if(body.behavior == E_BODY_STOP)
+	//show led if threshold is reach
+	if(us == E_US_0)
 	{
-		DrvLegSetXYZ(E_LEG_U_L,0,0,0,delay);
-		DrvLegSetXYZ(E_LEG_M_L,0,0,0,delay);
-		DrvLegSetXYZ(E_LEG_B_L,0,0,0,delay);
-		DrvLegSetXYZ(E_LEG_U_R,0,0,0,delay);
-		DrvLegSetXYZ(E_LEG_M_R,0,0,0,delay);
-		DrvLegSetXYZ(E_LEG_B_R,0,0,0,delay);
-		return TRUE;
+		SrvIhmPlatformLeftLedTimeOn(E_LED_STATE_ON,500);
 	}
-	else if(body.behavior == E_BODY_STAR)
+	if(us == E_US_1)
 	{
-		DrvLegSetXYZ(E_LEG_U_L,8,0,0,delay);
-		DrvLegSetXYZ(E_LEG_M_L,0,0,0,delay);
-		DrvLegSetXYZ(E_LEG_B_L,-8,0,0,delay);
-		DrvLegSetXYZ(E_LEG_U_R,-8,0,0,delay);
-		DrvLegSetXYZ(E_LEG_M_R,0,0,0,delay);
-		DrvLegSetXYZ(E_LEG_B_R,8,0,0,delay);
-		return TRUE;
+		SrvIhmPlatformRightLedTimeOn(E_LED_STATE_ON,500);
 	}
-	else if(body.behavior == E_BODY_STRAIGHT)
-	{
-		DrvLegSetXYZ(E_LEG_U_L,0,0,50,delay);
-		DrvLegSetXYZ(E_LEG_M_L,0,0,50,delay);
-		DrvLegSetXYZ(E_LEG_B_L,0,0,50,delay);
-		DrvLegSetXYZ(E_LEG_U_R,0,0,50,delay);
-		DrvLegSetXYZ(E_LEG_M_R,0,0,50,delay);
-		DrvLegSetXYZ(E_LEG_B_R,0,0,50,delay);
-		return TRUE;
-	}
-	return FALSE;
+	
+	
+	//SrvWalkSetWalk(E_WALK_STOP, 1000U);
+	//SrvBodyMoveSetBehavior(E_BODY_STAR,1000);
 }

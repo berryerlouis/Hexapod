@@ -26,9 +26,10 @@ typedef enum
 
 typedef enum
 {
-	E_WALK_STOP,
+	E_WALK_PAUSE,
 	E_WALK_FW,
 	E_WALK_RV,
+	E_WALK_STOP,
 	E_WALK_UNKNOWN,
 }E_WALK;
 
@@ -65,11 +66,21 @@ typedef enum
 
 ////////////////////////////////////////PUBLIC STRUCTURES/////////////////////////////////////////
 
+//struct of legs, 
+typedef struct
+{
+	E_GAIT gaiting;
+	E_WALK walking;
+	Int16U walkingDelay;
+}SWalk;
+
 ////////////////////////////////////////PUBLIC FUNCTIONS//////////////////////////////////////////
 //Fonction d'initialisation
 Boolean SrvWalkInit ( void ) ;
 //Fonction de dispatching d'evenements
 void SrvWalkUpdate (void) ;
+
+SWalk* SrvWalkgetStruct (void) ;
 
 Boolean SrvWalkSetWalk( E_WALK walk, uint16_t delay );
 Boolean SrvWalkSetGait( E_GAIT gait, uint16_t delay );

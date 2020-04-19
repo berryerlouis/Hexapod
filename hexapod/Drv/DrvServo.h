@@ -24,10 +24,9 @@
 #define PERIOD_SERVO_MAX		15000U  //�s
 #define NB_SERVOS				18U
 
-#define MIN_SERVO_SPEED			0U
-#define MAX_SERVO_SPEED			10U
+#define SERVO_SPEED_MSEC_PER_DEG	(160.0 / 60.0)	// specs  : 0.16s/60°
 
-#define SERVO_DEG_PER_SEC		50U
+
 
 typedef enum
 {
@@ -44,9 +43,9 @@ typedef struct
 {
 	Int8U id;
 	Boolean enable;
-	Int16S currentPosition;
-	Int16S startPosition;
-	Int16S targetPosition;
+	float currentPosition;
+	float startPosition;
+	float targetPosition;
 	Int32U startTime;
 	Int16U movingTime;
 	DrvServoCallback callback;
@@ -71,7 +70,7 @@ Int16S DrvServoGetTarget( Int8U index ) ;
 // activate or not the desired servo
 Boolean DrvServoActivate( Int8U index, Boolean enable) ;
 //check if servo reaches target
-Boolean DrvServoCheckPosition( Int8U index ) ;
+Boolean DrvServoReachesPosition( Int8U index ) ;
 //compute and set the next angle
 void DrvServoUpdate ( void ) ;
 

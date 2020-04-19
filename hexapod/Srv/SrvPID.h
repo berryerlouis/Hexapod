@@ -29,9 +29,6 @@ typedef struct
 //init des valeurs du PID
 void SrvPIDInit( void ) ;
 
-//Dispatcher d'evenements 
-void SrvPIDDispatcher (void) ;
-
 //get the struct of the using PID
 Pid **SrvPIDGetStruct ( Int8U index );
 

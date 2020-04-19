@@ -364,6 +364,12 @@
     <Compile Include="Srv\SrvBody.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="Srv\SrvBodyMove.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Srv\SrvBodyMove.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Srv\SrvComm.c">
       <SubType>compile</SubType>
     </Compile>
@@ -404,6 +410,12 @@
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Srv\SrvImuSimple.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Srv\SrvPID.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Srv\SrvPID.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Srv\SrvUltrason.c">

@@ -62,8 +62,8 @@ Boolean DrvUartInit( void )
 	
 	#ifdef E_UART_1
 	
-		DrvIoSetPinOutput(i2cPins[ E_UART_1 ][UART_TX_PIN]);
-		DrvIoSetPinInput(i2cPins[ E_UART_1 ][UART_RX_PIN]);
+		DrvIoSetPinOutput(uartPins[ E_UART_1 ][UART_TX_PIN]);
+		DrvIoSetPinInput(uartPins[ E_UART_1 ][UART_RX_PIN]);
 		
 		#ifdef E_UART_1_BAUD_RATE
 			UBRR1 = ComputeBaudRateDoubleSpeed(E_UART_1_BAUD_RATE);
@@ -74,7 +74,6 @@ Boolean DrvUartInit( void )
 		BIT_HIGH(UCSR1B,RXEN1);		//enable RX
 		BIT_HIGH(UCSR1B,TXEN1);		//enable TX
 		BIT_HIGH(UCSR1C,UCSZ10);	//8 bits, no parity, 1 stop
-		BIT_HIGH(UCSR1B,RXCIE1);	//enable RX interrupt
 		BIT_LOW(UCSR1B,TXCIE1);		//disable TX interrupt
 		BIT_LOW(UCSR1B,UDRIE1);		//disable UDR interrupt
 		BIT_HIGH(UCSR1B,RXCIE1);	//enable RX interrupt

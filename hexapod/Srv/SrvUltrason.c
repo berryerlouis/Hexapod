@@ -4,27 +4,27 @@
 #include "Cmps/CmpSRF04.h"
 #include "Drv/DrvTick.h"
 
-#include "SrvIhm.h"
-#include "SrvFeeling.h"
+#include "SrvUltrason.h"
 
 ////////////////////////////////////////PRIVATE DEFINES///////////////////////////////////////////
-#define US_THRESHOLD_DISTANCE	45U		// 45 cm
 ////////////////////////////////////////PRIVATE STRUCTURES////////////////////////////////////////
 
 ////////////////////////////////////////PRIVATE FUNCTIONS/////////////////////////////////////////
-static void SrvUltrasonShowLeds (void) ;
 
 ////////////////////////////////////////PRIVATE VARIABLES/////////////////////////////////////////
 uint32_t prevMillisUpdateUltrason = 0UL;
-Boolean usToggle = FALSE;
-uint8_t usthreshold = US_THRESHOLD_DISTANCE;
+E_US usIndexToSendEcho = E_US_0;
+SUltrason ultrason;
+SrvUltrasonCallback callbackUSHit = NULL;
 ////////////////////////////////////////PUBILC FUNCTIONS//////////////////////////////////////////
 
 //Fonction d'initialisation
 Boolean SrvUltrasonInit ( void ) 
 {
-	usToggle = FALSE;
-	usthreshold = US_THRESHOLD_DISTANCE;
+	usIndexToSendEcho = E_US_0;
+	ultrason.usthreshold = US_THRESHOLD_DISTANCE;
+	ultrason.distance[E_US_0] = 0U;
+	ultrason.distance[E_US_1] = 0U;
 	prevMillisUpdateUltrason = 0UL;
 	return CmpSRF04Init();
 }
@@ -34,21 +34,33 @@ void SrvUltrasonUpdate (void)
 	//update every 20ms
 	if ((DrvTickGetTimeMs() - prevMillisUpdateUltrason) > 50U)
 	{
-		if(usToggle)
+		//send pulse to each ultrason module
+		CmpSRF04SendPulse(usIndexToSendEcho);
+		usIndexToSendEcho++;
+		if(usIndexToSendEcho == E_NB_USS)
 		{
-			usToggle = FALSE;
-			CmpSRF04SendPulse(E_US_1);
+			usIndexToSendEcho = E_US_0;
 		}
-		else 
+		//get distance
+		ultrason.distance[usIndexToSendEcho] = CmpSRF04GetDistance(usIndexToSendEcho);
+		
+		//if threshold is reach 
+		if(ultrason.distance[usIndexToSendEcho] < ultrason.usthreshold)
 		{
-			usToggle = TRUE;
-			CmpSRF04SendPulse(E_US_0);
+			//notify callback
+			if(callbackUSHit != NULL)
+			{
+				callbackUSHit(usIndexToSendEcho, ultrason.distance[usIndexToSendEcho]);
+			}
 		}
 		prevMillisUpdateUltrason = DrvTickGetTimeMs();
-		
-		//show led if threshold is reach
-		SrvUltrasonShowLeds();
 	}
+}
+
+
+SUltrason* SrvUltrasonGetStruct( void )
+{
+	return &ultrason;
 }
 
 uint16_t SrvUltrasonGetDistance (E_US us)
@@ -59,37 +71,18 @@ uint16_t SrvUltrasonGetDistance (E_US us)
 // set threshold
 Boolean SrvUltrasonSetThreshold( uint8_t threshold )
 {
-	usthreshold = threshold;
+	ultrason.usthreshold = threshold;
 	return TRUE;
 }
+
 // get threshold
 uint8_t SrvUltrasonGetThreshold( void )
 {
-	return usthreshold;
+	return ultrason.usthreshold;
 }
 
 
-static void SrvUltrasonShowLeds (void) 
+void SrvUltrasonSetCallbackThreshold ( SrvUltrasonCallback cb ) 
 {
-	if(CmpSRF04GetDistance(E_US_0) <= US_THRESHOLD_DISTANCE)
-	{
-		SrvIhmPlatformLedLeft(E_LED_STATE_ON);
-		SrvFeelingSetFeeling(FEELING_STRESS);
-	}
-	else
-	{
-		SrvIhmPlatformLedLeft(E_LED_STATE_OFF);
-		SrvFeelingSetFeeling(FEELING_CALM);
-	}
-		
-	if(CmpSRF04GetDistance(E_US_1) <= US_THRESHOLD_DISTANCE)
-	{
-		SrvIhmPlatformLedRight(E_LED_STATE_ON);
-		SrvFeelingSetFeeling(FEELING_STRESS);
-	}
-	else
-	{
-		SrvIhmPlatformLedRight(E_LED_STATE_OFF);
-		SrvFeelingSetFeeling(FEELING_CALM);
-	}
+	callbackUSHit = cb;
 }

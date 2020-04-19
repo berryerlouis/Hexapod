@@ -91,7 +91,7 @@ typedef enum
 typedef enum
 {
 	E_UART_0,
-	//E_UART_1,
+	E_UART_1,
 	//Alaways at end
 	E_NB_UARTS,
 	E_UART_NONE

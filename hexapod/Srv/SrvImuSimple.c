@@ -16,7 +16,10 @@
 
 ////////////////////////////////////////PRIVATE VARIABLES/////////////////////////////////////////
 static SImuSimple imu;
-
+static float roll;
+static float pitch;
+static float yaw;
+Int32U prevMillisImuUpdate = 0;
 ////////////////////////////////////////PUBILC FUNCTIONS//////////////////////////////////////////
 
 //Fonction d'initialisation
@@ -24,58 +27,65 @@ Boolean SrvImuSimpleInit ( void )
 {	
 	imu.enable = TRUE;
 	imu.accthreshold = 5U;
+	prevMillisImuUpdate = 0;
+	roll = 0;
+	pitch = 0;
+	yaw = 0;
 	return CmpMPU9150Init(MPU9150_ADDRESS);
 }
 
-static volatile float roll , pitch, yaw;
 void SrvImuSimpleUpdate (void)
 {
-	if(	imu.enable == TRUE )
+	if ((DrvTickGetTimeMs() - prevMillisImuUpdate) > 250U)
 	{
-		
-		// ********************* Read Data *************************	
-		CmpMPU9150ReadAcc(MPU9150_ADDRESS, &imu.acc);
-		CmpMPU9150ReadGyr(MPU9150_ADDRESS, &imu.gyr);
-		CmpMPU9150ReadTmp(MPU9150_ADDRESS, &imu.tmp);
-		CmpMPU9150ReadCmps(MPU9150_ADDRESS, &imu.cmps);
-				
-		//check if hexapod is shoving
-		if(CmpMPU9150IsCalibrated())
+		if(	imu.enable == TRUE )
 		{
-			//compute axis
-			float accelX = imu.acc.accX;
-			float accelY = imu.acc.accY;
-			float accelZ = imu.acc.accZ;
-			//float gyroX = (imu.gyr.gyrX * 180.0) / M_PI;
-			//float gyroY = (imu.gyr.gyrY * 180.0) / M_PI;
-			//float gyroZ = (imu.gyr.gyrZ * 180.0) / M_PI;
-			//float magX = imu.cmps.cmpsX;
-			//float magY = imu.cmps.cmpsY;
-			//float magZ = imu.cmps.cmpsZ;
-	
-			//Roll & Pitch from acc
-			roll = atan2(-accelX ,( sqrt((accelY * accelY) + (accelZ * accelZ))));
-			pitch = atan2 (accelY ,( sqrt ((accelX * accelX) + (accelZ * accelZ))));
-
-			// yaw from mag
-			//float Yh = (magY * cos(roll)) - (magZ * sin(roll));
-			//float Xh = (magX * cos(pitch))+(magY * sin(roll)*sin(pitch)) + (magZ * cos(roll) * sin(pitch));
-			//yaw = gyroZ;
-
-			//filter data
-			imu.roll = (Int16S)ToDeg(roll) * -1;
-			imu.pitch = (Int16S)ToDeg(pitch);
-			imu.yaw = 0;
-			
-			
-			if(
-				(abs(imu.roll) > imu.accthreshold) ||
-				(abs(imu.pitch) > imu.accthreshold) 
-			)
+			// ********************* Read Data *************************	
+			CmpMPU9150ReadAcc(MPU9150_ADDRESS, &imu.acc);
+			CmpMPU9150ReadGyr(MPU9150_ADDRESS, &imu.gyr);
+			CmpMPU9150ReadTmp(MPU9150_ADDRESS, &imu.tmp);
+			CmpMPU9150ReadCmps(MPU9150_ADDRESS, &imu.cmps);
+				
+			//check if hexapod is shoving
+			if(CmpMPU9150IsCalibrated())
 			{
-				SrvFeelingSetFeeling(FEELING_STRESS);
+				//compute axis
+				float accelX = imu.acc.accX;
+				float accelY = imu.acc.accY;
+				float accelZ = imu.acc.accZ;
+				//float gyroX = (imu.gyr.gyrX * 180.0) / M_PI;
+				//float gyroY = (imu.gyr.gyrY * 180.0) / M_PI;
+				//float gyroZ = (imu.gyr.gyrZ * 180.0) / M_PI;
+				//float magX = imu.cmps.cmpsX;
+				//float magY = imu.cmps.cmpsY;
+				//float magZ = imu.cmps.cmpsZ;
+	
+				//Roll & Pitch from acc
+				roll = atan2(-accelX ,( sqrt((accelY * accelY) + (accelZ * accelZ))));
+				pitch = atan2 (accelY ,( sqrt ((accelX * accelX) + (accelZ * accelZ))));
+
+				// yaw from mag
+				//float Yh = (magY * cos(roll)) - (magZ * sin(roll));
+				//float Xh = (magX * cos(pitch))+(magY * sin(roll)*sin(pitch)) + (magZ * cos(roll) * sin(pitch));
+				//yaw = gyroZ;
+
+				//filter data
+				imu.roll = (Int16S)ToDeg(roll) * -1;
+				imu.pitch = (Int16S)ToDeg(pitch);
+				imu.yaw = 0;
+			
+			
+				if(
+					(abs(imu.roll) > imu.accthreshold) ||
+					(abs(imu.pitch) > imu.accthreshold) 
+				)
+				{
+					SrvFeelingSetFeeling(FEELING_STRESS);
+				}
 			}
-		}
+		}		
+		//for next time
+		prevMillisImuUpdate = DrvTickGetTimeMs();
 	}
 }
 

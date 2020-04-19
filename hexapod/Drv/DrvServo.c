@@ -16,7 +16,7 @@
 #define MIN_SERVO_DURATION			10000U
 #define MAX_SERVO_DURATION			100U
 ////////////////////////////////////////PRIVATE FUNCTIONS/////////////////////////////////////////
-static void DrvServoComputeAngle ( Int8U index );
+static float DrvServoComputeAngle ( Int8U index );
 ////////////////////////////////////////PRIVATE VARIABLES/////////////////////////////////////////
 static SServo servos[NB_SERVOS];
 
@@ -54,7 +54,7 @@ Boolean DrvServoInit( void )
 	return TRUE;
 }
 
-// move the selected servo to the desired position [-900,900] and during the desired time
+// move the selected servo to the desired position [-90,90] and during the desired time
 Boolean DrvServoSetTarget( Int8U index, Int16S angle, Int16U time)
 {
 	//check index
@@ -63,12 +63,25 @@ Boolean DrvServoSetTarget( Int8U index, Int16S angle, Int16U time)
 		//if between limits
 		if(( angle >= servos[ index ].min ) && ( angle <= servos[ index ].max ))
 		{
-			servos[ index ].movingTime = time;
-			//if not already set
+			//if not already set, the servo need to move
 			if(servos[ index ].targetPosition != angle)
 			{
-				servos[ index ].startPosition = servos[ index ].currentPosition;
-				servos[ index ].targetPosition = angle;
+				//set position and target
+				servos[ index ].startPosition	= servos[ index ].currentPosition;
+				servos[ index ].targetPosition	= angle;
+				//compute the delta
+				Int16S delta = servos[ index ].targetPosition - servos[ index ].startPosition;
+				//compute minimum time for this delta
+				Int16U durationMin = (Int16U)ABS((SERVO_SPEED_MSEC_PER_DEG * (float)delta));
+				//set the delay min for the servo to reaches its position if time < durationMin
+				if( durationMin > time )
+				{
+					servos[ index ].movingTime = durationMin;
+				}
+				else
+				{
+					servos[ index ].movingTime = time;
+				}
 				servos[ index ].startTime = DrvTickGetTimeMs();
 			}
 			return TRUE;
@@ -98,7 +111,7 @@ Int16S DrvServoGetTarget( Int8U index )
 }
 
 //check if servo reaches target
-Boolean DrvServoCheckPosition( Int8U index )
+Boolean DrvServoReachesPosition( Int8U index )
 {
 	if( servos[index].currentPosition != servos[index].targetPosition ) 
 	{
@@ -107,28 +120,42 @@ Boolean DrvServoCheckPosition( Int8U index )
 	return TRUE;
 }
 
-//set the position
-Int16S angle;
-Int32U prevMillisServoUpdate;
+static float angle ;
+Int32U prevMillisServoUpdate = 0U;
 SPCA9685Pwm pwm[NB_SERVOS];
 void DrvServoUpdate ( void )
 {
-	if ((DrvTickGetTimeMs() - prevMillisServoUpdate) > 15U)
+	//update every 10 ms
+	if ((DrvTickGetTimeMs() - prevMillisServoUpdate) > 10U)
 	{
 		//fill the pwm for each servos
 		for (Int8U index = 0U; index < NB_SERVOS ; index++)
 		{
-			//servo activate
+			//only if servo activate and position need to move to target
 			if(servos[ index ].enable == TRUE)
 			{
-				DrvServoComputeAngle(index);
-				angle = servos[index].currentPosition;
+				angle = (float)servos[index].currentPosition;
+				//if servo reach its target
+				if((DrvServoReachesPosition(index) == TRUE))
+				{
+					//send callabck once if different of NULL
+					if(servos[ index ].callback != NULL)
+					{
+						servos[index].callback(index);
+					}
+					servos[index].startPosition = servos[ index ].targetPosition;
+				}
+				else
+				{
+					//compute new angle step 
+					angle = DrvServoComputeAngle(index);
+				}
 				
 				//convert -90deg to 90deg => 0deg to 180deg
 				angle += 90;
-				angle = SetRangeInt16(angle, SERVO_ANGLE_MIN, SERVO_ANGLE_MAX, 114, 522);
+				angle = SetRange(angle, SERVO_ANGLE_MIN, SERVO_ANGLE_MAX, 195.0, 480.0);
 				pwm[index].on = 0U;
-				pwm[index].off = angle;
+				pwm[index].off = (Int16U)angle;
 			}
 			else
 			{
@@ -156,38 +183,33 @@ SServo* DrvServoGetStruture( Int8U index )
 
 ////////////////////////////////////////PRIVATE FUNCTIONS/////////////////////////////////////////
 
-void DrvServoComputeAngle ( Int8U index )
-{
+float DrvServoComputeAngle ( Int8U index )
+{	
 	Int32U currentTime	= DrvTickGetTimeMs() - servos[ index ].startTime;
-	Int16S startValue	= servos[ index ].startPosition;
-	Int16S changeValue	= servos[ index ].targetPosition - startValue;
-	Int16U duration		= servos[ index ].movingTime;
+	float startValue	= (float)servos[ index ].startPosition;
+	float changeValue	= (float)servos[ index ].targetPosition - startValue;
+	float duration		= (float)servos[ index ].movingTime;
 	
 	if(servos[ index ].ease == E_SERVO_EASE_LINEAR)
 	{
-		servos[index].currentPosition = changeValue * (float)((float)currentTime / (float)duration) + startValue;
+		servos[index].currentPosition = (Int16S)round(changeValue * (currentTime / duration) + startValue);
 	}
 	else if(servos[ index ].ease == E_SERVO_EASE_SINUS_IN)
 	{
-		servos[index].currentPosition = -changeValue * cos( M_PI_2 * (float)((float)currentTime / (float)duration)) + changeValue + startValue;
+		servos[index].currentPosition = -changeValue * cos( M_PI_2 * (currentTime / duration)) + changeValue + startValue;
 	}
 	else if(servos[ index ].ease == E_SERVO_EASE_SINUS_OUT)
 	{
-		servos[index].currentPosition = changeValue * sin( M_PI_2 * (float)((float)currentTime / (float)duration)) + startValue;
+		servos[index].currentPosition = changeValue * sin( M_PI_2 * (currentTime / duration)) + startValue;
 	}
 	else if(servos[ index ].ease == E_SERVO_EASE_SINUS_IN_OUT)
 	{
-		servos[index].currentPosition = (-changeValue/2) * (cos( M_PI * (float)((float)currentTime / (float)duration)) - 1 ) + startValue;
+		servos[index].currentPosition = (-changeValue/2.0) * (cos( M_PI * (currentTime / duration)) - 1.0 ) + startValue;
 	}
-	
 	if(currentTime >= duration)
 	{
-		servos[index].startPosition = servos[ index ].targetPosition;
-		servos[index].currentPosition = servos[ index ].targetPosition;
-		if(servos[index].callback != NULL)
-		{
-			servos[index].callback(index);
-		}
+		servos[index].currentPosition = servos[index].targetPosition;
 	}
+	return servos[index].currentPosition;
 }
 ///////////////////////////////////////////ISR FUNCTIONS//////////////////////////////////////////
