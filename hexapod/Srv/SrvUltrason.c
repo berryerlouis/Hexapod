@@ -69,14 +69,24 @@ uint16_t SrvUltrasonGetDistance (E_US us)
 }
 
 // set threshold
-Boolean SrvUltrasonSetThreshold( uint8_t threshold )
+Boolean SrvUltrasonSetThreshold( Int16U threshold )
 {
 	ultrason.usthreshold = threshold;
 	return TRUE;
 }
 
+// set threshold
+Boolean SrvUltrasonReachThreshold( E_US us )
+{
+	if( SrvUltrasonGetDistance(us) < SrvUltrasonGetThreshold() )
+	{
+		return TRUE;	
+	}
+	return FALSE;
+}
+
 // get threshold
-uint8_t SrvUltrasonGetThreshold( void )
+Int16U SrvUltrasonGetThreshold( void )
 {
 	return ultrason.usthreshold;
 }

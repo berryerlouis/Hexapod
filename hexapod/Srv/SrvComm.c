@@ -339,7 +339,24 @@ static Boolean SrvCommExecuteClusterBehavior( void )
 		uint16_t delay = inMessage.data[ 1U ] * 4096 + inMessage.data[ 2U ] * 256 + inMessage.data[ 3U ] * 16 + inMessage.data[ 4U ];
 		return SrvWalkSetGait(gait,delay);
 	}
-	
+	else if(( inMessage.command == COMM_CLUSTER_BEHAVIOR_COMMAND_SET_AMPLITUDE) && (inMessage.size == 2U))
+	{
+		//prepare output string
+		Int8U amplitude = (Int8U)(inMessage.data[ 0U ] * 16 + inMessage.data[ 1U ] ) * 1.0;
+		return SrvWalkSetAmplitude(amplitude);
+	}
+	else if(( inMessage.command == COMM_CLUSTER_BEHAVIOR_COMMAND_SET_GROUND_SIZE) && (inMessage.size == 6U))
+	{
+		//prepare output string
+		uint16_t delay = inMessage.data[ 2U ] * 4096 + inMessage.data[ 3U ] * 256 + inMessage.data[ 4U ] * 16 + inMessage.data[ 5U ];
+		return SrvBodyMoveSetGroundSize((inMessage.data[ 0U ] * 16 + inMessage.data[ 1U ] ) * 1.0,delay);
+	}
+	else if(( inMessage.command == COMM_CLUSTER_BEHAVIOR_COMMAND_SET_ELEVATION) && (inMessage.size == 6U))
+	{
+		//prepare output string
+		uint16_t delay = inMessage.data[ 2U ] * 4096 + inMessage.data[ 3U ] * 256 + inMessage.data[ 4U ] * 16 + inMessage.data[ 5U ];
+		return SrvBodyMoveSetElevation((inMessage.data[ 0U ] * 16 + inMessage.data[ 1U ] ) * 1.0,delay);
+	}
 	
 	
 	return FALSE;

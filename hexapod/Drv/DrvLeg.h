@@ -161,6 +161,9 @@ typedef struct
 	float startPositionZ;
 	Int32U startTime;
 	Int32U speed;
+	E_SERVO_EASES coxaEase;
+	E_SERVO_EASES femurEase;
+	E_SERVO_EASES tibiaEase;
 }SLeg;
 
 //struct of legs, 

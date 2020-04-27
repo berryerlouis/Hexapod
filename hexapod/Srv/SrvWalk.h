@@ -72,6 +72,7 @@ typedef struct
 	E_GAIT gaiting;
 	E_WALK walking;
 	Int16U walkingDelay;
+	Int16U walkingAmplitude;
 }SWalk;
 
 ////////////////////////////////////////PUBLIC FUNCTIONS//////////////////////////////////////////
@@ -82,6 +83,7 @@ void SrvWalkUpdate (void) ;
 
 SWalk* SrvWalkgetStruct (void) ;
 
+Boolean SrvWalkSetAmplitude( Int8U amplitude );
 Boolean SrvWalkSetWalk( E_WALK walk, uint16_t delay );
 Boolean SrvWalkSetGait( E_GAIT gait, uint16_t delay );
 #endif //SRVWALK_H_

@@ -19,14 +19,14 @@
 ////////////////////////////////////////PUBLIC ENUM///////////////////////////////////////////////
 
 ////////////////////////////////////////PUBLIC DEFINES////////////////////////////////////////////
-#define US_THRESHOLD_DISTANCE	45U		// 45 cm
+#define US_THRESHOLD_DISTANCE	30U		// 20 cm
 
 ////////////////////////////////////////PUBLIC STRUCTURES/////////////////////////////////////////
 //struct of legs, 
 typedef struct
 {
-	uint16_t usthreshold;
-	uint16_t distance [E_NB_USS];
+	Int16U usthreshold;
+	Int16U distance [E_NB_USS];
 }SUltrason;
 
 typedef void (*SrvUltrasonCallback) (E_US us, uint16_t distance);
@@ -40,12 +40,13 @@ void SrvUltrasonUpdate (void) ;
 SUltrason* SrvUltrasonGetStruct( void );
 
 // set threshold
-Boolean SrvUltrasonSetThreshold( uint8_t threshold );
+Boolean SrvUltrasonSetThreshold( Int16U threshold );
 // get threshold
-uint8_t SrvUltrasonGetThreshold( void );
+Int16U SrvUltrasonGetThreshold( void );
 //get distance
-uint16_t SrvUltrasonGetDistance (E_US us) ;
+Int16U SrvUltrasonGetDistance (E_US us) ;
 
+Boolean SrvUltrasonReachThreshold( E_US us );
 void SrvUltrasonSetCallbackThreshold ( SrvUltrasonCallback cb ) ;
 
 #endif //SRVULTRASON_H_

@@ -53,7 +53,6 @@ typedef struct
 	Int16S mid;
 	Int16S max;
 	Int16S offset;
-	E_SERVO_EASES ease;
 }SServo;
 
 

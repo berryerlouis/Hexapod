@@ -41,7 +41,6 @@ Boolean DrvServoInit( void )
 		servos[ index ].min = SERVO_ANGLE_MIN;
 		servos[ index ].mid = SERVO_ANGLE_MID;
 		servos[ index ].max = SERVO_ANGLE_MAX;
-		servos[ index ].ease = E_SERVO_EASE_LINEAR;
 	}
 	
 	//initialize the 2 components PCA9685
@@ -76,7 +75,7 @@ Boolean DrvServoSetTarget( Int8U index, Int16S angle, Int16U time)
 				//set the delay min for the servo to reaches its position if time < durationMin
 				if( durationMin > time )
 				{
-					servos[ index ].movingTime = durationMin;
+					servos[ index ].movingTime = durationMin - 1;
 				}
 				else
 				{
@@ -185,28 +184,15 @@ SServo* DrvServoGetStruture( Int8U index )
 
 float DrvServoComputeAngle ( Int8U index )
 {	
-	Int32U currentTime	= DrvTickGetTimeMs() - servos[ index ].startTime;
+	static Int32U currentTime;
+	currentTime	= abs(DrvTickGetTimeMs() - servos[ index ].startTime);
 	float startValue	= (float)servos[ index ].startPosition;
 	float changeValue	= (float)servos[ index ].targetPosition - startValue;
 	float duration		= (float)servos[ index ].movingTime;
 	
-	if(servos[ index ].ease == E_SERVO_EASE_LINEAR)
-	{
-		servos[index].currentPosition = (Int16S)round(changeValue * (currentTime / duration) + startValue);
-	}
-	else if(servos[ index ].ease == E_SERVO_EASE_SINUS_IN)
-	{
-		servos[index].currentPosition = -changeValue * cos( M_PI_2 * (currentTime / duration)) + changeValue + startValue;
-	}
-	else if(servos[ index ].ease == E_SERVO_EASE_SINUS_OUT)
-	{
-		servos[index].currentPosition = changeValue * sin( M_PI_2 * (currentTime / duration)) + startValue;
-	}
-	else if(servos[ index ].ease == E_SERVO_EASE_SINUS_IN_OUT)
-	{
-		servos[index].currentPosition = (-changeValue/2.0) * (cos( M_PI * (currentTime / duration)) - 1.0 ) + startValue;
-	}
-	if(currentTime >= duration)
+	//servos[index].currentPosition = (Int16S)round(changeValue * (float)(currentTime / duration) + startValue);
+
+	//if(currentTime >= duration)
 	{
 		servos[index].currentPosition = servos[index].targetPosition;
 	}
