@@ -21,15 +21,30 @@ typedef enum
 	FEELING_CALM,
 	FEELING_STRESS
 }EFeelingLevel;
+
+typedef enum
+{
+	FEELING_FEAR,
+	FEELING_NEUTRAL,
+	FEELING_AGRESSIVE,
+}EFeelingState;
 ////////////////////////////////////////PUBLIC DEFINES////////////////////////////////////////////
 
 ////////////////////////////////////////PUBLIC STRUCTURES/////////////////////////////////////////
+typedef struct 
+{
+	EFeelingLevel feeling;
+	EFeelingState state;
+	Int32U stressedPeriod;
+}SFeeling;
 
 ////////////////////////////////////////PUBLIC FUNCTIONS//////////////////////////////////////////
 //Fonction d'initialisation
 Boolean SrvFeelingInit ( void ) ;
 //Fonction de dispatching d'evenements
 void SrvFeelingUpdate (void) ;
-void SrvFeelingSetFeeling (EFeelingLevel _feel) ;
+void SrvFeelingSetFeelingLevel (EFeelingLevel feeling);
+void SrvFeelingSetFeelingStatus (EFeelingState state);
+SFeeling *SrvFeelingGetFeeling ( void ) ;
 
 #endif //SRVFEELING_H_

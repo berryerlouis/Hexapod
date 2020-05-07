@@ -26,7 +26,6 @@ typedef enum
 
 typedef enum
 {
-	E_WALK_PAUSE,
 	E_WALK_FW,
 	E_WALK_RV,
 	E_WALK_STOP,
@@ -39,30 +38,6 @@ typedef enum
 
 ////////////////////////////////////////PUBLIC DEFINES////////////////////////////////////////////
 
-//E_GAITS_TRIPOD
-//UL [0][1]
-//ML [1][0]
-//BL [0][1]
-//UR [1][0]
-//MR [0][1]
-//BR [1][0]
-
-//E_GAITS_WAVE
-//UL [0][0][0][0][0][1]
-//ML [0][0][0][0][1][0]
-//BL [0][0][0][1][0][0]
-//UR [0][0][1][0][0][0]
-//MR [0][1][0][0][0][0]
-//BR [1][0][0][0][0][0]
-
-//E_GAITS_RIPPLE
-//UL [1][1][0][0][0][0]
-//ML [0][0][0][0][1][1]
-//BL [0][0][1][1][0][0]
-//UR [0][0][0][1][1][0]
-//MR [0][1][1][0][0][0]
-//BR [1][0][0][0][0][1]
-
 
 ////////////////////////////////////////PUBLIC STRUCTURES/////////////////////////////////////////
 
@@ -73,6 +48,8 @@ typedef struct
 	E_WALK walking;
 	Int16U walkingDelay;
 	Int16U walkingAmplitude;
+	Int8S  direction;
+	
 }SWalk;
 
 ////////////////////////////////////////PUBLIC FUNCTIONS//////////////////////////////////////////
@@ -83,7 +60,6 @@ void SrvWalkUpdate (void) ;
 
 SWalk* SrvWalkgetStruct (void) ;
 
-Boolean SrvWalkSetAmplitude( Int8U amplitude );
-Boolean SrvWalkSetWalk( E_WALK walk, uint16_t delay );
-Boolean SrvWalkSetGait( E_GAIT gait, uint16_t delay );
+Boolean SrvWalkSetWalk( E_GAIT gait, E_WALK walk,Int8U amplitude, Int8S direction, uint16_t delay );
+Boolean SrvWalkStopWalk( void );
 #endif //SRVWALK_H_

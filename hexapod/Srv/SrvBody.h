@@ -18,6 +18,7 @@
 #include "SrvUltrason.h"
 #include "SrvBodyMove.h"
 #include "SrvWalk.h"
+#include "SrvFeeling.h"
 
 ////////////////////////////////////////INCLUDES//////////////////////////////////////////////////
 
@@ -26,16 +27,17 @@
 ////////////////////////////////////////PUBLIC DEFINES////////////////////////////////////////////
 
 ////////////////////////////////////////PUBLIC STRUCTURES/////////////////////////////////////////
-typedef struct SBody 
+typedef struct SBodyPublic 
 {
 	SLegs *legs;
+	SWalk *walk;
 	SBatteryInfo *battery;
 	SImuSimple* imu;
 	SUltrason* us;
 	SBodyMove *move;
-	SWalk *walk;
+	SFeeling *feeling;
 	Boolean initialized;
-}SBody;
+}SBodyPublic;
 ////////////////////////////////////////PUBLIC FUNCTIONS//////////////////////////////////////////
 //Fonction d'initialisation
 Boolean SrvBodyInit ( void ) ;

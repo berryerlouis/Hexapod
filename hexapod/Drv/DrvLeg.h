@@ -12,7 +12,6 @@
 #include "DrvServo.h"
 
 /////////////////////////////////////////PUBLIC DEFINES/////////////////////////////////////////////
-#define	NB_LEGS					6U
 #define	NB_SERVOS_PER_LEG		3U
 
 //length in cm of leg's member
@@ -128,12 +127,12 @@
 //enum of each leg of the hexapod
 typedef enum
 {
-	E_LEG_U_L,
+	E_LEG_F_L,
 	E_LEG_M_L,
-	E_LEG_B_L,
-	E_LEG_U_R,
+	E_LEG_R_L,
+	E_LEG_F_R,
 	E_LEG_M_R,
-	E_LEG_B_R,
+	E_LEG_R_R,
 	//nb legs
 	E_NB_LEGS
 }ELeg;
@@ -170,7 +169,7 @@ typedef struct
 typedef struct
 {
 	Boolean isInitialized;
-	SLeg leg [NB_LEGS];
+	SLeg leg [E_NB_LEGS];
 }SLegs;
 
 /////////////////////////////////////////PUBLIC FUNCTIONS/////////////////////////////////////////
@@ -179,10 +178,11 @@ Boolean DrvLegUpdate( void );
 SLegs* DrvLegGetLegs( void );
 Boolean DrvLegIsInitialized( void );
 SLeg* DrvLegGetStruct( ELeg indexLeg );
+Boolean DrvLegSetSpeed( ELeg indexLeg, Int16U speed  );
 Boolean DrvLegGetXYZ( ELeg indexLeg, float *x, float *y, float *z );
-Boolean DrvLegSetPosition( ELeg indexLeg, Int16S coxaAngle, Int16S femurAngle, Int16S tibiaAngle, Int16U speed );
-Boolean DrvLegCheckTarget( ELeg indexLeg );
+Boolean DrvLegComputeInverseKinematics( float x, float y, float z, Int16S *coxaAngle, Int16S *femurAngle, Int16S *tibiaAngle );
 Boolean DrvLegSetTarget( ELeg indexLeg, float x, float y, float z, Int16U speed );
+Boolean DrvLegCheckTarget( ELeg indexLeg );
 float DrvLegGetXFromCoxaAngle( float angle , float y);
 
 #endif /* DRVLEG_H_ */

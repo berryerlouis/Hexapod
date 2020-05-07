@@ -257,14 +257,11 @@ static Boolean SrvCommDecodeMessage( void )
 							SrvCommWriteMessage(2U);
 							return TRUE;
 						}
-						else
-						{
-							response[0U] = 'K';
-							response[1U] = 'O';
-							SrvCommWriteMessage(2U);
-							return FALSE;
-						}
 					}
+					response[0U] = 'K';
+					response[1U] = 'O';
+					SrvCommWriteMessage(2U);
+					return FALSE;
 				}
 				else
 				{
@@ -305,45 +302,31 @@ static Boolean SrvCommExecuteClusterBehavior( void )
 	{
 		//prepare output string
 		uint16_t delay = inMessage.data[ 1U ] * 4096 + inMessage.data[ 2U ] * 256 + inMessage.data[ 3U ] * 16 + inMessage.data[ 4U ];
+		SrvWalkStopWalk();
 		return SrvBodyMoveSetBehavior(inMessage.data[ 0U ], delay);
 	}
-	else if(( inMessage.command == COMM_CLUSTER_BEHAVIOR_COMMAND_SET_TRANSLATION_XYZ) && (inMessage.size == 10U))
-	{
-		//prepare output string
-		Int8S x = (Int8S)(inMessage.data[ 0U ] * 16 + inMessage.data[ 1U ] );
-		Int8S y = (Int8S)(inMessage.data[ 2U ] * 16 + inMessage.data[ 3U ] );
-		Int8S z = (Int8S)(inMessage.data[ 4U ] * 16 + inMessage.data[ 5U ] );
-		uint16_t delay = inMessage.data[ 6U ] * 4096 + inMessage.data[ 7U ] * 256 + inMessage.data[ 8U ] * 16 + inMessage.data[ 9U ];
-		return SrvBodyMoveSetTranslation(x,y,z,delay);
-	}
-	else if(( inMessage.command == COMM_CLUSTER_BEHAVIOR_COMMAND_SET_POSITION_XYZ) && (inMessage.size == 10U))
+	else if(( inMessage.command == COMM_CLUSTER_BEHAVIOR_COMMAND_SET_ROTATION_TRANSLATION) && (inMessage.size == 16U))
 	{
 		//prepare output string
 		Int8S roll = (Int8S)(inMessage.data[ 0U ] * 16 + inMessage.data[ 1U ] );
 		Int8S pitch = (Int8S)(inMessage.data[ 2U ] * 16 + inMessage.data[ 3U ] );
 		Int8S yaw = (Int8S)(inMessage.data[ 4U ] * 16 + inMessage.data[ 5U ] );
+		Int8S x = (Int8S)(inMessage.data[ 6U ] * 16 + inMessage.data[ 7U ] );
+		Int8S y = (Int8S)(inMessage.data[ 8U ] * 16 + inMessage.data[ 9U ] );
+		Int8S z = (Int8S)(inMessage.data[ 10U ] * 16 + inMessage.data[ 11U ] );
+		uint16_t delay = inMessage.data[ 12U ] * 4096 + inMessage.data[ 13U ] * 256 + inMessage.data[ 14U ] * 16 + inMessage.data[ 15U ];
+		SrvBodyMoveSetRotationAndTranslation(roll,pitch,yaw,x,y,z,delay);
+	}
+	else if(( inMessage.command == COMM_CLUSTER_BEHAVIOR_COMMAND_SET_WALK) && (inMessage.size == 10U))
+	{
+		//prepare output string
+		E_WALK gait = (E_WALK)inMessage.data[ 0U ];
+		E_WALK walk = (E_WALK)inMessage.data[ 1U ];
+		Int8U amplitude = (Int8U)(inMessage.data[ 2U ] * 16 + inMessage.data[ 3U ] );
+		Int8S direction =  (Int8S)(inMessage.data[ 4U ] * 16 + inMessage.data[ 5U ] );
 		uint16_t delay = inMessage.data[ 6U ] * 4096 + inMessage.data[ 7U ] * 256 + inMessage.data[ 8U ] * 16 + inMessage.data[ 9U ];
-		return SrvBodyMoveSetRollPitchYaw(roll,pitch,yaw,delay);
-	}
-	else if(( inMessage.command == COMM_CLUSTER_BEHAVIOR_COMMAND_SET_WALK) && (inMessage.size == 5U))
-	{
-		//prepare output string
-		E_WALK walk = (E_WALK)inMessage.data[ 0U ];
-		uint16_t delay = inMessage.data[ 1U ] * 4096 + inMessage.data[ 2U ] * 256 + inMessage.data[ 3U ] * 16 + inMessage.data[ 4U ];
-		return SrvWalkSetWalk(walk,delay);
-	}
-	else if(( inMessage.command == COMM_CLUSTER_BEHAVIOR_COMMAND_SET_GAIT) && (inMessage.size == 5U))
-	{
-		//prepare output string
-		E_GAIT gait = (E_WALK)inMessage.data[ 0U ];
-		uint16_t delay = inMessage.data[ 1U ] * 4096 + inMessage.data[ 2U ] * 256 + inMessage.data[ 3U ] * 16 + inMessage.data[ 4U ];
-		return SrvWalkSetGait(gait,delay);
-	}
-	else if(( inMessage.command == COMM_CLUSTER_BEHAVIOR_COMMAND_SET_AMPLITUDE) && (inMessage.size == 2U))
-	{
-		//prepare output string
-		Int8U amplitude = (Int8U)(inMessage.data[ 0U ] * 16 + inMessage.data[ 1U ] ) * 1.0;
-		return SrvWalkSetAmplitude(amplitude);
+		if(walk == E_WALK_STOP) return SrvWalkStopWalk();
+		return SrvWalkSetWalk(gait,walk,amplitude,direction,delay);
 	}
 	else if(( inMessage.command == COMM_CLUSTER_BEHAVIOR_COMMAND_SET_GROUND_SIZE) && (inMessage.size == 6U))
 	{
@@ -443,7 +426,7 @@ static Boolean SrvCommExecuteClusterServo( void )
 	{
 		servoId = (uint8_t)((inMessage.data[ 0U ] * 16U) + inMessage.data[ 1U ]);
 		//if legs
-		if(servoId < NB_LEGS * NB_SERVOS_PER_LEG)
+		if(servoId < E_NB_LEGS * NB_SERVOS_PER_LEG)
 		{
 			//prepare output string
 			uint8_t nbData = SrvCommPrepareMessage(COMM_CLUSTER_SERVOS,COMM_CLUSTER_SERVOS_COMMAND_STATUS_SERVO, 3U);
@@ -455,7 +438,7 @@ static Boolean SrvCommExecuteClusterServo( void )
 	else if(( inMessage.command ==  COMM_CLUSTER_SERVOS_COMMAND_ENABLE_SERVO) && (inMessage.size == 3U))
 	{
 		servoId = (uint8_t)((inMessage.data[ 0U ] * 16U) + inMessage.data[ 1U ]);
-		if(servoId < NB_LEGS * NB_SERVOS_PER_LEG)
+		if(servoId < E_NB_LEGS * NB_SERVOS_PER_LEG)
 		{
 			Boolean activate = inMessage.data[ 2U ];
 			//can send data
@@ -467,7 +450,7 @@ static Boolean SrvCommExecuteClusterServo( void )
 	{
 		servoId = (uint8_t)((inMessage.data[ 0U ] * 16U) + inMessage.data[ 1U ]);
 		//if legs
-		if(servoId < NB_LEGS * NB_SERVOS_PER_LEG)
+		if(servoId < E_NB_LEGS * NB_SERVOS_PER_LEG)
 		{
 			//prepare output string
 			servo = DrvServoGetStruture(servoId);
@@ -481,7 +464,7 @@ static Boolean SrvCommExecuteClusterServo( void )
 	{
 		servoId = (uint8_t)((inMessage.data[ 0U ] * 16U) + inMessage.data[ 1U ]);
 		//if legs
-		if(servoId < NB_LEGS * NB_SERVOS_PER_LEG)
+		if(servoId < E_NB_LEGS * NB_SERVOS_PER_LEG)
 		{
 			servo = DrvServoGetStruture(servoId);
 			Int8S servoPos = servo->offset + (Int8S)(inMessage.data[ 2U ] * 16 + inMessage.data[ 3U ] );
@@ -494,7 +477,7 @@ static Boolean SrvCommExecuteClusterServo( void )
 	{
 		servoId = (uint8_t)((inMessage.data[ 0U ] * 16U) + inMessage.data[ 1U ]);
 		//if legs
-		if(servoId < NB_LEGS * NB_SERVOS_PER_LEG)
+		if(servoId < E_NB_LEGS * NB_SERVOS_PER_LEG)
 		{
 			//prepare output string
 			servo = DrvServoGetStruture(servoId);
@@ -508,7 +491,7 @@ static Boolean SrvCommExecuteClusterServo( void )
 	{
 		servoId = (uint8_t)((inMessage.data[ 0U ] * 16U) + inMessage.data[ 1U ]);
 		//if legs
-		if(servoId < NB_LEGS * NB_SERVOS_PER_LEG)
+		if(servoId < E_NB_LEGS * NB_SERVOS_PER_LEG)
 		{
 			//prepare output string
 			servo = DrvServoGetStruture(servoId);
@@ -522,7 +505,7 @@ static Boolean SrvCommExecuteClusterServo( void )
 	{
 		//prepare output string
 		uint8_t nbData = SrvCommPrepareMessage(COMM_CLUSTER_SERVOS,COMM_CLUSTER_SERVOS_COMMAND_SERVO_READ_ALL, 18U * 2U);
-		for( uint8_t servoId = 0U; servoId < NB_LEGS * NB_SERVOS_PER_LEG ; servoId++ )
+		for( uint8_t servoId = 0U; servoId < E_NB_LEGS * NB_SERVOS_PER_LEG ; servoId++ )
 		{
 			servo = DrvServoGetStruture(servoId);
 			Int8U mid = (Int8U)(servo->targetPosition - servo->offset);
@@ -534,12 +517,12 @@ static Boolean SrvCommExecuteClusterServo( void )
 }
 static Boolean SrvCommExecuteClusterLeg( void )
 {
-	uint8_t legId = NB_LEGS;
+	uint8_t legId = E_NB_LEGS;
 	SLeg *leg;
 	if(( inMessage.command == COMM_CLUSTER_LEG_COMMAND_SET_LEG_XYZ) && (inMessage.size == 17U))
 	{
 		legId = inMessage.data[ 0U ];
-		if(legId < NB_LEGS)
+		if(legId < E_NB_LEGS)
 		{
 			Int16S x = inMessage.data[ 1U ] * 4096 + inMessage.data[ 2U ] * 256 + inMessage.data[ 3U ] * 16 + inMessage.data[ 4U ];
 			Int16S y = inMessage.data[ 5U ] * 4096 + inMessage.data[ 6U ] * 256 + inMessage.data[ 7U ] * 16 + inMessage.data[ 8U ];
@@ -551,7 +534,7 @@ static Boolean SrvCommExecuteClusterLeg( void )
 	else if(( inMessage.command == COMM_CLUSTER_LEG_COMMAND_GET_LEG_XYZ) && (inMessage.size == 1U))
 	{
 		legId = inMessage.data[ 0U ];
-		if(legId < NB_LEGS)
+		if(legId < E_NB_LEGS)
 		{
 			//prepare output string
 			leg = DrvLegGetStruct(legId);

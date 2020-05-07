@@ -19,8 +19,9 @@
 ////////////////////////////////////////PUBLIC ENUM///////////////////////////////////////////////
 
 ////////////////////////////////////////PUBLIC DEFINES////////////////////////////////////////////
-
+#define IMU_THRESHOLD_ANGLE 50		//up to 3600
 ////////////////////////////////////////PUBLIC STRUCTURES/////////////////////////////////////////
+typedef void (*cbSrvImuReachThreshold) (Int16S roll, Int16S pitch);
 typedef struct  
 {
 	Boolean enable;
@@ -28,16 +29,21 @@ typedef struct
 	SMpu9150Gyr gyr;
 	SMpu9150Tmp tmp; 
 	SMpu9150GCmps cmps;
-	uint8_t accthreshold;
+	Int8S accthreshold;
 	Int16S roll;
 	Int16S pitch;
 	Int16S yaw;
+	cbSrvImuReachThreshold cbReachThreshold;
 }SImuSimple;
 ////////////////////////////////////////PUBLIC FUNCTIONS//////////////////////////////////////////
+
+
 //Fonction d'initialisation
 Boolean SrvImuSimpleInit ( void ) ;
 //Fonction de dispatching d'evenements
 void SrvImuSimpleUpdate (void) ;
+//Get the callback
+void SrvImuSimpleSetCallback (cbSrvImuReachThreshold cb) ;
 //Get the sensor pointer
 SImuSimple* SrvImuSimpleGetSensor (void) ;
 // activate the sensor
@@ -46,6 +52,8 @@ Boolean SrvImuSimpleActivate( Boolean enable) ;
 Boolean SrvImuSimpleSetThreshold( uint8_t accthreshold ) ;
 // get threshold
 uint8_t SrvImuSimpleGetThreshold( void ) ;
+// get roll pitch yaw
+void SrvImuSimpleGetRollPitchYaw( Int16S *roll, Int16S *pitch, Int16S *yaw );
 // get roll
 Int16S SrvImuSimpleGetRoll( void ) ;
 // get pitch

@@ -184,18 +184,7 @@ SServo* DrvServoGetStruture( Int8U index )
 
 float DrvServoComputeAngle ( Int8U index )
 {	
-	static Int32U currentTime;
-	currentTime	= abs(DrvTickGetTimeMs() - servos[ index ].startTime);
-	float startValue	= (float)servos[ index ].startPosition;
-	float changeValue	= (float)servos[ index ].targetPosition - startValue;
-	float duration		= (float)servos[ index ].movingTime;
-	
-	//servos[index].currentPosition = (Int16S)round(changeValue * (float)(currentTime / duration) + startValue);
-
-	//if(currentTime >= duration)
-	{
-		servos[index].currentPosition = servos[index].targetPosition;
-	}
+	servos[index].currentPosition = servos[index].targetPosition;
 	return servos[index].currentPosition;
 }
 ///////////////////////////////////////////ISR FUNCTIONS//////////////////////////////////////////

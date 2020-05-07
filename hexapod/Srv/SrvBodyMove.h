@@ -49,9 +49,7 @@ Boolean SrvBodyMoveSetBehavior ( EBodyBehavior pos, uint16_t delay );
 //Get Position
 EBodyBehavior SrvBodyMoveGetBehavior ( void );
 //Set vertical Rotation
-Boolean SrvBodyMoveSetTranslation ( float x, float y, float z, uint16_t delay );
-//Set Body Rotation
-Boolean SrvBodyMoveSetRollPitchYaw ( float roll, float pitch, float yaw, uint16_t delay );
+Boolean SrvBodyMoveSetRotationAndTranslation ( float roll, float pitch, float yaw, float x, float y, float z, uint16_t delay );
 //Set Ground Size 
 Boolean SrvBodyMoveSetGroundSize ( float groundSize, uint16_t delay );
 //Set Elevation

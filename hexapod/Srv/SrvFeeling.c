@@ -12,22 +12,25 @@
 ////////////////////////////////////////PRIVATE FUNCTIONS/////////////////////////////////////////
 
 ////////////////////////////////////////PRIVATE VARIABLES/////////////////////////////////////////
-EFeelingLevel feel;
-uint32_t prevMillisFeeling = 0U;
+
+SFeeling feeling;
 Boolean feelingSet = FALSE;
+Int32U prevMillisFeeling = 0U;
 ////////////////////////////////////////PUBILC FUNCTIONS//////////////////////////////////////////
 
 //Fonction d'initialisation
 Boolean SrvFeelingInit ( void ) 
 {
+	feeling.stressedPeriod = 10000;
+	feeling.feeling = FEELING_CALM;
+	feeling.state = FEELING_NEUTRAL;
 	feelingSet = FALSE;
-	feel = FEELING_CALM;
 	return TRUE;
 }
 //Fonction de dispatching d'evenements
 void SrvFeelingUpdate (void)
 {
-	if( feel == FEELING_STRESS )
+	if( feeling.feeling == FEELING_STRESS )
 	{
 		if(feelingSet == FALSE)
 		{
@@ -38,25 +41,33 @@ void SrvFeelingUpdate (void)
 			if(DrvTickGetTimeMs() >= prevMillisFeeling)
 			{
 				feelingSet = FALSE;
-				feel = FEELING_CALM;
+				feeling.feeling = FEELING_CALM;
 				SrvHeartbeatCalm();
 			}
 			else
 			{
-				volatile uint32_t delay = prevMillisFeeling - DrvTickGetTimeMs();
-				SrvHeartbeatSetPeriod((uint8_t)(100 - (delay / 100)));
+				SrvHeartbeatSetPeriod((uint8_t)(100 - (prevMillisFeeling - DrvTickGetTimeMs()) / 100));
 			}
 		}
 	}
 }
 
-void SrvFeelingSetFeeling (EFeelingLevel _feel)
+void SrvFeelingSetFeelingLevel (EFeelingLevel feel)
 {
 	//only if stressed
-	if( _feel == FEELING_STRESS )
+	if( feel == FEELING_STRESS )
 	{
-		feel = _feel;
-		prevMillisFeeling = DrvTickGetTimeMs() + 10000U;
+		feeling.feeling = feel;
+		prevMillisFeeling = DrvTickGetTimeMs() + feeling.stressedPeriod;
 	}
 }
+void SrvFeelingSetFeelingStatus (EFeelingState state)
+{
+	feeling.state = state;
+}
+SFeeling *SrvFeelingGetFeeling ( void ) 
+{
+	return &feeling;
+}
+
 

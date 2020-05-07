@@ -66,33 +66,22 @@ SBodyMove *SrvBodyMoveGetStruct( void )
 	return &bodyMove;
 }
 
-//Set Body Rotation
-Boolean SrvBodyMoveSetRollPitchYaw ( float roll, float pitch, float yaw, uint16_t delay )
+
+//Set vertical Rotation
+Boolean SrvBodyMoveSetRotationAndTranslation ( float roll, float pitch, float yaw, float x, float y, float z, uint16_t delay )
 {
 	bodyMove.roll = roll;
 	bodyMove.pitch = pitch;
 	bodyMove.yaw = yaw;
-	DrvLegSetTarget(E_LEG_U_L,	DrvLegGetXFromCoxaAngle(15 + bodyMove.yaw - bodyMove.x	,bodyMove.groundSize - bodyMove.y)	,bodyMove.groundSize - bodyMove.y,	bodyMove.elevation + bodyMove.roll + bodyMove.pitch	 + bodyMove.z ,delay);
-	DrvLegSetTarget(E_LEG_M_L,	DrvLegGetXFromCoxaAngle(bodyMove.yaw - bodyMove.x		,bodyMove.groundSize - bodyMove.y)	,bodyMove.groundSize - bodyMove.y,	bodyMove.elevation + bodyMove.pitch					 + bodyMove.z ,delay);
-	DrvLegSetTarget(E_LEG_B_L,	-DrvLegGetXFromCoxaAngle(15 - bodyMove.yaw + bodyMove.x	,bodyMove.groundSize - bodyMove.y)	,bodyMove.groundSize - bodyMove.y,	bodyMove.elevation - bodyMove.roll + bodyMove.pitch	 + bodyMove.z ,delay);
-	DrvLegSetTarget(E_LEG_U_R,	-DrvLegGetXFromCoxaAngle(15 - bodyMove.yaw - bodyMove.x	,bodyMove.groundSize + bodyMove.y)	,bodyMove.groundSize + bodyMove.y,	bodyMove.elevation + bodyMove.roll - bodyMove.pitch	 + bodyMove.z ,delay);
-	DrvLegSetTarget(E_LEG_M_R,	DrvLegGetXFromCoxaAngle(bodyMove.yaw + bodyMove.x		,bodyMove.groundSize + bodyMove.y)	,bodyMove.groundSize + bodyMove.y,	bodyMove.elevation - bodyMove.pitch					 + bodyMove.z ,delay);
-	DrvLegSetTarget(E_LEG_B_R,	DrvLegGetXFromCoxaAngle(15 + bodyMove.yaw + bodyMove.x	,bodyMove.groundSize + bodyMove.y)	,bodyMove.groundSize + bodyMove.y,	bodyMove.elevation - bodyMove.roll - bodyMove.pitch	 + bodyMove.z ,delay);
-	return TRUE;
-}
-
-//Set vertical Rotation
-Boolean SrvBodyMoveSetTranslation ( float x, float y, float z, uint16_t delay )
-{
 	bodyMove.x = x;
 	bodyMove.y = y;
 	bodyMove.z = z;
-	DrvLegSetTarget(E_LEG_U_L,	DrvLegGetXFromCoxaAngle(15 + bodyMove.yaw - bodyMove.x	,bodyMove.groundSize - bodyMove.y)	,bodyMove.groundSize - bodyMove.y,	bodyMove.elevation + bodyMove.roll + bodyMove.pitch	 + bodyMove.z ,delay);
+	DrvLegSetTarget(E_LEG_F_L,	DrvLegGetXFromCoxaAngle(15 + bodyMove.yaw - bodyMove.x	,bodyMove.groundSize - bodyMove.y)	,bodyMove.groundSize - bodyMove.y,	bodyMove.elevation + bodyMove.roll + bodyMove.pitch	 + bodyMove.z ,delay);
 	DrvLegSetTarget(E_LEG_M_L,	DrvLegGetXFromCoxaAngle(bodyMove.yaw - bodyMove.x		,bodyMove.groundSize - bodyMove.y)	,bodyMove.groundSize - bodyMove.y,	bodyMove.elevation + bodyMove.pitch					 + bodyMove.z ,delay);
-	DrvLegSetTarget(E_LEG_B_L,	-DrvLegGetXFromCoxaAngle(15 - bodyMove.yaw + bodyMove.x	,bodyMove.groundSize - bodyMove.y)	,bodyMove.groundSize - bodyMove.y,	bodyMove.elevation - bodyMove.roll + bodyMove.pitch	 + bodyMove.z ,delay);
-	DrvLegSetTarget(E_LEG_U_R,	-DrvLegGetXFromCoxaAngle(15 - bodyMove.yaw - bodyMove.x	,bodyMove.groundSize + bodyMove.y)	,bodyMove.groundSize + bodyMove.y,	bodyMove.elevation + bodyMove.roll - bodyMove.pitch	 + bodyMove.z ,delay);
+	DrvLegSetTarget(E_LEG_R_L,	-DrvLegGetXFromCoxaAngle(15 - bodyMove.yaw + bodyMove.x	,bodyMove.groundSize - bodyMove.y)	,bodyMove.groundSize - bodyMove.y,	bodyMove.elevation - bodyMove.roll + bodyMove.pitch	 + bodyMove.z ,delay);
+	DrvLegSetTarget(E_LEG_F_R,	-DrvLegGetXFromCoxaAngle(15 - bodyMove.yaw - bodyMove.x	,bodyMove.groundSize + bodyMove.y)	,bodyMove.groundSize + bodyMove.y,	bodyMove.elevation + bodyMove.roll - bodyMove.pitch	 + bodyMove.z ,delay);
 	DrvLegSetTarget(E_LEG_M_R,	DrvLegGetXFromCoxaAngle(bodyMove.yaw + bodyMove.x		,bodyMove.groundSize + bodyMove.y)	,bodyMove.groundSize + bodyMove.y,	bodyMove.elevation - bodyMove.pitch					 + bodyMove.z ,delay);
-	DrvLegSetTarget(E_LEG_B_R,	DrvLegGetXFromCoxaAngle(15 + bodyMove.yaw + bodyMove.x	,bodyMove.groundSize + bodyMove.y)	,bodyMove.groundSize + bodyMove.y,	bodyMove.elevation - bodyMove.roll - bodyMove.pitch	 + bodyMove.z ,delay);
+	DrvLegSetTarget(E_LEG_R_R,	DrvLegGetXFromCoxaAngle(15 + bodyMove.yaw + bodyMove.x	,bodyMove.groundSize + bodyMove.y)	,bodyMove.groundSize + bodyMove.y,	bodyMove.elevation - bodyMove.roll - bodyMove.pitch	 + bodyMove.z ,delay);
 	return TRUE;
 }
 
@@ -105,28 +94,26 @@ EBodyBehavior SrvBodyMoveGetBehavior ( void )
 Boolean SrvBodyMoveSetBehavior ( EBodyBehavior pos, uint16_t delay )
 {
 	bodyMove.behavior = pos;
-	//pause walk if needed
-	SrvWalkSetWalk(E_WALK_STOP,delay);
 	if(bodyMove.behavior == E_BODY_STOP)
 	{
 		//Stop position
-		DrvLegSetTarget(E_LEG_U_L,	0,	bodyMove.groundSize,	bodyMove.elevation,	delay);
+		DrvLegSetTarget(E_LEG_F_L,	0,	bodyMove.groundSize,	bodyMove.elevation,	delay);
 		DrvLegSetTarget(E_LEG_M_L,	0,	bodyMove.groundSize,	bodyMove.elevation,	delay);
-		DrvLegSetTarget(E_LEG_B_L,	0,	bodyMove.groundSize,	bodyMove.elevation,	delay);
-		DrvLegSetTarget(E_LEG_U_R,	0,	bodyMove.groundSize,	bodyMove.elevation,	delay);
+		DrvLegSetTarget(E_LEG_R_L,	0,	bodyMove.groundSize,	bodyMove.elevation,	delay);
+		DrvLegSetTarget(E_LEG_F_R,	0,	bodyMove.groundSize,	bodyMove.elevation,	delay);
 		DrvLegSetTarget(E_LEG_M_R,	0,	bodyMove.groundSize,	bodyMove.elevation,	delay);
-		DrvLegSetTarget(E_LEG_B_R,	0,	bodyMove.groundSize,	bodyMove.elevation,	delay);
+		DrvLegSetTarget(E_LEG_R_R,	0,	bodyMove.groundSize,	bodyMove.elevation,	delay);
 		return TRUE;
 	}
 	else if(bodyMove.behavior == E_BODY_STAR)
 	{
 		//star position
-		DrvLegSetTarget(E_LEG_U_L,	DrvLegGetXFromCoxaAngle(15,bodyMove.groundSize)		,bodyMove.groundSize,	bodyMove.elevation,	delay);
+		DrvLegSetTarget(E_LEG_F_L,	DrvLegGetXFromCoxaAngle(15,bodyMove.groundSize)		,bodyMove.groundSize,	bodyMove.elevation,	delay);
 		DrvLegSetTarget(E_LEG_M_L,	0													,bodyMove.groundSize,	bodyMove.elevation,	delay);
-		DrvLegSetTarget(E_LEG_B_L,	-DrvLegGetXFromCoxaAngle(15,bodyMove.groundSize)	,bodyMove.groundSize,	bodyMove.elevation,	delay);
-		DrvLegSetTarget(E_LEG_U_R,	-DrvLegGetXFromCoxaAngle(15,bodyMove.groundSize)	,bodyMove.groundSize,	bodyMove.elevation,	delay);
+		DrvLegSetTarget(E_LEG_R_L,	-DrvLegGetXFromCoxaAngle(15,bodyMove.groundSize)	,bodyMove.groundSize,	bodyMove.elevation,	delay);
+		DrvLegSetTarget(E_LEG_F_R,	-DrvLegGetXFromCoxaAngle(15,bodyMove.groundSize)	,bodyMove.groundSize,	bodyMove.elevation,	delay);
 		DrvLegSetTarget(E_LEG_M_R,	0													,bodyMove.groundSize,	bodyMove.elevation,	delay);
-		DrvLegSetTarget(E_LEG_B_R,	DrvLegGetXFromCoxaAngle(15,bodyMove.groundSize)		,bodyMove.groundSize,	bodyMove.elevation,	delay);
+		DrvLegSetTarget(E_LEG_R_R,	DrvLegGetXFromCoxaAngle(15,bodyMove.groundSize)		,bodyMove.groundSize,	bodyMove.elevation,	delay);
 		return TRUE;
 	}
 	else if(bodyMove.behavior == E_BODY_STRAIGHT)
@@ -134,12 +121,12 @@ Boolean SrvBodyMoveSetBehavior ( EBodyBehavior pos, uint16_t delay )
 		bodyMove.groundSize = 0;
 		bodyMove.elevation = 0;
 		//straight position
-		DrvLegSetTarget(E_LEG_U_L,	DrvLegGetXFromCoxaAngle(15,0)	,	bodyMove.groundSize,	bodyMove.elevation,	delay);
+		DrvLegSetTarget(E_LEG_F_L,	DrvLegGetXFromCoxaAngle(15,0)	,	bodyMove.groundSize,	bodyMove.elevation,	delay);
 		DrvLegSetTarget(E_LEG_M_L,	0								,	bodyMove.groundSize,	bodyMove.elevation,	delay);
-		DrvLegSetTarget(E_LEG_B_L,	-DrvLegGetXFromCoxaAngle(15,0)	,	bodyMove.groundSize,	bodyMove.elevation,	delay);
-		DrvLegSetTarget(E_LEG_U_R,	-DrvLegGetXFromCoxaAngle(15,0)	,	bodyMove.groundSize,	bodyMove.elevation,	delay);
+		DrvLegSetTarget(E_LEG_R_L,	-DrvLegGetXFromCoxaAngle(15,0)	,	bodyMove.groundSize,	bodyMove.elevation,	delay);
+		DrvLegSetTarget(E_LEG_F_R,	-DrvLegGetXFromCoxaAngle(15,0)	,	bodyMove.groundSize,	bodyMove.elevation,	delay);
 		DrvLegSetTarget(E_LEG_M_R,	0								,	bodyMove.groundSize,	bodyMove.elevation,	delay);
-		DrvLegSetTarget(E_LEG_B_R,	DrvLegGetXFromCoxaAngle(15,0)	,	bodyMove.groundSize,	bodyMove.elevation,	delay);
+		DrvLegSetTarget(E_LEG_R_R,	DrvLegGetXFromCoxaAngle(15,0)	,	bodyMove.groundSize,	bodyMove.elevation,	delay);
 		return TRUE;
 	}
 	return FALSE;
