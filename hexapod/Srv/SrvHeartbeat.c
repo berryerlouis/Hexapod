@@ -46,22 +46,22 @@ void SrvHeartbeatUpdate (void)
 void SrvHeartbeatSetPeriod ( uint8_t period )
 {
 	//period [0-100]
-	heartBeatArray[2U] = 50;
+	heartBeatArray[2U] = 5U;
 	heartBeatArray[1U] = 50 + period * 4U;
-	heartBeatArray[2U] = 15U;
+	heartBeatArray[2U] = 5U;
 	heartBeatArray[3U] = 800U;
 }
 void SrvHeartbeatStress ( void )
 {
-	heartBeatArray[2U] = 50U;
+	heartBeatArray[2U] = 5U;
 	heartBeatArray[1U] = 50U;
-	heartBeatArray[2U] = 15U;
+	heartBeatArray[2U] = 5U;
 	heartBeatArray[3U] = 800U;
 }
 void SrvHeartbeatCalm ( void )
 {
-	heartBeatArray[2U] = 50U;
+	heartBeatArray[2U] = 5U;
 	heartBeatArray[1U] = 500U;
-	heartBeatArray[2U] = 15U;
+	heartBeatArray[2U] = 5U;
 	heartBeatArray[3U] = 1000U;
 }

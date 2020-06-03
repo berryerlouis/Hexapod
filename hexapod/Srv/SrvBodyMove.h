@@ -9,6 +9,7 @@
 
 #include "Conf/ConfHard.h"
 #include "Tools/tools_typedefs.h"
+#include "Drv/DrvLeg.h"
 
 
 ////////////////////////////////////////INCLUDES//////////////////////////////////////////////////
@@ -38,6 +39,8 @@ typedef struct
 	float z;
 	Boolean initialized;
 }SBodyMove;
+
+typedef AxisFloat SBodyLegMove;
 ////////////////////////////////////////PUBLIC FUNCTIONS//////////////////////////////////////////
 //Fonction d'initialisation
 Boolean SrvBodyMoveInit ( void ) ;
@@ -49,10 +52,18 @@ Boolean SrvBodyMoveSetBehavior ( EBodyBehavior pos, uint16_t delay );
 //Get Position
 EBodyBehavior SrvBodyMoveGetBehavior ( void );
 //Set vertical Rotation
-Boolean SrvBodyMoveSetRotationAndTranslation ( float roll, float pitch, float yaw, float x, float y, float z, uint16_t delay );
+Boolean SrvBodyMoveSetRotationAndTranslation ( float roll, float pitch, float yaw, float x, float y, float z );
+//Compute translation and rotation per leg
+SBodyLegMove SrvBodyMoveComputeLegRotationAndTranslation ( ELeg legId);
+//apply new position
+Boolean SrvBodyMoveApplyRotationAndTranslation ( uint16_t delay );
 //Set Ground Size 
-Boolean SrvBodyMoveSetGroundSize ( float groundSize, uint16_t delay );
+Boolean SrvBodyMoveSetGroundSize ( float groundSize);
+//Get Ground Size
+float SrvBodyMoveGetGroundSize ( void );
 //Set Elevation
-Boolean SrvBodyMoveSetElevation ( float elevation, uint16_t delay );
+Boolean SrvBodyMoveSetElevation ( float elevation);
+//Get Elevation
+float SrvBodyMoveGetElevation ( void );
 
 #endif //SRVBODYMOVE_H_

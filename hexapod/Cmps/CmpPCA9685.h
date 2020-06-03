@@ -12,15 +12,19 @@
 #include "Conf/ConfHard.h"
 
 ////////////////////////////////////////PUBLIC DEFINES/////////////////////////////////////////
+#define NB_PCA9685								2
 #define PCA9685_ADDRESS_0						0x40
 #define PCA9685_ADDRESS_1						0x41
 
-#define PCA9685_SUBADR1 0x2
-#define PCA9685_SUBADR2 0x3
-#define PCA9685_SUBADR3 0x4
 
-#define PCA9685_MODE1 0x0
-#define PCA9685_PRESCALE 0xFE
+#define PCA9685_PRESCALE	0xFE
+
+#define PCA9685_MODE1			0x00
+#define PCA9685_MODE1_SLEEP		0x10
+#define PCA9685_MODE1_AI		0x20
+#define PCA9685_MODE1_RESTART	0x80
+#define PCA9685_MODE2			0x01
+#define PCA9685_MODE2_OCH		0x04
 
 #define PCA9685_NB_LEDS 16U
 
@@ -36,21 +40,27 @@
 
 
 ////////////////////////////////////////PUBLIC STRUCTURES/////////////////////////////////////////
-
+//pwm structure representing the pwm of one output time on and off of PCA9685
 typedef struct
 {
 	Int16U on;
 	Int16U off;
 }SPCA9685Pwm;
+
 ////////////////////////////////////////PUBLIC FUNCTIONS/////////////////////////////////////////
+ //component initialization
+ Boolean CmpPCA9685Init( Int8U addr, float freq );
 
-Boolean CmpPCA9685Init( Int8U addr );
-Boolean CmpPCA9685Reset( Int8U addr );
-Boolean CmpPCA9685SetPWMFreq(Int8U addr, float freq);
-Boolean CmpPCA9685SetPWM(Int8U addr, Int8U num, Int16U on, Int16U off);
-Boolean CmpPCA9685SetAllPWM(Int8U addr, SPCA9685Pwm *pwm, Int8U nbPwm);
-Boolean CmpPCA9685SetPin(Int8U addr, Int8U num, Int16U val, Boolean invert);
+ //reset component
+ Boolean CmpPCA9685Reset( Int8U addr );
 
+ // get the pwm structure pointer at index
+ SPCA9685Pwm* CmpPCA9685GetPwmTab( Int8U addr, Int8U index );
 
+ //send current tab to component
+ Boolean CmpPCA9685SendBuffer( Int8U addr, Int8U nbPwm );
+
+//send selected pwm to component
+Boolean CmpPCA9685Send( Int8U addr, Int8U idPwm, SPCA9685Pwm pwm );
 
 #endif /* CMPPCA9685_H_ */

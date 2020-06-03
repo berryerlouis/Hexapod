@@ -1,6 +1,7 @@
 ////////////////////////////////////////INCLUDES//////////////////////////////////////////////////
 #include "Conf/ConfHard.h"
 
+//#include "Cmps/CmpVL53L0X.h"
 #include "Cmps/CmpSRF04.h"
 #include "Drv/DrvTick.h"
 
@@ -26,6 +27,7 @@ Boolean SrvUltrasonInit ( void )
 	ultrason.distance[E_US_0] = 0U;
 	ultrason.distance[E_US_1] = 0U;
 	prevMillisUpdateUltrason = 0UL;
+	//CmpVL53L0XInit();
 	return CmpSRF04Init();
 }
 //Fonction de dispatching d'evenements
@@ -63,7 +65,7 @@ SUltrason* SrvUltrasonGetStruct( void )
 	return &ultrason;
 }
 
-uint16_t SrvUltrasonGetDistance (E_US us)
+Int16U SrvUltrasonGetDistance (E_US us)
 {
 	return CmpSRF04GetDistance(us);
 }
@@ -78,7 +80,7 @@ Boolean SrvUltrasonSetThreshold( Int16U threshold )
 // set threshold
 Boolean SrvUltrasonReachThreshold( E_US us )
 {
-	if( SrvUltrasonGetDistance(us) < SrvUltrasonGetThreshold() )
+	if( SrvUltrasonGetDistance(us) < ultrason.usthreshold )
 	{
 		return TRUE;	
 	}

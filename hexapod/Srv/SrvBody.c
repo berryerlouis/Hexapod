@@ -48,7 +48,7 @@ Boolean SrvBodyInit ( void )
 	
 	body.move = SrvBodyMoveGetStruct();
 	
-	body.walk = SrvWalkgetStruct();
+	body.walk = SrvWalkGetStruct();
 	
 	body.feeling = SrvFeelingGetFeeling();
 	
@@ -69,8 +69,9 @@ void SrvBodyUpdate (void)
 	if((body.move->initialized) && (body.initialized == FALSE))
 	{
 		body.initialized = TRUE;
-		SrvBodyMoveSetGroundSize(60,3000);
-		SrvBodyMoveSetElevation(30,3000);
+		//set intitial State
+		SrvBodyMoveSetGroundSize(65);
+		SrvBodyMoveSetElevation(50);
 		SrvBodyMoveSetBehavior(E_BODY_STAR, 3000); 
 	}
 	
@@ -89,15 +90,13 @@ void SrvBodyUpdate (void)
 			{
 				if(prevMillisUpdateBreathStep == 0)
 				{
-					SrvBodyMoveSetGroundSize(60,0);
-					SrvBodyMoveSetElevation(45 ,0);
+					SrvBodyMoveSetElevation(SrvBodyMoveGetElevation() - 30);
 					SrvBodyMoveSetBehavior(SrvBodyMoveGetBehavior(), 2000);
 					prevMillisUpdateBreathStep = 1;
 				}
 				else
 				{
-					SrvBodyMoveSetGroundSize(60,0);
-					SrvBodyMoveSetElevation(50,0);
+					SrvBodyMoveSetElevation(SrvBodyMoveGetElevation() + 30);
 					SrvBodyMoveSetBehavior(SrvBodyMoveGetBehavior(), 2000);
 					prevMillisUpdateBreathStep = 0;
 				}
@@ -114,6 +113,8 @@ void SrvBodyUpdate (void)
 	//get loop update time
 	lastread_pid = DrvTickGetTimeUs();	*/	
 	
+	//update legs position
+	DrvLegUpdate();
 }
 
 
@@ -126,51 +127,54 @@ static Boolean SrvBodyUltrasonDetection (void)
 		{
 			if(body.feeling->state == FEELING_AGRESSIVE)
 			{
-				SrvBodyMoveSetRotationAndTranslation(15,0,0,15,0,-10,500);
+				SrvBodyMoveSetRotationAndTranslation(15,0,0,15,0,-10);
 			}
 			else if(body.feeling->state == FEELING_NEUTRAL)
 			{
-				SrvBodyMoveSetRotationAndTranslation(15,0,0,0,0,0,500);
+				SrvBodyMoveSetRotationAndTranslation(0,0,0,0,0,0);
 			}
 			else if(body.feeling->state == FEELING_FEAR)
 			{
-				SrvBodyMoveSetRotationAndTranslation(15,0,0,-15,0,+10,500);
+				SrvBodyMoveSetRotationAndTranslation(15,0,0,-15,0,+10);
 			}
-			return TRUE;
-		}
-		else if( SrvUltrasonReachThreshold(E_US_1) )
-		{
-			if(body.feeling->state == FEELING_AGRESSIVE)
-			{
-				SrvBodyMoveSetRotationAndTranslation(15,0,15,15,0,-10,500);
-			}
-			else if(body.feeling->state == FEELING_NEUTRAL)
-			{
-				SrvBodyMoveSetRotationAndTranslation(15,0,15,0,0,0,500);
-			}
-			else if(body.feeling->state == FEELING_FEAR)
-			{
-				SrvBodyMoveSetRotationAndTranslation(15,0,15,-15,0,+10,500);
-			}
-			return TRUE;
 		}
 		else if( SrvUltrasonReachThreshold(E_US_0) )
 		{
 			if(body.feeling->state == FEELING_AGRESSIVE)
 			{
-				SrvBodyMoveSetRotationAndTranslation(15,0,-15,15,0,-10,500);
+				SrvBodyMoveSetRotationAndTranslation(15,0,15,15,0,-10);
 			}
 			else if(body.feeling->state == FEELING_NEUTRAL)
 			{
-				SrvBodyMoveSetRotationAndTranslation(15,0,-15,0,0,0,500);
+				SrvBodyMoveSetRotationAndTranslation(0,0,15,0,0,0);
 			}
 			else if(body.feeling->state == FEELING_FEAR)
 			{
-				SrvBodyMoveSetRotationAndTranslation(15,0,-15,-15,0,+10,500);
+				SrvBodyMoveSetRotationAndTranslation(15,0,15,-15,0,+10);
 			}
-			return TRUE;
 		}
+		else if( SrvUltrasonReachThreshold(E_US_1) )
+		{
+			if(body.feeling->state == FEELING_AGRESSIVE)
+			{
+				SrvBodyMoveSetRotationAndTranslation(15,0,-15,15,0,-10);
+			}
+			else if(body.feeling->state == FEELING_NEUTRAL)
+			{
+				SrvBodyMoveSetRotationAndTranslation(0,0,-15,0,0,0);
+			}
+			else if(body.feeling->state == FEELING_FEAR)
+			{
+				SrvBodyMoveSetRotationAndTranslation(15,0,-15,-15,0,+10);
+			}
+		}
+		else
+		{
+			return FALSE;
+		}
+		SrvBodyMoveApplyRotationAndTranslation(250);
 		prevMillisUpdateUS = DrvTickGetTimeMs();
+		return TRUE;
 	}
 	
 	return FALSE;
@@ -180,7 +184,7 @@ static volatile Int16S touchDirection = 0;
 static Boolean SrvBodyTouchDetection (void)
 {
 	Boolean isTouch = FALSE;
-	Int8U touchThreshold = 5;
+	Int8U touchThreshold = 20;
 	if ((DrvTickGetTimeMs() - prevMillisUpdateIMU) > 10U)
 	{
 		if((abs(body.imu->roll) > touchThreshold) && (abs(body.imu->pitch) > touchThreshold) )

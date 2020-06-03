@@ -13,39 +13,38 @@
 ////////////////////////////////////////////PUBLIC DEFINES///////////////////////////////////////////
 
 
-#define SERVO_ANGLE_MID			90U		//mid position always 1500�s
+#define SERVO_ANGLE_MID			900U		//mid position always 1500�s
 #define SERVO_ANGLE_MIN			0U
-#define SERVO_ANGLE_MAX			180U
+#define SERVO_ANGLE_MAX			1800U
 
 #define PULSE_WIDTH_MIN			500U	//�s
 #define PULSE_WIDTH_MID			1400U	//�s
 #define PULSE_WIDTH_MAX			2300U	//�s
 
 #define PERIOD_SERVO_MAX		15000U  //�s
-#define NB_SERVOS				18U
+#define NB_SERVOS				19U
 
-#define SERVO_SPEED_MSEC_PER_DEG	(160.0 / 60.0)	// specs  : 0.16s/60°
+#define SERVO_SPEED_MSEC_PER_DEG	(100.0 / 60.0)	// specs  : 0.16s/60°
 
 
 
-typedef enum
-{
-	E_SERVO_EASE_LINEAR, //no easing, no acceleration
-	E_SERVO_EASE_SINUS_IN, //accelerating from zero velocity
-	E_SERVO_EASE_SINUS_OUT, //decelerating to zero velocity
-	E_SERVO_EASE_SINUS_IN_OUT //accelerating until halfway, then decelerating
-}E_SERVO_EASES;
+/////////////////////////////////////////PUBLIC ENUM/////////////////////////////////////////
 
+
+/////////////////////////////////////////PUBLIC CALLBACK/////////////////////////////////////////
+//callback sent when the servo reach its position
 typedef void (*DrvServoCallback) (Int8U index);
 
 /////////////////////////////////////////PUBLIC STRUCTURES/////////////////////////////////////////
+//servo structure representing all parameters of one servo
 typedef struct
 {
 	Int8U id;
 	Boolean enable;
-	float currentPosition;
-	float startPosition;
-	float targetPosition;
+	Boolean newPosition;
+	Int16S currentPosition;
+	Int16S startPosition;
+	Int16S targetPosition;
 	Int32U startTime;
 	Int16U movingTime;
 	DrvServoCallback callback;
@@ -57,7 +56,7 @@ typedef struct
 
 
 /////////////////////////////////////////PUBLIC FUNCTIONS/////////////////////////////////////////
-// Init of Drv Servo 
+// Initialization of Servo
 Boolean DrvServoInit( void ) ;
 
 // move the selected servo to the desired position [-900,900] and during the desired time

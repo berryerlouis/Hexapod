@@ -256,6 +256,12 @@
     <Compile Include="Cmps\CmpSSD1306.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="Cmps\CmpVL53L0X.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Cmps\CmpVL53L0X.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Conf\ConfBoard.h">
       <SubType>compile</SubType>
     </Compile>

@@ -206,7 +206,6 @@ Boolean SrvCoreLoop ( void )
 		//get time
 		Int32U now = DrvTickGetTimeUs();
 		core.services[i].update();
-		//update each servo
 		DrvServoUpdate();
 		//get loop update time
 		core.services[i].updateTime = DrvTickGetTimeUs() - now;

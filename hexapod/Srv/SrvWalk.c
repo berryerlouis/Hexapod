@@ -2,21 +2,19 @@
 #include "Conf/ConfHard.h"
 
 #include "Drv/DrvTick.h"
-#include "Drv/DrvLeg.h"
 #include "SrvWalk.h"
 #include "SrvBodyMove.h"
 
 ////////////////////////////////////////PRIVATE DEFINES///////////////////////////////////////////
 #define NB_WALK_STEPS_TRIANGLE			3
 #define NB_WALK_STEPS_SQUARE			4
-#define WALK_AMPLITUDE_MAX			30.0
+#define WALK_AMPLITUDE_MAX				40.0
 ////////////////////////////////////////PRIVATE STRUCTURES////////////////////////////////////////
 
 ////////////////////////////////////////PRIVATE FUNCTIONS/////////////////////////////////////////
 
 //Stop gaits
 static void SrvWalkStep ( void );
-static Boolean SrvWalkSetAmplitude( Int8U amplitude );
 static float SrvWalkGetLegCoxaAngle ( ELeg legIndex, float pos );
 ////////////////////////////////////////PRIVATE VARIABLES/////////////////////////////////////////
 
@@ -33,7 +31,7 @@ static SStepNormalPosition stepLegsTypeTriangle[NB_WALK_STEPS_TRIANGLE] =
 {
 	//x		y	z
 	{-1,  0,	1},//ground		// '_'
-	{00,  1,	0},				// '\\'
+	{00,  0,	0},				// '\\'
 	{01,  0,	1},				// '/'
 };
 
@@ -99,8 +97,8 @@ Boolean SrvWalkInit ( void )
 	//by default go ripple for 1000ms
 	walkPrivate.walkStruct.gaiting = E_GAITS_RIPPLE;
 	walkPrivate.walkStruct.walking = E_WALK_STOP;
-	walkPrivate.walkStruct.walkingDelay = 1000U;
-	walkPrivate.walkStruct.walkingAmplitude = WALK_AMPLITUDE_MAX;
+	walkPrivate.walkStruct.delay = 1000U;
+	walkPrivate.walkStruct.amplitude = WALK_AMPLITUDE_MAX;
 	walkPrivate.walkStruct.direction = 0;
 	
 	//by default go ripple for 1000ms
@@ -131,9 +129,23 @@ void SrvWalkUpdate ( void )
 	}	
 }
 
-SWalk* SrvWalkgetStruct (void) 
+SWalk* SrvWalkGetStruct (void) 
 {
 	return &walkPrivate.walkStruct;
+}
+
+Boolean SrvWalkSetSpeed( Int16U speed )
+{
+	if((speed >= 250) && (speed <= 3000))
+	{
+		walkPrivate.walkStruct.delay = speed;
+		return TRUE;
+	}
+	return FALSE;
+}
+Int16U SrvWalkGetSpeed( void )
+{
+	return walkPrivate.walkStruct.delay;
 }
 
 Boolean SrvWalkStopWalk( void )
@@ -142,60 +154,63 @@ Boolean SrvWalkStopWalk( void )
 	return TRUE;
 }
 
-Boolean SrvWalkSetWalk( E_GAIT gait, E_WALK walk,Int8U amplitude, Int8S direction, uint16_t delay )
+Boolean SrvWalkSetWalk( E_GAIT gait, E_WALK walk,Int8S amplitude, Int8S direction, uint16_t delay )
 {
 	Boolean oSuccess = FALSE;
 	
 	oSuccess = SrvWalkSetAmplitude(amplitude);
-	walkPrivate.walkStruct.direction = direction / 10;
+	walkPrivate.walkStruct.direction = direction;
 	
 	//if we want to change walk
 	if((walkPrivate.walkStruct.walking != walk) || (walkPrivate.walkStruct.gaiting != gait))
 	{
-		walkPrivate.walkStruct.gaiting = gait;
 		walkPrivate.walkStruct.walking = walk;
-		walkPrivate.walkStruct.walkingDelay = delay;
+		walkPrivate.walkStruct.delay = delay;
 				
-		if( walkPrivate.walkStruct.gaiting == E_GAITS_TRIPOD )
+		//if different gait
+		if(walkPrivate.walkStruct.gaiting != gait)
 		{
-			for(ELeg legIndex = E_LEG_F_L ; legIndex < E_NB_LEGS ; legIndex++)
+			walkPrivate.walkStruct.gaiting = gait;
+			if( walkPrivate.walkStruct.gaiting == E_GAITS_TRIPOD )
 			{
-				walkPrivate.walkSteps.steps[legIndex] = tripodSteps[legIndex];
-				walkPrivate.walkSteps.legOnGround[legIndex] = FALSE;
+				for(ELeg legIndex = E_LEG_F_L ; legIndex < E_NB_LEGS ; legIndex++)
+				{
+					walkPrivate.walkSteps.steps[legIndex] = tripodSteps[legIndex];
+					walkPrivate.walkSteps.legOnGround[legIndex] = FALSE;
+				}
+				walkPrivate.walkSteps.nbStep = 4U;
+				walkPrivate.walkSteps.indexStep = 0U;
+				walkPrivate.walkSteps.stepMultDelayOnGround = 2U;
 			}
-			walkPrivate.walkSteps.nbStep = 4U;
-			walkPrivate.walkSteps.indexStep = 0U;
-			walkPrivate.walkSteps.stepMultDelayOnGround = 2U;
-		}
-		else if( walkPrivate.walkStruct.gaiting == E_GAITS_WAVE )
-		{
-			for(ELeg legIndex = E_LEG_F_L ; legIndex < E_NB_LEGS ; legIndex++)
+			else if( walkPrivate.walkStruct.gaiting == E_GAITS_WAVE )
 			{
-				walkPrivate.walkSteps.steps[legIndex] = waveSteps[legIndex];
-				walkPrivate.walkSteps.legOnGround[legIndex] = FALSE;
+				for(ELeg legIndex = E_LEG_F_L ; legIndex < E_NB_LEGS ; legIndex++)
+				{
+					walkPrivate.walkSteps.steps[legIndex] = waveSteps[legIndex];
+					walkPrivate.walkSteps.legOnGround[legIndex] = FALSE;
+				}
+				walkPrivate.walkSteps.nbStep = 12U;
+				walkPrivate.walkSteps.indexStep = 0U;
+				walkPrivate.walkSteps.stepMultDelayOnGround = 10U;
 			}
-			walkPrivate.walkSteps.nbStep = 12U;
-			walkPrivate.walkSteps.indexStep = 0U;
-			walkPrivate.walkSteps.stepMultDelayOnGround = 10U;
-		}
-		else if( walkPrivate.walkStruct.gaiting == E_GAITS_RIPPLE )
-		{
-			for(ELeg legIndex = E_LEG_F_L ; legIndex < E_NB_LEGS ; legIndex++)
+			else if( walkPrivate.walkStruct.gaiting == E_GAITS_RIPPLE )
 			{
-				walkPrivate.walkSteps.steps[legIndex] = rippleSteps[legIndex];
-				walkPrivate.walkSteps.legOnGround[legIndex] = FALSE;
+				for(ELeg legIndex = E_LEG_F_L ; legIndex < E_NB_LEGS ; legIndex++)
+				{
+					walkPrivate.walkSteps.steps[legIndex] = rippleSteps[legIndex];
+					walkPrivate.walkSteps.legOnGround[legIndex] = FALSE;
+				}
+				walkPrivate.walkSteps.nbStep = 8U;
+				walkPrivate.walkSteps.indexStep = 0U;
+				walkPrivate.walkSteps.stepMultDelayOnGround = 6U;
 			}
-			walkPrivate.walkSteps.nbStep = 8U;
-			walkPrivate.walkSteps.indexStep = 0U;
-			walkPrivate.walkSteps.stepMultDelayOnGround = 6U;
 		}
-		
 		oSuccess = TRUE;
 	}
 	else
 	{
 		//same walk but change speed
-		walkPrivate.walkStruct.walkingDelay = delay;
+		walkPrivate.walkStruct.delay = delay;
 		oSuccess = TRUE;
 	}
 	return oSuccess;
@@ -203,6 +218,9 @@ Boolean SrvWalkSetWalk( E_GAIT gait, E_WALK walk,Int8U amplitude, Int8S directio
 
 ////////////////////////////////////////PRIVATE FUNCTIONS/////////////////////////////////////////
 
+static volatile float xTemp;
+static volatile float yTemp;
+static volatile float zTemp;
 static void SrvWalkStep ( void )
 {
 	//check all legs to reach their target
@@ -228,33 +246,19 @@ static void SrvWalkStep ( void )
 	//all legs reach their target, so we can go further
 	if(okTarget == 0b00111111)
 	{
-		//go to the next step
-		if(walkPrivate.walkStruct.walking == E_WALK_FW)
+
+		walkPrivate.walkSteps.indexStep++;
+		if( walkPrivate.walkSteps.indexStep == walkPrivate.walkSteps.nbStep)
 		{
-			walkPrivate.walkSteps.indexStep++;
-			if( walkPrivate.walkSteps.indexStep == walkPrivate.walkSteps.nbStep)
-			{
-				walkPrivate.walkSteps.indexStep = 0U;
-			}
-		}
-		else if(walkPrivate.walkStruct.walking == E_WALK_RV)
-		{
-			walkPrivate.walkSteps.indexStep--;
-			if( walkPrivate.walkSteps.indexStep == 0xFF)
-			{
-				walkPrivate.walkSteps.indexStep = walkPrivate.walkSteps.nbStep - 1U;
-			}
+			walkPrivate.walkSteps.indexStep = 0U;
 		}
 		
 		SBodyMove *move = SrvBodyMoveGetStruct();
 		//apply the new angle to legs
 		for(ELeg legIndex = E_LEG_F_L ; legIndex < E_NB_LEGS ; legIndex++)
 		{
-			float xTemp;
-			float yTemp;
-			float zTemp;
 			Int8U stepIndex = 0U;
-			Int16U delay = walkPrivate.walkStruct.walkingDelay;
+			Int16U delay = walkPrivate.walkStruct.delay;
 			walkPrivate.walkSteps.legOnGround[legIndex] = FALSE;
 			
 			//go forward
@@ -266,33 +270,72 @@ static void SrvWalkStep ( void )
 			}
 			else if(walkPrivate.walkSteps.steps[legIndex][walkPrivate.walkSteps.indexStep] == '\\')
 			{
-				//swap index if reverse direction
-				stepIndex = (walkPrivate.walkStruct.walking == E_WALK_FW) ? 1 : 2;
+				stepIndex = 1;
 			}
 			else if(walkPrivate.walkSteps.steps[legIndex][walkPrivate.walkSteps.indexStep] == '/')
 			{
-				//swap index if reverse direction
-				stepIndex = (walkPrivate.walkStruct.walking == E_WALK_FW) ? 2 : 1;
+				stepIndex = 2;
 			}
 			
-			//get position at index		
-			xTemp = (walkPrivate.walkStruct.walking == E_WALK_FW) ? stepLegsTypeTriangle[ stepIndex ].x : -stepLegsTypeTriangle[ stepIndex ].x;
-			//apply amplitude
-			xTemp = (xTemp + walkPrivate.walkStruct.direction) * (float)(walkPrivate.walkStruct.walkingAmplitude);
-			//apply direction
-			/*if(legIndex < E_LEG_F_R)
+			//turn over itself
+			if((walkPrivate.walkStruct.amplitude == 0) && (walkPrivate.walkStruct.direction != 0))
 			{
-				xTemp = xTemp * (float)(walkPrivate.walkStruct.walkingAmplitude + walkPrivate.walkStruct.direction);
+				//rotate
+				//apply direction
+				//do clockwise rotation matrix
+				xTemp = stepLegsTypeTriangle[ stepIndex ].x;
+				yTemp = stepLegsTypeTriangle[ stepIndex ].y;
+				
+				if(walkPrivate.walkStruct.direction > 0)
+				{
+					if(legIndex >= E_LEG_F_R)
+					{
+						xTemp *= -1;
+					}
+				}
+				else
+				{
+					if(legIndex >= E_LEG_F_R)
+					{
+						xTemp *= -1;
+					}
+				}
+				
+				
+				//apply amplitude
+				xTemp = xTemp * (float)((WALK_AMPLITUDE_MAX * walkPrivate.walkStruct.direction) / 90);
+				yTemp = (yTemp * (float)((((abs(walkPrivate.walkStruct.direction) > WALK_AMPLITUDE_MAX) ? WALK_AMPLITUDE_MAX : walkPrivate.walkStruct.direction) * 20) / WALK_AMPLITUDE_MAX)) + move->groundSize;
+				zTemp = stepLegsTypeTriangle[ stepIndex ].z != 0 ? move->elevation  : move->elevation - 20;
 			}
 			else
 			{
-				xTemp = xTemp * (float)(walkPrivate.walkStruct.walkingAmplitude + walkPrivate.walkStruct.direction);
-			}*/
+				//translate
+				//apply direction
+				if(legIndex < E_LEG_F_R)
+				{
+					//do clockwise rotation matrix
+					xTemp = stepLegsTypeTriangle[ stepIndex ].x * cos(ToRad(walkPrivate.walkStruct.direction)) + stepLegsTypeTriangle[ stepIndex ].y * sin(ToRad(walkPrivate.walkStruct.direction));
+					yTemp = stepLegsTypeTriangle[ stepIndex ].y * cos(ToRad(walkPrivate.walkStruct.direction)) - stepLegsTypeTriangle[ stepIndex ].x * sin(ToRad(walkPrivate.walkStruct.direction));
+				}
+				else
+				{
+					//do anticlockwise rotation matrix
+					xTemp = (stepLegsTypeTriangle[ stepIndex ].x * cos(ToRad(walkPrivate.walkStruct.direction)) - stepLegsTypeTriangle[ stepIndex ].y * sin(ToRad(walkPrivate.walkStruct.direction)));
+					yTemp = (stepLegsTypeTriangle[ stepIndex ].y * cos(ToRad(walkPrivate.walkStruct.direction)) + stepLegsTypeTriangle[ stepIndex ].x * sin(ToRad(walkPrivate.walkStruct.direction)));
+				}
+				//apply amplitude
+				xTemp = xTemp * (float)(walkPrivate.walkStruct.amplitude);
+				yTemp = (yTemp * (float)((abs(walkPrivate.walkStruct.amplitude) * 20) / WALK_AMPLITUDE_MAX)) + move->groundSize;
+				zTemp = stepLegsTypeTriangle[ stepIndex ].z != 0 ? move->elevation  : move->elevation - 20;
+			}	
 			
-			xTemp = SetLimits(xTemp,-WALK_AMPLITUDE_MAX,WALK_AMPLITUDE_MAX);
+			
+			//apply elevation
+			
 			xTemp = SrvWalkGetLegCoxaAngle(legIndex, xTemp);
-			yTemp = stepLegsTypeTriangle[ stepIndex ].y == 0 ? move->groundSize : move->groundSize + ((walkPrivate.walkStruct.walkingAmplitude * 20) / WALK_AMPLITUDE_MAX); //between ground size and ground size + 20 (relative to amplitude)
-			zTemp = stepLegsTypeTriangle[ stepIndex ].z != 0 ? move->elevation  : move->elevation - ((walkPrivate.walkStruct.walkingAmplitude * 10) / WALK_AMPLITUDE_MAX) ; //between elevation and 0
+			
+			
+			//SBodyLegMove compute = SrvBodyMoveComputeLegRotationAndTranslation(legIndex);
 			
 			DrvLegSetTarget(legIndex,
 							xTemp,
@@ -301,10 +344,7 @@ static void SrvWalkStep ( void )
 							delay);
 		}
 	}
-	
 }
-
-
 
 static float SrvWalkGetLegCoxaAngle ( ELeg legIndex, float pos )
 {
@@ -336,12 +376,30 @@ static float SrvWalkGetLegCoxaAngle ( ELeg legIndex, float pos )
 }
 
 
-static Boolean SrvWalkSetAmplitude( Int8U amplitude )
+
+Boolean SrvWalkSetAmplitude( Int8S amplitude )
 {
-	if( amplitude <= WALK_AMPLITUDE_MAX )
+	if(abs(amplitude) <= WALK_AMPLITUDE_MAX )
 	{
-		walkPrivate.walkStruct.walkingAmplitude = amplitude;
+		walkPrivate.walkStruct.amplitude = amplitude;
 		return TRUE;
 	}
 	return FALSE;
+}
+Int8S SrvWalkGetAmplitude( void )
+{
+	return walkPrivate.walkStruct.amplitude;
+}
+Boolean SrvWalkSetDirection( Int8S direction )
+{
+	if( abs(direction) <= 90 )
+	{
+		walkPrivate.walkStruct.direction = direction;
+		return TRUE;
+	}
+	return FALSE;
+}
+Int8S SrvWalkGetDirection( void )
+{
+	return walkPrivate.walkStruct.direction;
 }

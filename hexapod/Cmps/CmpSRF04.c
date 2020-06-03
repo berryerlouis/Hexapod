@@ -17,8 +17,7 @@ typedef enum
 {
 	SEND_PULSE,
 	WAIT_RISING_EDGE,
-	WAIT_FALLING_EDGE,
-	WAIT_NEXT_PULSE,
+	WAIT_FALLING_EDGE
 }E_StatusSRF04;
 
 ////////////////////////////////////////PRIVATE VARIABLES/////////////////////////////////////////
@@ -111,12 +110,13 @@ ISR(PCINT0_vect)
 		{
 			Int32U timeAfterEcho = time - timeBeforeEchoStart[loop_us];
 			//must be inf to 30 ms
-			if( timeAfterEcho <  SRF04_ECHO_TIMEOUT)
+			if( timeAfterEcho < SRF04_ECHO_TIMEOUT)
 			{
 				distance[loop_us] = timeAfterEcho / 58UL;
-				statusEcho[loop_us] = SEND_PULSE;
 			}
 			statusEcho[loop_us] = SEND_PULSE;
+			timeoutEcho[loop_us] = 0U;
+			timeBeforeEchoStart[loop_us] = 0U;
 		}
 	}
 }

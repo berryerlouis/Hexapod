@@ -57,8 +57,6 @@ void SrvBodyMoveUpdate (void)
 			//SrvBodyMoveSetBehavior(E_BODY_STAR,1500);
 		}
 	}
-	//update legs position
-	DrvLegUpdate();
 }
 
 SBodyMove *SrvBodyMoveGetStruct( void )
@@ -66,9 +64,51 @@ SBodyMove *SrvBodyMoveGetStruct( void )
 	return &bodyMove;
 }
 
-
 //Set vertical Rotation
-Boolean SrvBodyMoveSetRotationAndTranslation ( float roll, float pitch, float yaw, float x, float y, float z, uint16_t delay )
+SBodyLegMove SrvBodyMoveComputeLegRotationAndTranslation ( ELeg legId )
+{
+	SBodyLegMove legMove;
+	if(legId == E_LEG_F_L)
+	{
+		legMove.x = DrvLegGetXFromCoxaAngle(15 + bodyMove.yaw - bodyMove.x	,bodyMove.groundSize - bodyMove.y);
+		legMove.y = bodyMove.groundSize - bodyMove.y;
+		legMove.z = bodyMove.elevation + bodyMove.roll + bodyMove.pitch	 + bodyMove.z ;
+	}
+	else if(legId == E_LEG_M_L)
+	{
+		legMove.x = DrvLegGetXFromCoxaAngle(bodyMove.yaw - bodyMove.x		,bodyMove.groundSize - bodyMove.y);
+		legMove.y = bodyMove.groundSize - bodyMove.y;
+		legMove.z = bodyMove.elevation + bodyMove.pitch					 + bodyMove.z ;
+	}
+	else if(legId == E_LEG_R_L)
+	{
+		legMove.x = -DrvLegGetXFromCoxaAngle(15 - bodyMove.yaw + bodyMove.x	,bodyMove.groundSize - bodyMove.y);
+		legMove.y = bodyMove.groundSize - bodyMove.y;
+		legMove.z = bodyMove.elevation - bodyMove.roll + bodyMove.pitch	 + bodyMove.z ;
+	}
+	else if(legId == E_LEG_F_R)
+	{
+		legMove.x = -DrvLegGetXFromCoxaAngle(15 - bodyMove.yaw - bodyMove.x	,bodyMove.groundSize + bodyMove.y);
+		legMove.y = bodyMove.groundSize + bodyMove.y;
+		legMove.z = bodyMove.elevation + bodyMove.roll - bodyMove.pitch	 + bodyMove.z ;
+	}
+	else if(legId == E_LEG_M_R)
+	{
+		legMove.x = DrvLegGetXFromCoxaAngle(bodyMove.yaw + bodyMove.x		,bodyMove.groundSize + bodyMove.y);
+		legMove.y = bodyMove.groundSize + bodyMove.y;
+		legMove.z = bodyMove.elevation - bodyMove.pitch					 + bodyMove.z ;
+	}
+	else if(legId == E_LEG_R_R)
+	{
+		legMove.x = DrvLegGetXFromCoxaAngle(15 + bodyMove.yaw + bodyMove.x	,bodyMove.groundSize + bodyMove.y);
+		legMove.y = bodyMove.groundSize + bodyMove.y;
+		legMove.z = bodyMove.elevation - bodyMove.roll - bodyMove.pitch	 + bodyMove.z ;
+	}
+	return legMove;
+}
+	
+//Set vertical Rotation
+Boolean SrvBodyMoveSetRotationAndTranslation ( float roll, float pitch, float yaw, float x, float y, float z)
 {
 	bodyMove.roll = roll;
 	bodyMove.pitch = pitch;
@@ -76,12 +116,18 @@ Boolean SrvBodyMoveSetRotationAndTranslation ( float roll, float pitch, float ya
 	bodyMove.x = x;
 	bodyMove.y = y;
 	bodyMove.z = z;
-	DrvLegSetTarget(E_LEG_F_L,	DrvLegGetXFromCoxaAngle(15 + bodyMove.yaw - bodyMove.x	,bodyMove.groundSize - bodyMove.y)	,bodyMove.groundSize - bodyMove.y,	bodyMove.elevation + bodyMove.roll + bodyMove.pitch	 + bodyMove.z ,delay);
-	DrvLegSetTarget(E_LEG_M_L,	DrvLegGetXFromCoxaAngle(bodyMove.yaw - bodyMove.x		,bodyMove.groundSize - bodyMove.y)	,bodyMove.groundSize - bodyMove.y,	bodyMove.elevation + bodyMove.pitch					 + bodyMove.z ,delay);
-	DrvLegSetTarget(E_LEG_R_L,	-DrvLegGetXFromCoxaAngle(15 - bodyMove.yaw + bodyMove.x	,bodyMove.groundSize - bodyMove.y)	,bodyMove.groundSize - bodyMove.y,	bodyMove.elevation - bodyMove.roll + bodyMove.pitch	 + bodyMove.z ,delay);
-	DrvLegSetTarget(E_LEG_F_R,	-DrvLegGetXFromCoxaAngle(15 - bodyMove.yaw - bodyMove.x	,bodyMove.groundSize + bodyMove.y)	,bodyMove.groundSize + bodyMove.y,	bodyMove.elevation + bodyMove.roll - bodyMove.pitch	 + bodyMove.z ,delay);
-	DrvLegSetTarget(E_LEG_M_R,	DrvLegGetXFromCoxaAngle(bodyMove.yaw + bodyMove.x		,bodyMove.groundSize + bodyMove.y)	,bodyMove.groundSize + bodyMove.y,	bodyMove.elevation - bodyMove.pitch					 + bodyMove.z ,delay);
-	DrvLegSetTarget(E_LEG_R_R,	DrvLegGetXFromCoxaAngle(15 + bodyMove.yaw + bodyMove.x	,bodyMove.groundSize + bodyMove.y)	,bodyMove.groundSize + bodyMove.y,	bodyMove.elevation - bodyMove.roll - bodyMove.pitch	 + bodyMove.z ,delay);
+	return TRUE;
+}
+
+//Set vertical Rotation
+Boolean SrvBodyMoveApplyRotationAndTranslation ( uint16_t delay )
+{
+	SBodyLegMove legMove;
+	for(Int8U indexLeg = 0U ; indexLeg < E_NB_LEGS ; indexLeg++ )
+	{
+		legMove = SrvBodyMoveComputeLegRotationAndTranslation(indexLeg);
+		DrvLegSetTarget(indexLeg,	legMove.x , legMove.y, legMove.z , delay);
+	}
 	return TRUE;
 }
 
@@ -133,14 +179,24 @@ Boolean SrvBodyMoveSetBehavior ( EBodyBehavior pos, uint16_t delay )
 }
 
 //Set Ground Size
-Boolean SrvBodyMoveSetGroundSize ( float groundSize, uint16_t delay )
+Boolean SrvBodyMoveSetGroundSize ( float groundSize )
 {
 	bodyMove.groundSize = groundSize;
 	return TRUE;
 }
+//Get Ground Size
+float SrvBodyMoveGetGroundSize ( void )
+{
+	return bodyMove.groundSize;
+}
 //Set Elevation
-Boolean SrvBodyMoveSetElevation ( float elevation, uint16_t delay )
+Boolean SrvBodyMoveSetElevation ( float elevation )
 {
 	bodyMove.elevation = elevation;
 	return TRUE;
+}
+//Get Elevation
+float SrvBodyMoveGetElevation ( void )
+{
+	return bodyMove.elevation;
 }

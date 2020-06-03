@@ -17,6 +17,7 @@
 #include "SrvWalk.h"
 #include "SrvDisplay.h"
 #include "SrvBodyMove.h"
+#include "SrvFeeling.h"
 
 
 ////////////////////////////////////////PRIVATE DEFINES///////////////////////////////////////////
@@ -58,13 +59,16 @@ static Boolean SrvCommExecuteClusterLeg( void );
 static Boolean SrvCommExecuteClusterDisplay( void );
 
 ////////////////////////////////////////PRIVATE VARIABLES/////////////////////////////////////////
-volatile Int16U nbDataAvailable = 0U;
-volatile commMessageParsingState status = COMM_START;
-volatile commMessage inMessage;
-volatile char response [100U] = { 0U };
-uint32_t prevMillisPositionUpdate = 0U;
+static volatile Int16U nbDataAvailable = 0U;
+static volatile commMessageParsingState status = COMM_START;
+static volatile commMessage inMessage;
+static volatile char response [100U] = { 0U };
+uint32_t prevMillisSendPeriodic = 0U;
+Boolean sendPeriodic = FALSE;
+
 
 EUART uartUsing = E_UART_0;
+EErrorMessage errorMessage = COMM_ERROR_NONE;
 /************************************************************************/
 /*init de la communication                                              */
 /************************************************************************/
@@ -98,15 +102,25 @@ Boolean SrvCommInit (void)
 void SrvCommUpdate ( void ) 
 {
 	SrvCommDecodeMessage();
-	if ((DrvTickGetTimeMs() - prevMillisPositionUpdate) > 250U)
+	
+	//if allows periodic and not reading frame
+	if((sendPeriodic == TRUE) && (status == COMM_START))
 	{
-		//inMessage.cluster = COMM_CLUSTER_IMU;
-		//inMessage.command = COMM_CLUSTER_IMU_COMMAND_GET_RPY;
-		//inMessage.size = 0U;
-		//SrvCommExecuteMessage();
-		//for next time
-		prevMillisPositionUpdate = DrvTickGetTimeMs();
+		if ((DrvTickGetTimeMs() - prevMillisSendPeriodic) > 250U)
+		{
+			inMessage.cluster = COMM_CLUSTER_SERVOS;
+			inMessage.command = COMM_CLUSTER_SERVOS_COMMAND_SERVO_READ_ALL;
+			inMessage.size = 0U;
+			SrvCommExecuteMessage();
+			inMessage.cluster = COMM_CLUSTER_ULTRASON;
+			inMessage.command = COMM_CLUSTER_ULTRASON_COMMAND_GET_DISTANCE;
+			inMessage.size = 0U;
+			SrvCommExecuteMessage();
+			//for next time
+			prevMillisSendPeriodic = DrvTickGetTimeMs();
+		}
 	}
+	
 	
 	#ifdef HC_05_MODE_AT
 		SrvCommExecuteMessageHC05();
@@ -146,6 +160,10 @@ static Boolean SrvCommExecuteMessage( void )
 	else if( inMessage.cluster == COMM_CLUSTER_DISPLAY)
 	{
 		oSuccess = SrvCommExecuteClusterDisplay();
+	}
+	else
+	{
+		errorMessage = COMM_ERROR_UNKNOWN_CLUSTER;
 	}
 	
 	return oSuccess;
@@ -190,86 +208,108 @@ static Boolean SrvCommDecodeMessage( void )
 			inMessage.size++;
 		//switch
 		#else
-		switch((Int8U) status)
+		if(( datum == '>' ) && (status != COMM_PARAMS))
 		{
-			case COMM_START:
-				//wait for start and end
-				if( datum == '<' )
-				{
-					//new frame is coming
-					status = COMM_HEADER;
-					//reset pointer
-					countData = 0U;
-				}
-			break;
-			case COMM_HEADER:
-				//get header
-				inMessage.header = asciiHexToInt(datum) ;
-				status = COMM_CLUSTER_0;
-			break;
-			case COMM_CLUSTER_0:
-				//get cluster id
-				inMessage.cluster = asciiHexToInt(datum) * 16U;
-				status = COMM_CLUSTER_1;
-			break;
-			case COMM_CLUSTER_1:
-				//get cluster id
-				inMessage.cluster += asciiHexToInt(datum) ;
-				status = COMM_COMMAND_0;
-			break;
-			
-			case COMM_COMMAND_0:
-				//get command id
-				inMessage.command = asciiHexToInt(datum) * 16U;
-				status = COMM_COMMAND_1;
-			break;
-			case COMM_COMMAND_1:
-				//get command id
-				inMessage.command += asciiHexToInt(datum) ;
-				status = COMM_SIZE_0;
-			break;
-			
-			case COMM_SIZE_0:
-				//get size
-				inMessage.size = asciiHexToInt(datum) * 16U;
-				status = COMM_SIZE_1;
-			break;
-			case COMM_SIZE_1:
-				//get size
-				inMessage.size += asciiHexToInt(datum) ;
-				status = COMM_PARAMS;
-			break;
-			
-			case COMM_PARAMS:
-				//if end of frame
-				if( datum == '>' )
-				{
-					//in all case return to wait a start
-					status = COMM_START;
-					//check frame integrity
-					if(countData == inMessage.size)
+			errorMessage = COMM_ERROR_SIZE_MESSAGE;
+			response[0U] = 'K';
+			response[1U] = 'O';
+			response[2U] = errorMessage + 0x30;
+			SrvCommWriteMessage(3U);
+			//new frame is coming
+			status = COMM_START;
+			//reset pointer
+			countData = 0U;
+			return FALSE;
+		}
+		else
+		{
+			switch((Int8U) status)
+			{
+				case COMM_START:
+					//wait for start and end
+					if( datum == '<' )
 					{
-						//execute incoming message
-						if(SrvCommExecuteMessage())
-						{
-							response[0U] = 'O';
-							response[1U] = 'K';
-							SrvCommWriteMessage(2U);
-							return TRUE;
-						}
+						//new frame is coming
+						status = COMM_HEADER;
+						//reset pointer
+						countData = 0U;
 					}
-					response[0U] = 'K';
-					response[1U] = 'O';
-					SrvCommWriteMessage(2U);
-					return FALSE;
-				}
-				else
-				{
-					//fill buffer
-					inMessage.data[ countData ] = asciiHexToInt(datum) ;
-					countData++;
-				}
-			break;
+				break;
+				case COMM_HEADER:
+					//get header
+					inMessage.header = asciiHexToInt(datum) ;
+					status = COMM_CLUSTER_0;
+				break;
+				case COMM_CLUSTER_0:
+					//get cluster id
+					inMessage.cluster = asciiHexToInt(datum) * 16U;
+					status = COMM_CLUSTER_1;
+				break;
+				case COMM_CLUSTER_1:
+					//get cluster id
+					inMessage.cluster += asciiHexToInt(datum) ;
+					status = COMM_COMMAND_0;
+				break;
+			
+				case COMM_COMMAND_0:
+					//get command id
+					inMessage.command = asciiHexToInt(datum) * 16U;
+					status = COMM_COMMAND_1;
+				break;
+				case COMM_COMMAND_1:
+					//get command id
+					inMessage.command += asciiHexToInt(datum) ;
+					status = COMM_SIZE_0;
+				break;
+			
+				case COMM_SIZE_0:
+					//get size
+					inMessage.size = asciiHexToInt(datum) * 16U;
+					status = COMM_SIZE_1;
+				break;
+				case COMM_SIZE_1:
+					//get size
+					inMessage.size += asciiHexToInt(datum) ;
+					status = COMM_PARAMS;
+				break;
+			
+				case COMM_PARAMS:
+					//if end of frame
+					if( datum == '>' )
+					{
+						//in all case return to wait a start
+						status = COMM_START;
+						//check frame integrity
+						if(countData == inMessage.size)
+						{
+							//execute incoming message
+							if(SrvCommExecuteMessage())
+							{
+								response[0U] = 'O';
+								response[1U] = 'K';
+								SrvCommWriteMessage(2U);
+								return TRUE;
+							}
+						}
+						else
+						{
+							errorMessage = COMM_ERROR_SIZE_MESSAGE;
+							countData = 0U;
+						}
+						response[0U] = 'K';
+						response[1U] = 'O';
+						response[2U] = errorMessage + 0x30;
+						SrvCommWriteMessage(3U);
+						return FALSE;
+					}
+					else
+					{
+						//fill buffer
+						inMessage.data[ countData ] = asciiHexToInt(datum) ;
+						countData++;
+					}
+				break;
+			}
 		}
 		#endif
 	}	
@@ -286,6 +326,20 @@ static Boolean SrvCommExecuteClusterGeneral( void )
 		uint8_t nbData = SrvCommPrepareMessage( COMM_CLUSTER_GENARAL,COMM_CLUSTER_GENARAL_COMMAND_VERSION, 2U);
 		nbData += sprintf((char*)&response[ nbData ],"%01X%01X", VERSION_SOFTWARE, VERSION_HARDWARE);
 		return SrvCommWriteMessage(nbData);
+	}
+	else if(( inMessage.command == COMM_CLUSTER_GENARAL_COMMAND_START_PERIODIC) && (inMessage.size == 0U))
+	{
+		sendPeriodic = TRUE;
+		return TRUE;
+	}
+	else if(( inMessage.command == COMM_CLUSTER_GENARAL_COMMAND_STOP_PERIODIC) && (inMessage.size == 0U))
+	{
+		sendPeriodic = FALSE;
+		return TRUE;
+	}
+	else
+	{
+		errorMessage = COMM_ERROR_UNKNOWN_COMMAND;
 	}
 	return FALSE;
 }
@@ -315,33 +369,121 @@ static Boolean SrvCommExecuteClusterBehavior( void )
 		Int8S y = (Int8S)(inMessage.data[ 8U ] * 16 + inMessage.data[ 9U ] );
 		Int8S z = (Int8S)(inMessage.data[ 10U ] * 16 + inMessage.data[ 11U ] );
 		uint16_t delay = inMessage.data[ 12U ] * 4096 + inMessage.data[ 13U ] * 256 + inMessage.data[ 14U ] * 16 + inMessage.data[ 15U ];
-		SrvBodyMoveSetRotationAndTranslation(roll,pitch,yaw,x,y,z,delay);
+		SrvBodyMoveSetRotationAndTranslation(roll,pitch,yaw,x,y,z);
+		SWalk *walk = SrvWalkGetStruct();
+		if(walk->walking == E_WALK_STOP) return SrvBodyMoveApplyRotationAndTranslation(delay);
+		return TRUE;
 	}
 	else if(( inMessage.command == COMM_CLUSTER_BEHAVIOR_COMMAND_SET_WALK) && (inMessage.size == 10U))
 	{
 		//prepare output string
-		E_WALK gait = (E_WALK)inMessage.data[ 0U ];
+		E_GAIT gait = (E_GAIT)inMessage.data[ 0U ];
 		E_WALK walk = (E_WALK)inMessage.data[ 1U ];
-		Int8U amplitude = (Int8U)(inMessage.data[ 2U ] * 16 + inMessage.data[ 3U ] );
+		Int8S amplitude = (Int8S)(inMessage.data[ 2U ] * 16 + inMessage.data[ 3U ] );
 		Int8S direction =  (Int8S)(inMessage.data[ 4U ] * 16 + inMessage.data[ 5U ] );
 		uint16_t delay = inMessage.data[ 6U ] * 4096 + inMessage.data[ 7U ] * 256 + inMessage.data[ 8U ] * 16 + inMessage.data[ 9U ];
 		if(walk == E_WALK_STOP) return SrvWalkStopWalk();
 		return SrvWalkSetWalk(gait,walk,amplitude,direction,delay);
 	}
+	else if(( inMessage.command == COMM_CLUSTER_BEHAVIOR_COMMAND_GET_WALK) && (inMessage.size == 0U))
+	{
+		SWalk *walk = SrvWalkGetStruct();
+		//prepare output string
+		uint8_t nbData = SrvCommPrepareMessage(COMM_CLUSTER_BEHAVIOR,COMM_CLUSTER_BEHAVIOR_COMMAND_GET_WALK, 1U);
+		nbData += sprintf((char*)&response[ nbData ],"%01X", walk->walking);
+		return SrvCommWriteMessage(nbData);
+	}
 	else if(( inMessage.command == COMM_CLUSTER_BEHAVIOR_COMMAND_SET_GROUND_SIZE) && (inMessage.size == 6U))
 	{
 		//prepare output string
 		uint16_t delay = inMessage.data[ 2U ] * 4096 + inMessage.data[ 3U ] * 256 + inMessage.data[ 4U ] * 16 + inMessage.data[ 5U ];
-		return SrvBodyMoveSetGroundSize((inMessage.data[ 0U ] * 16 + inMessage.data[ 1U ] ) * 1.0,delay);
+		SrvBodyMoveSetGroundSize((inMessage.data[ 0U ] * 16 + inMessage.data[ 1U ] ) * 1.0);
+		
+		SWalk *walk = SrvWalkGetStruct();
+		if(walk->walking == E_WALK_STOP) return SrvBodyMoveApplyRotationAndTranslation(delay);
+		return TRUE;
+	}
+	else if(( inMessage.command == COMM_CLUSTER_BEHAVIOR_COMMAND_GET_GROUND_SIZE) && (inMessage.size == 0U))
+	{
+		SBodyMove *move = SrvBodyMoveGetStruct();
+		//prepare output string
+		uint8_t nbData = SrvCommPrepareMessage(COMM_CLUSTER_BEHAVIOR,COMM_CLUSTER_BEHAVIOR_COMMAND_GET_GROUND_SIZE, 2U);
+		nbData += sprintf((char*)&response[ nbData ],"%02X", (uint16_t)move->groundSize);
+		return SrvCommWriteMessage(nbData);
 	}
 	else if(( inMessage.command == COMM_CLUSTER_BEHAVIOR_COMMAND_SET_ELEVATION) && (inMessage.size == 6U))
 	{
 		//prepare output string
 		uint16_t delay = inMessage.data[ 2U ] * 4096 + inMessage.data[ 3U ] * 256 + inMessage.data[ 4U ] * 16 + inMessage.data[ 5U ];
-		return SrvBodyMoveSetElevation((inMessage.data[ 0U ] * 16 + inMessage.data[ 1U ] ) * 1.0,delay);
+		SrvBodyMoveSetElevation((inMessage.data[ 0U ] * 16 + inMessage.data[ 1U ] ) * 1.0);
+		
+		SWalk *walk = SrvWalkGetStruct();
+		if(walk->walking == E_WALK_STOP) return SrvBodyMoveApplyRotationAndTranslation(delay);
+		return TRUE;
 	}
-	
-	
+	else if(( inMessage.command == COMM_CLUSTER_BEHAVIOR_COMMAND_GET_ELEVATION) && (inMessage.size == 0U))
+	{
+		SBodyMove *move = SrvBodyMoveGetStruct();
+		//prepare output string
+		uint8_t nbData = SrvCommPrepareMessage(COMM_CLUSTER_BEHAVIOR,COMM_CLUSTER_BEHAVIOR_COMMAND_GET_ELEVATION, 2U);
+		nbData += sprintf((char*)&response[ nbData ],"%02X", (uint16_t)move->elevation);
+		return SrvCommWriteMessage(nbData);
+	}
+	else if(( inMessage.command == COMM_CLUSTER_BEHAVIOR_COMMAND_SET_FEELING) && (inMessage.size == 1U))
+	{
+		//prepare output string
+		SrvFeelingSetFeelingStatus((EFeelingState)inMessage.data[ 0U ]);
+		return TRUE;
+	}
+	else if(( inMessage.command == COMM_CLUSTER_BEHAVIOR_COMMAND_GET_FEELING) && (inMessage.size == 0U))
+	{
+		SFeeling *feel = SrvFeelingGetFeeling();
+		//prepare output string
+		uint8_t nbData = SrvCommPrepareMessage(COMM_CLUSTER_BEHAVIOR,COMM_CLUSTER_BEHAVIOR_COMMAND_GET_FEELING, 1U);
+		nbData += sprintf((char*)&response[ nbData ],"%01X", feel->state);
+		return SrvCommWriteMessage(nbData);
+	}
+	else if(( inMessage.command == COMM_CLUSTER_BEHAVIOR_COMMAND_SET_SPEED) && (inMessage.size == 4U))
+	{
+		Int16U delay = inMessage.data[ 0U ] * 4096 + inMessage.data[ 1U ] * 256 + inMessage.data[ 2U ] * 16 + inMessage.data[ 3U ];
+		SrvWalkSetSpeed(delay);
+		return TRUE;
+	}
+	else if(( inMessage.command == COMM_CLUSTER_BEHAVIOR_COMMAND_GET_SPEED) && (inMessage.size == 0U))
+	{
+		//prepare output string
+		uint8_t nbData = SrvCommPrepareMessage(COMM_CLUSTER_BEHAVIOR,COMM_CLUSTER_BEHAVIOR_COMMAND_GET_SPEED, 4U);
+		nbData += sprintf((char*)&response[ nbData ],"%04X", SrvWalkGetSpeed());
+		return SrvCommWriteMessage(nbData);
+	}
+	else if(( inMessage.command == COMM_CLUSTER_BEHAVIOR_COMMAND_SET_AMPLITUDE) && (inMessage.size == 2U))
+	{
+		Int8S amplitude = (Int8S)inMessage.data[ 0U ] * 16 + inMessage.data[ 1U ];
+		return SrvWalkSetAmplitude(amplitude);
+	}
+	else if(( inMessage.command == COMM_CLUSTER_BEHAVIOR_COMMAND_GET_AMPLITUDE) && (inMessage.size == 0U))
+	{
+		//prepare output string
+		uint8_t nbData = SrvCommPrepareMessage(COMM_CLUSTER_BEHAVIOR,COMM_CLUSTER_BEHAVIOR_COMMAND_GET_AMPLITUDE, 2U);
+		nbData += sprintf((char*)&response[ nbData ],"%02X", SrvWalkGetAmplitude());
+		return SrvCommWriteMessage(nbData);
+	}
+	else if(( inMessage.command == COMM_CLUSTER_BEHAVIOR_COMMAND_SET_DIRECTION) && (inMessage.size == 2U))
+	{
+		Int8S direction = (Int8S)inMessage.data[ 0U ] * 16 + inMessage.data[ 1U ];
+		return SrvWalkSetDirection(direction);
+	}
+	else if(( inMessage.command == COMM_CLUSTER_BEHAVIOR_COMMAND_GET_DIRECTION) && (inMessage.size == 0U))
+	{
+		//prepare output string
+		uint8_t nbData = SrvCommPrepareMessage(COMM_CLUSTER_BEHAVIOR,COMM_CLUSTER_BEHAVIOR_COMMAND_GET_DIRECTION, 2U);
+		nbData += sprintf((char*)&response[ nbData ],"%02X", SrvWalkGetDirection());
+		return SrvCommWriteMessage(nbData);
+	}
+	else
+	{
+		errorMessage = COMM_ERROR_UNKNOWN_COMMAND;
+	}
 	return FALSE;
 }
 static Boolean SrvCommExecuteClusterIMU( void )
@@ -390,6 +532,10 @@ static Boolean SrvCommExecuteClusterIMU( void )
 		nbData += sprintf((char*)&response[ nbData ],"%04X", SrvImuSimpleGetYaw());
 		return SrvCommWriteMessage(nbData);
 	}
+	else
+	{
+		errorMessage = COMM_ERROR_UNKNOWN_COMMAND;
+	}
 	return FALSE;
 }
 static Boolean SrvCommExecuteClusterUltrason( void )
@@ -412,9 +558,13 @@ static Boolean SrvCommExecuteClusterUltrason( void )
 	{
 		//prepare output string
 		uint8_t nbData = SrvCommPrepareMessage(COMM_CLUSTER_ULTRASON,COMM_CLUSTER_ULTRASON_COMMAND_GET_DISTANCE, 4U);
-		nbData += sprintf((char*)&response[ nbData ],"%02X", SrvUltrasonGetDistance(E_US_0));
-		nbData += sprintf((char*)&response[ nbData ],"%02X", SrvUltrasonGetDistance(E_US_1));
+		nbData += sprintf((char*)&response[ nbData ], "%02X", (uint8_t)SrvUltrasonGetDistance(E_US_0));
+		nbData += sprintf((char*)&response[ nbData ], "%02X", (uint8_t)SrvUltrasonGetDistance(E_US_1));
 		return SrvCommWriteMessage(nbData);
+	}
+	else
+	{
+		errorMessage = COMM_ERROR_UNKNOWN_COMMAND;
 	}
 	return FALSE;
 }
@@ -426,7 +576,7 @@ static Boolean SrvCommExecuteClusterServo( void )
 	{
 		servoId = (uint8_t)((inMessage.data[ 0U ] * 16U) + inMessage.data[ 1U ]);
 		//if legs
-		if(servoId < E_NB_LEGS * NB_SERVOS_PER_LEG)
+		if(servoId < NB_SERVOS)
 		{
 			//prepare output string
 			uint8_t nbData = SrvCommPrepareMessage(COMM_CLUSTER_SERVOS,COMM_CLUSTER_SERVOS_COMMAND_STATUS_SERVO, 3U);
@@ -438,7 +588,7 @@ static Boolean SrvCommExecuteClusterServo( void )
 	else if(( inMessage.command ==  COMM_CLUSTER_SERVOS_COMMAND_ENABLE_SERVO) && (inMessage.size == 3U))
 	{
 		servoId = (uint8_t)((inMessage.data[ 0U ] * 16U) + inMessage.data[ 1U ]);
-		if(servoId < E_NB_LEGS * NB_SERVOS_PER_LEG)
+		if(servoId < NB_SERVOS)
 		{
 			Boolean activate = inMessage.data[ 2U ];
 			//can send data
@@ -450,12 +600,12 @@ static Boolean SrvCommExecuteClusterServo( void )
 	{
 		servoId = (uint8_t)((inMessage.data[ 0U ] * 16U) + inMessage.data[ 1U ]);
 		//if legs
-		if(servoId < E_NB_LEGS * NB_SERVOS_PER_LEG)
+		if(servoId < NB_SERVOS)
 		{
 			//prepare output string
 			servo = DrvServoGetStruture(servoId);
 			uint8_t nbData = SrvCommPrepareMessage(COMM_CLUSTER_SERVOS,COMM_CLUSTER_SERVOS_COMMAND_SERVO_READ, 4U);
-			Int8U servoPos = (Int8U)(servo->targetPosition - servo->offset);
+			Int8U servoPos = (Int8U)((servo->currentPosition - servo->offset) / 10);
 			nbData += sprintf((char*)&response[ nbData ],"%02X%02X",servoId,servoPos);
 			return SrvCommWriteMessage(nbData);
 		}
@@ -464,10 +614,10 @@ static Boolean SrvCommExecuteClusterServo( void )
 	{
 		servoId = (uint8_t)((inMessage.data[ 0U ] * 16U) + inMessage.data[ 1U ]);
 		//if legs
-		if(servoId < E_NB_LEGS * NB_SERVOS_PER_LEG)
+		if(servoId < NB_SERVOS)
 		{
 			servo = DrvServoGetStruture(servoId);
-			Int8S servoPos = servo->offset + (Int8S)(inMessage.data[ 2U ] * 16 + inMessage.data[ 3U ] );
+			Int16S servoPos = 10 *(servo->offset + (Int8S)(inMessage.data[ 2U ] * 16 + inMessage.data[ 3U ] ));
 			uint16_t delay = inMessage.data[ 4U ] * 4096 + inMessage.data[ 5U ] * 256 + inMessage.data[ 6U ] * 16 + inMessage.data[ 7U ];
 			//can send data
 			return DrvServoSetTarget(servoId,servoPos, delay);
@@ -477,12 +627,12 @@ static Boolean SrvCommExecuteClusterServo( void )
 	{
 		servoId = (uint8_t)((inMessage.data[ 0U ] * 16U) + inMessage.data[ 1U ]);
 		//if legs
-		if(servoId < E_NB_LEGS * NB_SERVOS_PER_LEG)
+		if(servoId < NB_SERVOS)
 		{
 			//prepare output string
 			servo = DrvServoGetStruture(servoId);
 			uint8_t nbData = SrvCommPrepareMessage(COMM_CLUSTER_SERVOS,COMM_CLUSTER_SERVOS_COMMAND_SERVO_MIN_READ, 4U);
-			Int8U min = (Int8U)(servo->min - servo->offset);
+			Int8U min = (Int8U)((servo->min - servo->offset) / 10);
 			nbData += sprintf((char*)&response[ nbData ],"%02X%02X",servoId,min);
 			return SrvCommWriteMessage(nbData);
 		}
@@ -491,12 +641,12 @@ static Boolean SrvCommExecuteClusterServo( void )
 	{
 		servoId = (uint8_t)((inMessage.data[ 0U ] * 16U) + inMessage.data[ 1U ]);
 		//if legs
-		if(servoId < E_NB_LEGS * NB_SERVOS_PER_LEG)
+		if(servoId < NB_SERVOS)
 		{
 			//prepare output string
 			servo = DrvServoGetStruture(servoId);
 			uint8_t nbData = SrvCommPrepareMessage(COMM_CLUSTER_SERVOS,COMM_CLUSTER_SERVOS_COMMAND_SERVO_MAX_READ, 4U);
-			Int8U max = (Int8U)(servo->max - servo->offset);
+			Int8U max = (Int8U)((servo->max - servo->offset) / 10);
 			nbData += sprintf((char*)&response[ nbData ],"%02X%02X",servoId,max);
 			return SrvCommWriteMessage(nbData);
 		}
@@ -504,14 +654,18 @@ static Boolean SrvCommExecuteClusterServo( void )
 	else if(( inMessage.command ==  COMM_CLUSTER_SERVOS_COMMAND_SERVO_READ_ALL)&& (inMessage.size == 0U))
 	{
 		//prepare output string
-		uint8_t nbData = SrvCommPrepareMessage(COMM_CLUSTER_SERVOS,COMM_CLUSTER_SERVOS_COMMAND_SERVO_READ_ALL, 18U * 2U);
-		for( uint8_t servoId = 0U; servoId < E_NB_LEGS * NB_SERVOS_PER_LEG ; servoId++ )
+		uint8_t nbData = SrvCommPrepareMessage(COMM_CLUSTER_SERVOS,COMM_CLUSTER_SERVOS_COMMAND_SERVO_READ_ALL, NB_SERVOS * 2U);
+		for( uint8_t servoId = 0U; servoId < NB_SERVOS ; servoId++ )
 		{
 			servo = DrvServoGetStruture(servoId);
-			Int8U mid = (Int8U)(servo->targetPosition - servo->offset);
-			nbData += sprintf((char*)&response[ nbData ],"%02X",mid);
+			Int8U servoPos = (Int8U)((servo->currentPosition - servo->offset) / 10);
+			nbData += sprintf((char*)&response[ nbData ],"%02X",servoPos);
 		}
 		return SrvCommWriteMessage(nbData);
+	}
+	else
+	{
+		errorMessage = COMM_ERROR_UNKNOWN_COMMAND;
 	}
 	return FALSE;
 }
@@ -539,17 +693,22 @@ static Boolean SrvCommExecuteClusterLeg( void )
 			//prepare output string
 			leg = DrvLegGetStruct(legId);
 			uint8_t nbData = SrvCommPrepareMessage(COMM_CLUSTER_LEG,COMM_CLUSTER_LEG_COMMAND_GET_LEG_XYZ, 13U);
-			Int16S x = (Int16S)leg->currentPositionX;
-			Int16S y = (Int16S)leg->currentPositionY;
-			Int16S z = (Int16S)leg->currentPositionZ;
+			Int16S x = (Int16S)leg->targetPositionX;
+			Int16S y = (Int16S)leg->targetPositionY;
+			Int16S z = (Int16S)leg->targetPositionZ;
 			nbData += sprintf((char*)&response[ nbData ],"%01X%04X%04X%04X",legId,x,y,z);
 			return SrvCommWriteMessage(nbData);
 		}
+	}
+	else
+	{
+		errorMessage = COMM_ERROR_UNKNOWN_COMMAND;
 	}
 	return FALSE;
 }
 static Boolean SrvCommExecuteClusterDisplay( void )
 {
+	errorMessage = COMM_ERROR_UNKNOWN_COMMAND;
 	return FALSE;
 }
 
