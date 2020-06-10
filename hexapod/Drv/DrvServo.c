@@ -18,9 +18,10 @@
 
 ////////////////////////////////////////PRIVATE FUNCTIONS/////////////////////////////////////////
 
+static float DrvServoEase( E_SERVO_EASES ease, float target, float start, Int32U startTime, Int32U duration);
+
 ////////////////////////////////////////PRIVATE VARIABLES/////////////////////////////////////////
 static SServo servos[NB_SERVOS];
-
 /////////////////////////////////////////PUBLIC FUNCTIONS/////////////////////////////////////////
 // Initialization of Servo
 Boolean DrvServoInit( void )
@@ -70,7 +71,7 @@ Boolean DrvServoSetTarget( Int8U index, Int16S angle, Int16U time)
 				//compute the delta
 				Int16S delta = servos[ index ].targetPosition - servos[ index ].startPosition;
 				//compute minimum time for this delta
-				servos[ index ].movingTime = (Int16U)ABS((SERVO_SPEED_MSEC_PER_DEG * (float)delta)) > time ? (Int16U)ABS((SERVO_SPEED_MSEC_PER_DEG * (float)delta)) : time ;
+				servos[ index ].movingTime = (Int16U)ABS((float)delta)/(SERVO_SPEED_MSEC_PER_DEG) > time ?(Int16U)ABS((float)delta)/(SERVO_SPEED_MSEC_PER_DEG) : time ;
 			}
 			return TRUE;
 		}
@@ -108,9 +109,8 @@ Boolean DrvServoReachesPosition( Int8U index )
 	return TRUE;
 }
 
-
+//permits to send not in a same time to the 2 PCA9685
 Boolean switchPCA9685 = FALSE;
-Int32U prevMillisServoUpdate = 0U;
 //call every loop in order to send the new position to PCA9585
 void DrvServoUpdate ( void )
 { 
@@ -138,46 +138,39 @@ void DrvServoUpdate ( void )
 		{
 			//get current angle
 			angle = servos[index].currentPosition;
-			if(servos[index].startPosition != servos[ index ].targetPosition)
+			//if servo reach its target
+			if((DrvServoReachesPosition(index) == TRUE))
 			{
-				//if servo reach its target
-				if((DrvServoReachesPosition(index) == TRUE))
+				//send callback once if different of NULL
+				if(servos[ index ].callback != NULL)
 				{
-					//send callback once if different of NULL
-					if(servos[ index ].callback != NULL)
-					{
-						servos[index].callback(index);
-					}
-					//now start position is the target position
-					servos[index].startPosition = servos[ index ].targetPosition;
+					servos[index].callback(index);
+				}
+			}
+			else
+			{
+				//if new position asked, get the current time as start time
+				if(servos[ index ].newPosition)
+				{
+					//now position asked is starting
+					servos[ index ].newPosition = FALSE;
+					servos[ index ].startTime = DrvTickGetTimeMs();
 				}
 				else
 				{
-					//if new position asked, get the current time as start time
-					if(servos[ index ].newPosition)
-					{
-						//now position asked is starting
-						servos[ index ].newPosition = FALSE;
-						servos[ index ].startTime = DrvTickGetTimeMs();
-					}
-					else
-					{
-						//compute new current 
-						float currentTime	= DrvTickGetTimeMs() - servos[index].startTime;
-						float changeValue	= servos[ index ].targetPosition - servos[ index ].startPosition;
-						servos[ index ].currentPosition = changeValue * (currentTime / servos[ index ].movingTime) + servos[index].startPosition;
-							
-						//servos[ index ].currentPosition += servos[ index ].currentPosition > servos[ index ].targetPosition ? -1 : 1;
-					}
-				
-					if((Int32U)(servos[ index ].startTime + servos[ index ].movingTime) <= DrvTickGetTimeMs())
-					{
-						//time elapse, so servo has reaches its target position
-						servos[index].currentPosition = servos[index].targetPosition;
-					}
-					//get updated angle
-					angle = servos[index].currentPosition;
+					//compute new current 
+					float currentTime	= DrvTickGetTimeMs() - servos[index].startTime;
+					float changeValue	= servos[ index ].targetPosition - servos[ index ].startPosition;
+					servos[ index ].currentPosition = changeValue * (currentTime / servos[ index ].movingTime) + servos[index].startPosition;
 				}
+				
+				if((Int32U)(servos[ index ].startTime + servos[ index ].movingTime) <= DrvTickGetTimeMs())
+				{
+					//time elapse, so servo has reaches its target position
+					servos[index].currentPosition = servos[index].targetPosition;
+				}
+				//get updated angle
+				angle = servos[index].currentPosition;
 			}
 			//convert -900deg to 900deg => 0deg to 1800deg
 			angle += 900;
@@ -191,27 +184,23 @@ void DrvServoUpdate ( void )
 		}
 	}
 		
-	//if ((DrvTickGetTimeMs() - prevMillisServoUpdate) > 10U)
-	{
-		//for next time
-		//prevMillisServoUpdate = DrvTickGetTimeMs();
-		//#define DEBUG_WITHOUT_SERVOS
-		#ifndef DEBUG_WITHOUT_SERVOS
-			//send to each component
-			if(switchPCA9685)
-			{
-				switchPCA9685 = FALSE;
-				//there are 9 servos on left side legs
-				CmpPCA9685SendBuffer(PCA9685_ADDRESS_1, NB_SERVOS_ON_PCA9685_ADDRESS_1);
-			}
-			else
-			{
-				switchPCA9685 = TRUE;
-				//there are 9 servos on right side legs + 1 servo for the head
-				CmpPCA9685SendBuffer(PCA9685_ADDRESS_0,NB_SERVOS_ON_PCA9685_ADDRESS_0);
-			}
-		#endif
-	}
+	//#define DEBUG_WITHOUT_SERVOS
+	#ifndef DEBUG_WITHOUT_SERVOS
+		//send to each component
+		if(switchPCA9685)
+		{
+			switchPCA9685 = FALSE;
+			//there are 9 servos on left side legs
+			CmpPCA9685SendBuffer(PCA9685_ADDRESS_1, NB_SERVOS_ON_PCA9685_ADDRESS_1);
+		}
+		else
+		{
+			switchPCA9685 = TRUE;
+			//there are 9 servos on right side legs + 1 servo for the head
+			CmpPCA9685SendBuffer(PCA9685_ADDRESS_0,NB_SERVOS_ON_PCA9685_ADDRESS_0);
+		}
+	#endif
+	
 }
 
 // get the servo structure pointer at index
@@ -225,6 +214,38 @@ SServo* DrvServoGetStruture( Int8U index )
 	}
 	//return null if wrong
 	return NULL;
+}
+
+
+static inline float DrvServoEase( E_SERVO_EASES ease, float targetPos, float startPos, Int32U startTime, Int32U duration)
+{
+	float currentTime	= DrvTickGetTimeMs() - startTime;
+	float changeValue	= targetPos - startPos;
+	float current = 0;
+	if(ease == E_SERVO_EASE_LINEAR)
+	{
+		current = changeValue * (currentTime / duration) + startPos;
+	}
+	else if(ease == E_SERVO_EASE_SINUS_IN)
+	{
+		current = -changeValue * (cos( M_PI_2 * (currentTime / duration))) + changeValue + startPos;
+	}
+	else if(ease == E_SERVO_EASE_SINUS_OUT)
+	{
+		current = changeValue * (sin( M_PI_2 * (currentTime / duration))) + startPos;
+	}
+	else if(ease == E_SERVO_EASE_SINUS_IN_OUT)
+	{
+		current = (-changeValue/2.0) * (cos( M_PI * (currentTime / duration)) - 1.0 ) + startPos;
+	}
+	
+	//if time is over set the current position to target
+	if(currentTime >= duration)
+	{
+		return targetPos;
+	}
+	
+	return current;
 }
 
 ////////////////////////////////////////PRIVATE FUNCTIONS/////////////////////////////////////////

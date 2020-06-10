@@ -400,6 +400,12 @@
     <Compile Include="Srv\SrvFeeling.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="Srv\SrvHead.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="Srv\SrvHead.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="Srv\SrvHeartbeat.c">
       <SubType>compile</SubType>
     </Compile>
@@ -424,10 +430,10 @@
     <Compile Include="Srv\SrvPID.h">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="Srv\SrvUltrason.c">
+    <Compile Include="Srv\SrvDetection.c">
       <SubType>compile</SubType>
     </Compile>
-    <Compile Include="Srv\SrvUltrason.h">
+    <Compile Include="Srv\SrvDetection.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="Srv\SrvWalk.c">

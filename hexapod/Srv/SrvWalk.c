@@ -92,7 +92,6 @@ SWalkPrivate walkPrivate;
 Boolean SrvWalkInit ( void )
 {
     Boolean oSuccess = TRUE;
-	DrvLegInit();
 	
 	//by default go ripple for 1000ms
 	walkPrivate.walkStruct.gaiting = E_GAITS_RIPPLE;
@@ -171,6 +170,7 @@ Boolean SrvWalkSetWalk( E_GAIT gait, E_WALK walk,Int8S amplitude, Int8S directio
 		if(walkPrivate.walkStruct.gaiting != gait)
 		{
 			walkPrivate.walkStruct.gaiting = gait;
+			//for tripod gait
 			if( walkPrivate.walkStruct.gaiting == E_GAITS_TRIPOD )
 			{
 				for(ELeg legIndex = E_LEG_F_L ; legIndex < E_NB_LEGS ; legIndex++)
@@ -182,6 +182,7 @@ Boolean SrvWalkSetWalk( E_GAIT gait, E_WALK walk,Int8S amplitude, Int8S directio
 				walkPrivate.walkSteps.indexStep = 0U;
 				walkPrivate.walkSteps.stepMultDelayOnGround = 2U;
 			}
+			//for wave gait
 			else if( walkPrivate.walkStruct.gaiting == E_GAITS_WAVE )
 			{
 				for(ELeg legIndex = E_LEG_F_L ; legIndex < E_NB_LEGS ; legIndex++)
@@ -193,6 +194,7 @@ Boolean SrvWalkSetWalk( E_GAIT gait, E_WALK walk,Int8S amplitude, Int8S directio
 				walkPrivate.walkSteps.indexStep = 0U;
 				walkPrivate.walkSteps.stepMultDelayOnGround = 10U;
 			}
+			//for ripple gait
 			else if( walkPrivate.walkStruct.gaiting == E_GAITS_RIPPLE )
 			{
 				for(ELeg legIndex = E_LEG_F_L ; legIndex < E_NB_LEGS ; legIndex++)
@@ -350,7 +352,7 @@ static float SrvWalkGetLegCoxaAngle ( ELeg legIndex, float pos )
 {
 	if(legIndex == E_LEG_F_L)
 	{
-		return pos + WALK_AMPLITUDE_MAX;
+		return pos + 60;
 	}
 	if(legIndex == E_LEG_M_L)
 	{
@@ -358,11 +360,11 @@ static float SrvWalkGetLegCoxaAngle ( ELeg legIndex, float pos )
 	}
 	if(legIndex == E_LEG_R_L)
 	{
-		return pos - WALK_AMPLITUDE_MAX;
+		return pos - 60;
 	}
 	if(legIndex == E_LEG_F_R)
 	{
-		return -pos - WALK_AMPLITUDE_MAX;
+		return -pos - 60;
 	}
 	if(legIndex == E_LEG_M_R)
 	{
@@ -370,7 +372,7 @@ static float SrvWalkGetLegCoxaAngle ( ELeg legIndex, float pos )
 	}
 	if(legIndex == E_LEG_R_R)
 	{
-		return -pos + WALK_AMPLITUDE_MAX;
+		return -pos + 60;
 	}
 	return 0;
 }

@@ -11,14 +11,13 @@
 
 
 ////////////////////////////////////////PRIVATE DEFINES///////////////////////////////////////////
-
+#define BODY_TIMEOUT_INITIALIZATION		5000U	//5 sec
+#define BODY_TIMEOUT_BREATH				4000U	//4 sec
 ////////////////////////////////////////PRIVATE STRUCTURES////////////////////////////////////////
 
 ////////////////////////////////////////PRIVATE FUNCTIONS/////////////////////////////////////////
-static void SrvBodyUltrasonCallback (E_US us, uint16_t distance);
-static void SrvBodyImuCallback (Int16S roll, Int16S pitch);
-static Boolean SrvBodyUltrasonDetection (void);
-static Boolean SrvBodyTouchDetection (void);
+static void SrvBodyImuNotify (Int16S roll, Int16S pitch);
+static void SrvBodyDetectionNotify (Int8U sensorId, Int16U distance);
 ////////////////////////////////////////PRIVATE VARIABLES/////////////////////////////////////////
 
 ////////////////////////////////////////PUBILC FUNCTIONS//////////////////////////////////////////
@@ -27,37 +26,50 @@ SBodyPublic body;
 
 //variables de timming
 Int32U lastread_pid = 0U;
+
 Int32U prevMillisUpdateBreath = 0U;
 Int32U prevMillisUpdateUS = 0U;
-Int32U prevMillisUpdateIMU = 0U;
+Int32U prevMillisBodyInitialization = 0U;
 Int8U prevMillisUpdateBreathStep = 0U;
 //Fonction d'initialisation
 Boolean SrvBodyInit ( void ) 
 {
+	
+	DrvLegInit();
 	body.legs = DrvLegGetLegs();
+	
+	body.head = SrvHeadGetStruct();
 	
 	body.battery = SrvBatteryGetStruct();
 	
 	body.imu = SrvImuSimpleGetSensor();
 	SrvImuSimpleSetThreshold(IMU_THRESHOLD_ANGLE);	
-	SrvImuSimpleSetCallback(SrvBodyImuCallback);
+	SrvImuSimpleSetNotification(SrvBodyImuNotify);
 	
-	body.us = SrvUltrasonGetStruct();
-	SrvUltrasonSetThreshold(US_THRESHOLD_DISTANCE);
-	SrvUltrasonSetCallbackThreshold(SrvBodyUltrasonCallback);
+	body.detection = SrvDetectionGetStruct();
+	SrvDetectionSetNotification(SrvBodyDetectionNotify);
 	
+	SrvBodyMoveInit();
 	body.move = SrvBodyMoveGetStruct();
 	
 	body.walk = SrvWalkGetStruct();
 	
 	body.feeling = SrvFeelingGetFeeling();
 	
+	//body is not yet initialized
 	body.initialized = FALSE;
 	
-	SrvPIDInit();
+	/*SrvPIDInit();
 	SrvPIDSetValues( 0, 0.5F, 0.0F, 0.1F );
-	SrvPIDSetValues( 1, 0.5F, 0.0F, 0.1F );
+	SrvPIDSetValues( 1, 0.5F, 0.0F, 0.1F );*/
 	
+	//set initial State
+	SrvBodyMoveSetGroundSize(65);
+	SrvBodyMoveSetElevation(70);
+	//at the beginning go to star position
+	//SrvBodyMoveSetBehavior(E_BODY_STAR, BODY_TIMEOUT_INITIALIZATION);
+	SrvHeadScan();
+	prevMillisBodyInitialization = DrvTickGetTimeMs();
 	
 	return TRUE;
 }
@@ -65,39 +77,36 @@ Boolean SrvBodyInit ( void )
 //Fonction de dispatching d'evenements
 void SrvBodyUpdate (void)
 {
-	//at the beginning go to star position
-	if((body.move->initialized) && (body.initialized == FALSE))
+	//wait for intializing
+	if ((body.initialized == FALSE) && ((DrvTickGetTimeMs() - prevMillisBodyInitialization) > BODY_TIMEOUT_INITIALIZATION))
 	{
 		body.initialized = TRUE;
-		//set intitial State
-		SrvBodyMoveSetGroundSize(65);
-		SrvBodyMoveSetElevation(50);
-		SrvBodyMoveSetBehavior(E_BODY_STAR, 3000); 
 	}
 	
 	//if initialize and stop so breath if not us detection
 	if( (body.initialized == TRUE) && 
-	    (body.walk->walking == E_WALK_STOP) )
+	    (body.walk->walking == E_WALK_STOP)&& 
+	    (body.move->behavior == E_BODY_STAR)  )
 	{
-		Boolean checkTouch = FALSE;
+		
+		SrvBodyMoveSetElevation(60);
+		SrvBodyMoveSetGroundSize(65);
 		Boolean checkClosedObject = FALSE;
-		checkClosedObject = SrvBodyUltrasonDetection();
-		checkTouch = SrvBodyTouchDetection();
-		//stop walk and move body if detection of ultrasound or touch detection
-		if(!checkClosedObject && !checkTouch) 
+		//stop walk and move body if detection of ultrasound 
+		if(!checkClosedObject) 
 		{	//no detection	
-			if ((DrvTickGetTimeMs() - prevMillisUpdateBreath) > 4000U)
+			if ((DrvTickGetTimeMs() - prevMillisUpdateBreath) > BODY_TIMEOUT_BREATH)
 			{
 				if(prevMillisUpdateBreathStep == 0)
 				{
-					SrvBodyMoveSetElevation(SrvBodyMoveGetElevation() - 30);
-					SrvBodyMoveSetBehavior(SrvBodyMoveGetBehavior(), 2000);
+					SrvBodyMoveSetElevation(SrvBodyMoveGetElevation() - 10);
+					SrvBodyMoveSetPosition(E_BODY_STAR, BODY_TIMEOUT_BREATH);
 					prevMillisUpdateBreathStep = 1;
 				}
 				else
 				{
-					SrvBodyMoveSetElevation(SrvBodyMoveGetElevation() + 30);
-					SrvBodyMoveSetBehavior(SrvBodyMoveGetBehavior(), 2000);
+					SrvBodyMoveSetElevation(SrvBodyMoveGetElevation() + 10);
+					SrvBodyMoveSetPosition(E_BODY_STAR, BODY_TIMEOUT_BREATH);
 					prevMillisUpdateBreathStep = 0;
 				}
 				prevMillisUpdateBreath = DrvTickGetTimeMs();
@@ -115,150 +124,16 @@ void SrvBodyUpdate (void)
 	
 	//update legs position
 	DrvLegUpdate();
+	DrvServoUpdate();
 }
 
 
-static Boolean SrvBodyUltrasonDetection (void)
+static void SrvBodyDetectionNotify (Int8U sensorId, Int16U distance)
 {
-	if ((DrvTickGetTimeMs() - prevMillisUpdateUS) > 100U)
-	{
-		if( ( SrvUltrasonReachThreshold(E_US_0) ) &&
-			( SrvUltrasonReachThreshold(E_US_1) ))
-		{
-			if(body.feeling->state == FEELING_AGRESSIVE)
-			{
-				SrvBodyMoveSetRotationAndTranslation(15,0,0,15,0,-10);
-			}
-			else if(body.feeling->state == FEELING_NEUTRAL)
-			{
-				SrvBodyMoveSetRotationAndTranslation(0,0,0,0,0,0);
-			}
-			else if(body.feeling->state == FEELING_FEAR)
-			{
-				SrvBodyMoveSetRotationAndTranslation(15,0,0,-15,0,+10);
-			}
-		}
-		else if( SrvUltrasonReachThreshold(E_US_0) )
-		{
-			if(body.feeling->state == FEELING_AGRESSIVE)
-			{
-				SrvBodyMoveSetRotationAndTranslation(15,0,15,15,0,-10);
-			}
-			else if(body.feeling->state == FEELING_NEUTRAL)
-			{
-				SrvBodyMoveSetRotationAndTranslation(0,0,15,0,0,0);
-			}
-			else if(body.feeling->state == FEELING_FEAR)
-			{
-				SrvBodyMoveSetRotationAndTranslation(15,0,15,-15,0,+10);
-			}
-		}
-		else if( SrvUltrasonReachThreshold(E_US_1) )
-		{
-			if(body.feeling->state == FEELING_AGRESSIVE)
-			{
-				SrvBodyMoveSetRotationAndTranslation(15,0,-15,15,0,-10);
-			}
-			else if(body.feeling->state == FEELING_NEUTRAL)
-			{
-				SrvBodyMoveSetRotationAndTranslation(0,0,-15,0,0,0);
-			}
-			else if(body.feeling->state == FEELING_FEAR)
-			{
-				SrvBodyMoveSetRotationAndTranslation(15,0,-15,-15,0,+10);
-			}
-		}
-		else
-		{
-			return FALSE;
-		}
-		SrvBodyMoveApplyRotationAndTranslation(250);
-		prevMillisUpdateUS = DrvTickGetTimeMs();
-		return TRUE;
-	}
-	
-	return FALSE;
+	SrvFeelingSetFeelingLevel(FEELING_STRESS);
 }
-
-static volatile Int16S touchDirection = 0;
-static Boolean SrvBodyTouchDetection (void)
-{
-	Boolean isTouch = FALSE;
-	Int8U touchThreshold = 20;
-	if ((DrvTickGetTimeMs() - prevMillisUpdateIMU) > 10U)
-	{
-		if((abs(body.imu->roll) > touchThreshold) && (abs(body.imu->pitch) > touchThreshold) )
-		{	
-			isTouch = TRUE;
-			if((body.imu->roll > 0 ) && (body.imu->pitch > 0 ))
-			{
-				touchDirection = 225;
-			}
-			else if((body.imu->roll < 0 ) && (body.imu->pitch > 0 ))
-			{
-				touchDirection = 315;
-			}
-			else if((body.imu->roll > 0 ) && (body.imu->pitch < 0 ))
-			{
-				touchDirection = 135;
-			}
-			else if((body.imu->roll < 0 ) && (body.imu->pitch < 0 ))
-			{
-				touchDirection = 45;
-			}
-		}
-		else if(abs(body.imu->roll) > touchThreshold) 
-		{
-			isTouch = TRUE;
-			if(body.imu->roll > 0 )
-			{
-				touchDirection = 180;
-			}
-			else if(body.imu->roll < 0 )
-			{
-				touchDirection = 0;
-			}
-		}
-		else if(abs(body.imu->pitch) > touchThreshold)
-		{
-			isTouch = TRUE;
-			if(body.imu->pitch > 0 )
-			{
-				touchDirection = 270;
-			}
-			else if(body.imu->pitch < 0 )
-			{
-				touchDirection = 90;
-			}
-		}
-		prevMillisUpdateIMU = DrvTickGetTimeMs();
-	}
-	
-	if( isTouch == TRUE )	
-	{
-//		SrvBodyMoveSetRotationAndTranslation((touchDirection*15/360),(touchDirection*15/360),(touchDirection*15/360),0,0,0,500);
-	}
-	
-	return isTouch;
-}
-
-static void SrvBodyImuCallback (Int16S roll, Int16S pitch)
+static void SrvBodyImuNotify (Int16S roll, Int16S pitch)
 {
 	SrvFeelingSetFeelingLevel(FEELING_STRESS);
 }
 
-static void SrvBodyUltrasonCallback (E_US us, uint16_t distance)
-{
-	//show led if threshold is reach
-	if(us == E_US_0)
-	{
-		SrvWalkStopWalk();
-		SrvIhmPlatformLeftLedTimeOn(E_LED_STATE_ON,500);
-		
-	}
-	if(us == E_US_1)
-	{
-		SrvWalkStopWalk();
-		SrvIhmPlatformRightLedTimeOn(E_LED_STATE_ON,500);
-	}
-}

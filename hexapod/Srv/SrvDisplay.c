@@ -7,7 +7,7 @@
 
 #include "SrvDisplay.h"
 #include "SrvBattery.h"
-#include "SrvUltrason.h"
+#include "SrvDetection.h"
 ////////////////////////////////////////PRIVATE DEFINES///////////////////////////////////////////
 
 ////////////////////////////////////////PRIVATE STRUCTURES////////////////////////////////////////
@@ -115,12 +115,12 @@ void SrvDisplayScreenShowUltrason ( void )
 {
 	char tabUs0[5U] = {0U};
 	char tabUs1[5U] = {0U};
-	itoa (SrvUltrasonGetDistance(E_US_0), tabUs0, 10);
+	itoa (SrvDetectionGetDistanceUS(E_US_0), tabUs0, 10);
 	size_t len = strlen(tabUs0);
 	tabUs0[len] = 'c';
 	tabUs0[len + 1U] = 'm';
 	SrvDisplayScreenShowString(5U,11U,tabUs0);
-	itoa (SrvUltrasonGetDistance(E_US_1), tabUs1, 10);
+	itoa (SrvDetectionGetDistanceUS(E_US_1), tabUs1, 10);
 	len = strlen(tabUs1);
 	tabUs1[len] = 'c';
 	tabUs1[len + 1U] = 'm';

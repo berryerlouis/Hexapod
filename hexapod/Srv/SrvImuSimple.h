@@ -43,7 +43,7 @@ Boolean SrvImuSimpleInit ( void ) ;
 //Fonction de dispatching d'evenements
 void SrvImuSimpleUpdate (void) ;
 //Get the callback
-void SrvImuSimpleSetCallback (cbSrvImuReachThreshold cb) ;
+void SrvImuSimpleSetNotification (cbSrvImuReachThreshold cb) ;
 //Get the sensor pointer
 SImuSimple* SrvImuSimpleGetSensor (void) ;
 // activate the sensor

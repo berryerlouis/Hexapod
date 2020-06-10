@@ -7,7 +7,6 @@
 ////////////////////////////////////////INCLUDES//////////////////////////////////////////////////
 #include "Conf\ConfHard.h"
 #include "DrvTick.h"
-#include "DrvTimer.h"
 #include "DrvLeg.h"
 
 
@@ -28,7 +27,6 @@ uint8_t servoIndexInitialization = 0U;
 static Boolean DrvLegSetOffset ( void ) ;
 static void DrvLegInititalizing( void );
 static Boolean DrvLegApplyPosition( ELeg indexLeg, float coxaAngle, float femurAngle, float tibiaAngle, Int16U speed );
-static float DrvLegEase( E_SERVO_EASES ease, float target, float start, Int32U startTime, Int32U duration);
 /////////////////////////////////////////PUBLIC FUNCTIONS/////////////////////////////////////////
 
 // Init of Drv PWM
@@ -37,10 +35,7 @@ Boolean DrvLegInit( void )
 	//permits to enable servo step by step
 	servoIndexInitialization = 0U;
 	legs.isInitialized = FALSE;
-	
-	//initialize the driver
-	DrvServoInit();
-	
+		
 	//get each servos for each leg and set member id
 	for(Int8U indexLeg = 0U ; indexLeg < E_NB_LEGS ; indexLeg++ )
 	{
@@ -195,36 +190,7 @@ Boolean DrvLegComputeInverseKinematics(float x, float y, float z, float *coxaAng
 	return TRUE;
 }
 
-static float DrvLegEase( E_SERVO_EASES ease, float target, float start, Int32U startTime, Int32U duration)
-{
-	float currentTime	= DrvTickGetTimeMs() - startTime;
-	float changeValue	= target - start;
-	float current = 0;
-	if(ease == E_SERVO_EASE_LINEAR)
-	{
-		current = changeValue * (currentTime / duration) + start;
-	}
-	else if(ease == E_SERVO_EASE_SINUS_IN)
-	{
-		current = -changeValue * (cos( M_PI_2 * (currentTime / duration))) + changeValue + start;
-	}
-	else if(ease == E_SERVO_EASE_SINUS_OUT)
-	{
-		current = changeValue * (sin( M_PI_2 * (currentTime / duration))) + start;
-	}
-	else if(ease == E_SERVO_EASE_SINUS_IN_OUT)
-	{
-		current = (-changeValue/2.0) * (cos( M_PI * (currentTime / duration)) - 1.0 ) + start;
-	}
-	
-	//if time is over set the current position to target
-	if(currentTime >= duration)
-	{
-		return target;
-	}
-	
-	return current;
-}
+
 
 static Boolean DrvLegApplyPosition( ELeg indexLeg, float coxaAngle, float femurAngle, float tibiaAngle, Int16U speed )
 {	
@@ -316,12 +282,12 @@ static void DrvLegInititalizing( void )
 			}
 			else if(servoIndexInitialization % 3 == 1)
 			{
-				//get x from angles
+				//get y from angles
 				legs.leg[servoIndexInitialization / NB_SERVOS_PER_LEG].targetPositionY = DrvServoGetTarget(servoIndexInitialization) / 10  ;
 			}
 			else if(servoIndexInitialization % 3 == 2)
 			{
-				//get x from angles
+				//get z from angles
 				legs.leg[servoIndexInitialization / NB_SERVOS_PER_LEG].targetPositionZ = DrvServoGetTarget(servoIndexInitialization) / 10  ;
 				//leg is now enable
 				legs.leg[servoIndexInitialization / NB_SERVOS_PER_LEG].enable = TRUE ;

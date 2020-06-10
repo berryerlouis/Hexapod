@@ -24,9 +24,16 @@
 #define PERIOD_SERVO_MAX		15000U  //�s
 #define NB_SERVOS				19U
 
-#define SERVO_SPEED_MSEC_PER_DEG	(100.0 / 60.0)	// specs  : 0.16s/60°
+#define SERVO_SPEED_MSEC_PER_DEG	(160.0 / 60.0)	// specs  : 0.16s/60°
 
-
+//enum of kind of easing
+typedef enum
+{
+	E_SERVO_EASE_LINEAR, //no easing, no acceleration
+	E_SERVO_EASE_SINUS_IN, //accelerating from zero velocity
+	E_SERVO_EASE_SINUS_OUT, //decelerating to zero velocity
+	E_SERVO_EASE_SINUS_IN_OUT //accelerating until halfway, then decelerating
+}E_SERVO_EASES;
 
 /////////////////////////////////////////PUBLIC ENUM/////////////////////////////////////////
 

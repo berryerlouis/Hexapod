@@ -37,27 +37,10 @@ Boolean SrvBodyMoveInit ( void )
 	bodyMove.roll = 0;
 	bodyMove.pitch = 0;
 	bodyMove.yaw = 0;
-	bodyMove.initialized = FALSE;
 	
 	return TRUE;
 }
 
-//Fonction de dispatching d'evenements
-void SrvBodyMoveUpdate (void)
-{
-	//wait for initialization of legs
-	if(DrvLegIsInitialized())
-	{
-		//do it once
-		if(bodyMove.initialized == FALSE)
-		{
-			bodyMove.initialized = TRUE;
-			//set to position STAR 
-			
-			//SrvBodyMoveSetBehavior(E_BODY_STAR,1500);
-		}
-	}
-}
 
 SBodyMove *SrvBodyMoveGetStruct( void )
 {
@@ -132,12 +115,12 @@ Boolean SrvBodyMoveApplyRotationAndTranslation ( uint16_t delay )
 }
 
 //Get Behavior
-EBodyBehavior SrvBodyMoveGetBehavior ( void )
+EBodyBehavior SrvBodyMoveGetPosition ( void )
 {
 	return bodyMove.behavior;
 }
 //Set Behavior
-Boolean SrvBodyMoveSetBehavior ( EBodyBehavior pos, uint16_t delay )
+Boolean SrvBodyMoveSetPosition ( EBodyBehavior pos, uint16_t delay )
 {
 	bodyMove.behavior = pos;
 	if(bodyMove.behavior == E_BODY_STOP)

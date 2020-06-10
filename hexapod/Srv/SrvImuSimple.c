@@ -93,7 +93,7 @@ void SrvImuSimpleUpdate (void)
 
 
 //Get the callback
-void SrvImuSimpleSetCallback (cbSrvImuReachThreshold cb) 
+void SrvImuSimpleSetNotification (cbSrvImuReachThreshold cb) 
 {
 	imu.cbReachThreshold = cb;
 }

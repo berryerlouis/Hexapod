@@ -136,14 +136,7 @@ typedef enum
 	E_NB_LEGS
 }ELeg;
 
-//enum of kind of easing 
-typedef enum
-{
-	E_SERVO_EASE_LINEAR, //no easing, no acceleration
-	E_SERVO_EASE_SINUS_IN, //accelerating from zero velocity
-	E_SERVO_EASE_SINUS_OUT, //decelerating to zero velocity
-	E_SERVO_EASE_SINUS_IN_OUT //accelerating until halfway, then decelerating
-}E_SERVO_EASES;
+
 
 
 /////////////////////////////////////////PUBLIC STRUCTURES/////////////////////////////////////////

@@ -12,12 +12,13 @@
 #include "Drv/DrvTick.h"
 
 #include "SrvImuSimple.h"
-#include "SrvUltrason.h"
+#include "SrvDetection.h"
 #include "SrvComm.h"
 #include "SrvWalk.h"
 #include "SrvDisplay.h"
 #include "SrvBodyMove.h"
 #include "SrvFeeling.h"
+#include "SrvHead.h"
 
 
 ////////////////////////////////////////PRIVATE DEFINES///////////////////////////////////////////
@@ -53,7 +54,7 @@ static int SrvCommPrepareMessage(ECluster cluster, uint8_t cmd,  uint8_t size);
 static Boolean SrvCommExecuteClusterGeneral( void );
 static Boolean SrvCommExecuteClusterBehavior( void );
 static Boolean SrvCommExecuteClusterIMU( void );
-static Boolean SrvCommExecuteClusterUltrason( void );
+static Boolean SrvCommExecuteClusterDetection( void );
 static Boolean SrvCommExecuteClusterServo( void );
 static Boolean SrvCommExecuteClusterLeg( void );
 static Boolean SrvCommExecuteClusterDisplay( void );
@@ -112,8 +113,12 @@ void SrvCommUpdate ( void )
 			inMessage.command = COMM_CLUSTER_SERVOS_COMMAND_SERVO_READ_ALL;
 			inMessage.size = 0U;
 			SrvCommExecuteMessage();
-			inMessage.cluster = COMM_CLUSTER_ULTRASON;
-			inMessage.command = COMM_CLUSTER_ULTRASON_COMMAND_GET_DISTANCE;
+			inMessage.cluster = COMM_CLUSTER_DETECTION;
+			inMessage.command = COMM_CLUSTER_DETECTION_ULTRASON_COMMAND_GET_DISTANCE;
+			inMessage.size = 0U;
+			SrvCommExecuteMessage();
+			inMessage.cluster = COMM_CLUSTER_DETECTION;
+			inMessage.command = COMM_CLUSTER_DETECTION_LAZER_COMMAND_GET_DISTANCE;
 			inMessage.size = 0U;
 			SrvCommExecuteMessage();
 			//for next time
@@ -145,9 +150,9 @@ static Boolean SrvCommExecuteMessage( void )
 	{
 		oSuccess = SrvCommExecuteClusterIMU();
 	}
-	else if( inMessage.cluster == COMM_CLUSTER_ULTRASON)
+	else if( inMessage.cluster == COMM_CLUSTER_DETECTION)
 	{
-		oSuccess = SrvCommExecuteClusterUltrason();
+		oSuccess = SrvCommExecuteClusterDetection();
 	}
 	else if( inMessage.cluster == COMM_CLUSTER_SERVOS)
 	{	
@@ -345,19 +350,19 @@ static Boolean SrvCommExecuteClusterGeneral( void )
 }
 static Boolean SrvCommExecuteClusterBehavior( void )
 {
-	if(( inMessage.command == COMM_CLUSTER_BEHAVIOR_COMMAND_GET_BEHAVIOR) && (inMessage.size == 0U))
+	if(( inMessage.command == COMM_CLUSTER_BEHAVIOR_COMMAND_GET_POSITION) && (inMessage.size == 0U))
 	{
 		//prepare output string
-		uint8_t nbData = SrvCommPrepareMessage(COMM_CLUSTER_BEHAVIOR,COMM_CLUSTER_BEHAVIOR_COMMAND_GET_BEHAVIOR, 1U);
-		nbData += sprintf((char*)&response[ nbData ],"%01X", SrvBodyMoveGetBehavior());
+		uint8_t nbData = SrvCommPrepareMessage(COMM_CLUSTER_BEHAVIOR,COMM_CLUSTER_BEHAVIOR_COMMAND_GET_POSITION, 1U);
+		nbData += sprintf((char*)&response[ nbData ],"%01X", SrvBodyMoveGetPosition());
 		return SrvCommWriteMessage(nbData);
 	}
-	else if(( inMessage.command == COMM_CLUSTER_BEHAVIOR_COMMAND_SET_BEHAVIOR) && (inMessage.size == 5U))
+	else if(( inMessage.command == COMM_CLUSTER_BEHAVIOR_COMMAND_SET_POSITION) && (inMessage.size == 5U))
 	{
 		//prepare output string
 		uint16_t delay = inMessage.data[ 1U ] * 4096 + inMessage.data[ 2U ] * 256 + inMessage.data[ 3U ] * 16 + inMessage.data[ 4U ];
 		SrvWalkStopWalk();
-		return SrvBodyMoveSetBehavior(inMessage.data[ 0U ], delay);
+		return SrvBodyMoveSetPosition(inMessage.data[ 0U ], delay);
 	}
 	else if(( inMessage.command == COMM_CLUSTER_BEHAVIOR_COMMAND_SET_ROTATION_TRANSLATION) && (inMessage.size == 16U))
 	{
@@ -446,8 +451,7 @@ static Boolean SrvCommExecuteClusterBehavior( void )
 	else if(( inMessage.command == COMM_CLUSTER_BEHAVIOR_COMMAND_SET_SPEED) && (inMessage.size == 4U))
 	{
 		Int16U delay = inMessage.data[ 0U ] * 4096 + inMessage.data[ 1U ] * 256 + inMessage.data[ 2U ] * 16 + inMessage.data[ 3U ];
-		SrvWalkSetSpeed(delay);
-		return TRUE;
+		return SrvWalkSetSpeed(delay);
 	}
 	else if(( inMessage.command == COMM_CLUSTER_BEHAVIOR_COMMAND_GET_SPEED) && (inMessage.size == 0U))
 	{
@@ -480,6 +484,13 @@ static Boolean SrvCommExecuteClusterBehavior( void )
 		nbData += sprintf((char*)&response[ nbData ],"%02X", SrvWalkGetDirection());
 		return SrvCommWriteMessage(nbData);
 	}
+	else if(( inMessage.command == COMM_CLUSTER_BEHAVIOR_COMMAND_START_SCAN) && (inMessage.size == 0U))
+	{
+		return SrvHeadScan();
+	}
+	
+	
+	
 	else
 	{
 		errorMessage = COMM_ERROR_UNKNOWN_COMMAND;
@@ -538,28 +549,49 @@ static Boolean SrvCommExecuteClusterIMU( void )
 	}
 	return FALSE;
 }
-static Boolean SrvCommExecuteClusterUltrason( void )
+static Boolean SrvCommExecuteClusterDetection( void )
 {
-	if(( inMessage.command == COMM_CLUSTER_ULTRASON_COMMAND_GET_THRESHOLD) && (inMessage.size == 0U))
+	if(( inMessage.command == COMM_CLUSTER_DETECTION_ULTRASON_COMMAND_GET_THRESHOLD) && (inMessage.size == 0U))
 	{
 		//prepare output string
-		uint8_t nbData = SrvCommPrepareMessage(COMM_CLUSTER_ULTRASON,COMM_CLUSTER_ULTRASON_COMMAND_GET_THRESHOLD, 2U);
-		nbData += sprintf((char*)&response[ nbData ],"%02X", SrvUltrasonGetThreshold());
+		uint8_t nbData = SrvCommPrepareMessage(COMM_CLUSTER_DETECTION,COMM_CLUSTER_DETECTION_ULTRASON_COMMAND_GET_THRESHOLD, 2U);
+		nbData += sprintf((char*)&response[ nbData ],"%02X", SrvDetectionGetThresholdUS());
 		return SrvCommWriteMessage(nbData);
 	}
-	else if(( inMessage.command == COMM_CLUSTER_ULTRASON_COMMAND_SET_THRESHOLD) && (inMessage.size == 2U))
+	else if(( inMessage.command == COMM_CLUSTER_DETECTION_ULTRASON_COMMAND_SET_THRESHOLD) && (inMessage.size == 2U))
 	{
 		//prepare output string
-		SrvUltrasonSetThreshold((uint8_t)((inMessage.data[ 0U ] * 16U) + inMessage.data[ 1U ]));
+		SrvDetectionSetThresholdUS((uint8_t)((inMessage.data[ 0U ] * 16U) + inMessage.data[ 1U ]));
 		//can send data
 		return TRUE;
 	}
-	else if(( inMessage.command == COMM_CLUSTER_ULTRASON_COMMAND_GET_DISTANCE) && (inMessage.size == 0U))
+	else if(( inMessage.command == COMM_CLUSTER_DETECTION_ULTRASON_COMMAND_GET_DISTANCE) && (inMessage.size == 0U))
 	{
 		//prepare output string
-		uint8_t nbData = SrvCommPrepareMessage(COMM_CLUSTER_ULTRASON,COMM_CLUSTER_ULTRASON_COMMAND_GET_DISTANCE, 4U);
-		nbData += sprintf((char*)&response[ nbData ], "%02X", (uint8_t)SrvUltrasonGetDistance(E_US_0));
-		nbData += sprintf((char*)&response[ nbData ], "%02X", (uint8_t)SrvUltrasonGetDistance(E_US_1));
+		uint8_t nbData = SrvCommPrepareMessage(COMM_CLUSTER_DETECTION,COMM_CLUSTER_DETECTION_ULTRASON_COMMAND_GET_DISTANCE, 4U);
+		nbData += sprintf((char*)&response[ nbData ], "%02X", (uint8_t)SrvDetectionGetDistanceUS(E_US_0));
+		nbData += sprintf((char*)&response[ nbData ], "%02X", (uint8_t)SrvDetectionGetDistanceUS(E_US_1));
+		return SrvCommWriteMessage(nbData);
+	}
+	else if(( inMessage.command == COMM_CLUSTER_DETECTION_LAZER_COMMAND_GET_THRESHOLD) && (inMessage.size == 0U))
+	{
+		//prepare output string
+		uint8_t nbData = SrvCommPrepareMessage(COMM_CLUSTER_DETECTION,COMM_CLUSTER_DETECTION_LAZER_COMMAND_GET_THRESHOLD, 2U);
+		nbData += sprintf((char*)&response[ nbData ],"%02X", SrvDetectionGetThresholdLazer());
+		return SrvCommWriteMessage(nbData);
+	}
+	else if(( inMessage.command == COMM_CLUSTER_DETECTION_LAZER_COMMAND_SET_THRESHOLD) && (inMessage.size == 2U))
+	{
+		//prepare output string
+		SrvDetectionSetThresholdLazer((uint8_t)((inMessage.data[ 0U ] * 16U) + inMessage.data[ 1U ]));
+		//can send data
+		return TRUE;
+	}
+	else if(( inMessage.command == COMM_CLUSTER_DETECTION_LAZER_COMMAND_GET_DISTANCE) && (inMessage.size == 0U))
+	{
+		//prepare output string
+		uint8_t nbData = SrvCommPrepareMessage(COMM_CLUSTER_DETECTION,COMM_CLUSTER_DETECTION_LAZER_COMMAND_GET_DISTANCE, 4U);
+		nbData += sprintf((char*)&response[ nbData ], "%04X", (uint16_t)SrvDetectionGetDistanceLazer(E_LAZER_0));
 		return SrvCommWriteMessage(nbData);
 	}
 	else

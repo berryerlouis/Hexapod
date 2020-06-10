@@ -87,6 +87,15 @@ typedef enum
 	E_US_NONE
 }E_US;
 
+//set output VLX used
+typedef enum
+{
+	E_LAZER_0,
+	//Alaways at end
+	E_NB_LAZERS,
+	E_LAZER_NONE
+}E_LAZER;
+
 //set output Uart used
 typedef enum
 {

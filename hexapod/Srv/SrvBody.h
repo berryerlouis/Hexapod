@@ -13,12 +13,14 @@
 #include "Tools/tools_typedefs.h"
 
 #include "Drv/DrvLeg.h"
+
 #include "SrvBattery.h"
 #include "SrvImuSimple.h"
-#include "SrvUltrason.h"
+#include "SrvDetection.h"
 #include "SrvBodyMove.h"
 #include "SrvWalk.h"
 #include "SrvFeeling.h"
+#include "Srv/SrvHead.h"
 
 ////////////////////////////////////////INCLUDES//////////////////////////////////////////////////
 
@@ -30,10 +32,11 @@
 typedef struct SBodyPublic 
 {
 	SLegs *legs;
+	SHead *head;
 	SWalk *walk;
 	SBatteryInfo *battery;
 	SImuSimple* imu;
-	SUltrason* us;
+	SDetection* detection;
 	SBodyMove *move;
 	SFeeling *feeling;
 	Boolean initialized;

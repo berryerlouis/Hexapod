@@ -12,6 +12,7 @@
 #include "Drv/DrvUart.h"
 #include "Drv/DrvTwi.h"
 #include "Drv/DrvSpi.h"
+#include "Drv/DrvServo.h"
 
 
 #include "SrvHeartbeat.h"
@@ -19,12 +20,12 @@
 #include "SrvWalk.h"
 #include "SrvComm.h"
 #include "SrvBody.h"
-#include "SrvBodyMove.h"
 #include "SrvDisplay.h"
 #include "SrvBattery.h"
-#include "SrvUltrason.h"
+#include "SrvDetection.h"
 #include "SrvFeeling.h"
 #include "SrvImuSimple.h"
+#include "SrvHead.h"
 
 ////////////////////////////////////////PRIVATE DEFINES///////////////////////////////////////////
 
@@ -59,11 +60,11 @@ SCoreDriver coreDrivers [] =
 		DrvTwiInit,
 		0UL,
 	},
-	/*{
+	{
 		5U,
-		DrvSpiInit,
+		DrvServoInit,
 		0UL,
-	}*/
+	}
 };
 
 #define NB_CORE_DRIVERS (Int8U)((Int8U)sizeof(coreDrivers)/sizeof(SCoreDriver))
@@ -100,43 +101,43 @@ SCoreService coreServices [] =
 	},
 	{
 		4U,
-		SrvBodyInit,
-		SrvBodyUpdate,
+		SrvDetectionInit,
+		SrvDetectionUpdate,
 		0UL,
 		0UL
 	},
 	{
 		5U,
-		SrvUltrasonInit,
-		SrvUltrasonUpdate,
-		0UL,
-		0UL
-	},
-	{
-		6U,
 		SrvHeartbeatInit,
 		SrvHeartbeatUpdate,
 		0UL,
 		0UL
 	},
 	{
-		7U,
+		6U,
 		SrvFeelingInit,
 		SrvFeelingUpdate,
 		0UL,
 		0UL
 	},
 	{
-		8U,
+		7U,
 		SrvImuSimpleInit,
 		SrvImuSimpleUpdate,
 		0UL,
 		0UL
 	},
 	{
+		8U,
+		SrvHeadInit,
+		SrvHeadUpdate,
+		0UL,
+		0UL
+	},
+	{
 		9U,
-		SrvBodyMoveInit,
-		SrvBodyMoveUpdate,
+		SrvBodyInit,
+		SrvBodyUpdate,
 		0UL,
 		0UL
 	},
@@ -206,7 +207,6 @@ Boolean SrvCoreLoop ( void )
 		//get time
 		Int32U now = DrvTickGetTimeUs();
 		core.services[i].update();
-		DrvServoUpdate();
 		//get loop update time
 		core.services[i].updateTime = DrvTickGetTimeUs() - now;
 		//get the max time

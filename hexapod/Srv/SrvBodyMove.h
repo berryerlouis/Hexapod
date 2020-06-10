@@ -37,20 +37,18 @@ typedef struct
 	float x;
 	float y;
 	float z;
-	Boolean initialized;
 }SBodyMove;
 
 typedef AxisFloat SBodyLegMove;
 ////////////////////////////////////////PUBLIC FUNCTIONS//////////////////////////////////////////
 //Fonction d'initialisation
 Boolean SrvBodyMoveInit ( void ) ;
-//Fonction de dispatching d'evenements
-void SrvBodyMoveUpdate (void) ;
+
 SBodyMove *SrvBodyMoveGetStruct( void );
 //Set Position
-Boolean SrvBodyMoveSetBehavior ( EBodyBehavior pos, uint16_t delay );
+Boolean SrvBodyMoveSetPosition ( EBodyBehavior pos, uint16_t delay );
 //Get Position
-EBodyBehavior SrvBodyMoveGetBehavior ( void );
+EBodyBehavior SrvBodyMoveGetPosition ( void );
 //Set vertical Rotation
 Boolean SrvBodyMoveSetRotationAndTranslation ( float roll, float pitch, float yaw, float x, float y, float z );
 //Compute translation and rotation per leg
