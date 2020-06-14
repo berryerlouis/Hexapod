@@ -15,12 +15,12 @@
 
 #define TASK_BREATH_ID					0U
 #define TASK_DETECTION_ID				1U
-#define TASK_SCAN_ID					1U
+#define TASK_SCAN_ID					2U
 #define TASK_IMU_ID						3U
 
 #define TASK_BREATH_TIMEOUT				4000U	//4 sec
 #define TASK_DETECTION_TIMEOUT			0U		//every loop
-#define TASK_SCAN_TIMEOUT				5000U	//5 sec
+#define TASK_SCAN_TIMEOUT				20000U	//10 sec
 #define TASK_IMU_TIMEOUT				500U	//500 msec
 
 ////////////////////////////////////////PRIVATE FUNCTIONS/////////////////////////////////////////
@@ -61,10 +61,10 @@ STask tasks [] =
 	},
 	{
 		TASK_SCAN_ID,
-		FALSE,
+		TRUE,
 		SrvTaskScan,
 		0U,
-		TASK_IMU_TIMEOUT,
+		TASK_SCAN_TIMEOUT,
 	}
 };
 #define NB_TASK (Int8U)((Int8U)sizeof(tasks)/sizeof(STask))
@@ -154,6 +154,8 @@ void SrvTaskUpdate (void)
 void SrvTaskEnable (Int8U taskId)
 {
 	tasks[taskId].enable = TRUE;
+	//reset time
+	tasks[taskId].updateTime = DrvTickGetTimeMs();
 }
 
 void SrvTaskDisable (Int8U taskId)
@@ -205,6 +207,7 @@ static void SrvTaskDetection (void)
 	//LEFT US0
 	if((hexapod.detection->detect[0] == TRUE) && (hexapod.detection->detect[1] == FALSE) && (hexapod.detection->detect[2] == FALSE))
 	{
+		SrvHeadSetPosition(HEAD_HORI_MAX,50);
 		SrvIhmPlatformLeftLedTimeOn(E_LED_STATE_ON,50);
 		roll  = 15/2;
 		pitch = 0;
@@ -213,6 +216,7 @@ static void SrvTaskDetection (void)
 	//CENTER LEFT US0 + LAZER
 	else if((hexapod.detection->detect[0] == TRUE) && (hexapod.detection->detect[1] == FALSE) && (hexapod.detection->detect[2] == TRUE))
 	{
+		SrvHeadSetPosition(((HEAD_HORI_MAX - HEAD_HORI_MID) / 2)+HEAD_HORI_MID,50);
 		SrvIhmPlatformLeftLedTimeOn(E_LED_STATE_ON,50);
 		roll  = 15/2;
 		pitch = 0;
@@ -222,6 +226,7 @@ static void SrvTaskDetection (void)
 	else if(((hexapod.detection->detect[0] == TRUE) && (hexapod.detection->detect[1] == TRUE) && (hexapod.detection->detect[2] == TRUE)) ||
 			((hexapod.detection->detect[0] == FALSE) && (hexapod.detection->detect[1] == FALSE) && (hexapod.detection->detect[2] == TRUE)))
 	{
+		SrvHeadSetPosition(HEAD_HORI_MID,50);
 		SrvIhmPlatformLeftLedTimeOn(E_LED_STATE_ON,50);
 		SrvIhmPlatformRightLedTimeOn(E_LED_STATE_ON,50);
 		roll  = 15/2;
@@ -232,6 +237,7 @@ static void SrvTaskDetection (void)
 	else if((hexapod.detection->detect[0] == FALSE) && (hexapod.detection->detect[1] == TRUE) && (hexapod.detection->detect[2] == TRUE))
 	{
 		SrvIhmPlatformRightLedTimeOn(E_LED_STATE_ON,50);
+		SrvHeadSetPosition(((HEAD_HORI_MIN - HEAD_HORI_MID) / 2)+HEAD_HORI_MID,50);
 		roll  = 15/2;
 		pitch = 0;
 		yaw   = 15/2;
@@ -239,6 +245,7 @@ static void SrvTaskDetection (void)
 	//RIGHT US1
 	else if((hexapod.detection->detect[0] == FALSE) && (hexapod.detection->detect[1] == TRUE) && (hexapod.detection->detect[2] == FALSE))
 	{
+		SrvHeadSetPosition(HEAD_HORI_MIN,50);
 		SrvIhmPlatformRightLedTimeOn(E_LED_STATE_ON,50);
 		roll  = 15/2;
 		pitch = 0;
@@ -299,12 +306,15 @@ static void SrvTaskDetectionNotify (Boolean reachThreshold)
 		//enable task detection
 		SrvTaskEnable(TASK_DETECTION_ID);
 		SrvTaskDisable(TASK_BREATH_ID);
+		SrvTaskDisable(TASK_SCAN_ID);
+		hexapod.head->scanning = FALSE;
 	}
 	else
 	{
 		//disable task detection
 		SrvTaskDisable(TASK_DETECTION_ID);
 		SrvTaskEnable(TASK_BREATH_ID);
+		SrvTaskEnable(TASK_SCAN_ID);
 	}
 	
 }

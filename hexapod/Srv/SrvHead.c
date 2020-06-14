@@ -47,7 +47,7 @@ Boolean SrvHeadInit( void )
 	head.servos[ HEAD_HORI_SERVO_INDEX ]->enable				= TRUE ;
 
 
-	head.enable			= FALSE /*TRUE*/ ; 
+	head.enable			= TRUE ; 
 	head.initialized	= TRUE ;
 	return TRUE;
 }
@@ -70,6 +70,11 @@ Boolean SrvHeadScan( void )
 	}
 	return FALSE;
 }
+void SrvHeadSetPosition( Int16S angle, Int16U time )
+{
+	if(head.enable) DrvServoSetTarget(HEAD_HORI_SERO_TAB_INDEX, angle, time);
+}
+
 
 SHead* SrvHeadGetStruct( void )
 {
@@ -99,20 +104,29 @@ void SrvHeadSetMinPosition( Int16U time )
 
 void SrvHeadServoCallbackReachMin (Int8U index)
 {
-	SrvHeadSetMaxPosition(HEAD_SCAN_TIME );
-	DrvServoSetCallback(HEAD_HORI_SERO_TAB_INDEX, SrvHeadServoCallbackReachMax);
+	if(head.scanning)
+	{
+		SrvHeadSetMaxPosition(HEAD_SCAN_TIME );
+		DrvServoSetCallback(HEAD_HORI_SERO_TAB_INDEX, SrvHeadServoCallbackReachMax);
+	}
 }
 
 void SrvHeadServoCallbackReachMax (Int8U index)
 {
-	SrvHeadSetMidPosition(HEAD_SCAN_TIME/2);
-	DrvServoSetCallback(HEAD_HORI_SERO_TAB_INDEX, SrvHeadServoCallbackReachMid);
+	if(head.scanning)
+	{
+		SrvHeadSetMidPosition(HEAD_SCAN_TIME/2);
+		DrvServoSetCallback(HEAD_HORI_SERO_TAB_INDEX, SrvHeadServoCallbackReachMid);
+	}
 }
 
 void SrvHeadServoCallbackReachMid (Int8U index)
 {
-	head.scanning = FALSE ;
-	DrvServoSetCallback(HEAD_HORI_SERO_TAB_INDEX, NULL);
+	if(head.scanning)
+	{
+		head.scanning = FALSE ;
+		DrvServoSetCallback(HEAD_HORI_SERO_TAB_INDEX, NULL);
+	}
 }
 
 

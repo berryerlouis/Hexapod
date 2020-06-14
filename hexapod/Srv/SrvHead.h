@@ -38,5 +38,6 @@ Boolean SrvHeadInit( void );
 void SrvHeadUpdate( void );
 Boolean SrvHeadScan( void );
 SHead* SrvHeadGetStruct( void );
+void SrvHeadSetPosition( Int16S angle, Int16U time );
 void SrvHeadSetNotification (SrvHeadNotification cb) ;
 #endif /* SrvHead_H_ */
