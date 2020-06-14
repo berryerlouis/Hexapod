@@ -19,7 +19,7 @@
 #include "SrvIhm.h"
 #include "SrvWalk.h"
 #include "SrvComm.h"
-#include "SrvBody.h"
+#include "SrvTask.h"
 #include "SrvDisplay.h"
 #include "SrvBattery.h"
 #include "SrvDetection.h"
@@ -136,8 +136,8 @@ SCoreService coreServices [] =
 	},
 	{
 		9U,
-		SrvBodyInit,
-		SrvBodyUpdate,
+		SrvTasknit,
+		SrvTaskUpdate,
 		0UL,
 		0UL
 	},
@@ -207,6 +207,7 @@ Boolean SrvCoreLoop ( void )
 		//get time
 		Int32U now = DrvTickGetTimeUs();
 		core.services[i].update();
+		DrvServoUpdate();
 		//get loop update time
 		core.services[i].updateTime = DrvTickGetTimeUs() - now;
 		//get the max time

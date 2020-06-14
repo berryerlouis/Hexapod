@@ -21,14 +21,14 @@ typedef enum
 }E_StatusSRF04;
 
 ////////////////////////////////////////PRIVATE VARIABLES/////////////////////////////////////////
-volatile E_StatusSRF04 statusEcho[ E_NB_USS ] = {SEND_PULSE};
-volatile Int32U timeBeforeEchoStart[ E_NB_USS ] = {0UL};
-volatile Int16U timeoutEcho[ E_NB_USS ] = {0UL};
+volatile E_StatusSRF04 statusEcho[ E_NB_ULTRASONS ] = {SEND_PULSE};
+volatile Int32U timeBeforeEchoStart[ E_NB_ULTRASONS ] = {0UL};
+volatile Int16U timeoutEcho[ E_NB_ULTRASONS ] = {0UL};
 
-EIoPin srf04PinEcho[ E_NB_USS ] = US_PINS_ECHO ;
-EIoPin srf04PinPulse[ E_NB_USS ] = US_PINS_PULSE ;
-Int16U distance[ E_NB_USS ] = {0U};
-EIOLevel levelPin[ E_NB_USS ];
+EIoPin srf04PinEcho[ E_NB_ULTRASONS ] = US_PINS_ECHO ;
+EIoPin srf04PinPulse[ E_NB_ULTRASONS ] = US_PINS_PULSE ;
+Int16U distance[ E_NB_ULTRASONS ] = {0U};
+EIOLevel levelPin[ E_NB_ULTRASONS ];
 
 ////////////////////////////////////////PRIVATE FUNCTIONS/////////////////////////////////////////
 
@@ -37,7 +37,7 @@ EIOLevel levelPin[ E_NB_USS ];
 //fonction init du capteur
 Boolean CmpSRF04Init( void )
 {
-	for(uint8_t loop_us = 0U ; loop_us < E_NB_USS ; loop_us++)
+	for(uint8_t loop_us = 0U ; loop_us < E_NB_ULTRASONS ; loop_us++)
 	{
 		//set pin to output
 		DrvIoSetPinOutput(srf04PinPulse[loop_us]);
@@ -94,7 +94,7 @@ Int16U CmpSRF04GetDistance( E_US us )
 //ISR pin Sonar
 ISR(PCINT0_vect)
 {
-	for(uint8_t loop_us = 0U ; loop_us < E_NB_USS ; loop_us++)
+	for(uint8_t loop_us = 0U ; loop_us < E_NB_ULTRASONS ; loop_us++)
 	{
 		levelPin[loop_us] = DrvIoGetPinState(srf04PinEcho[loop_us]);
 		Int32U time = DrvTickGetTimeUs();

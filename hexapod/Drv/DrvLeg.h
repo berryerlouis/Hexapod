@@ -17,7 +17,7 @@
 //length in cm of leg's member
 #define LEG_COCYX_LENGTH		60		//in mm 
 #define LEG_FEMUR_LENGTH		85		//in mm 
-#define LEG_TIBIA_LENGTH		120		//in mm 
+#define LEG_TIBIA_LENGTH		123		//in mm 
 
 #define LEG_COCYX_AMPLITUDE			500		
 #define LEG_COCYX_AMPLITUDE_DIV_2	LEG_COCYX_AMPLITUDE / 2		

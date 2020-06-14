@@ -61,6 +61,8 @@ Boolean SrvBodyMoveSetGroundSize ( float groundSize);
 float SrvBodyMoveGetGroundSize ( void );
 //Set Elevation
 Boolean SrvBodyMoveSetElevation ( float elevation);
+//Set Relative Elevation
+Boolean SrvBodyMoveSetRelativeElevation ( float elevation );
 //Get Elevation
 float SrvBodyMoveGetElevation ( void );
 

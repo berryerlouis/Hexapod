@@ -178,6 +178,12 @@ Boolean SrvBodyMoveSetElevation ( float elevation )
 	bodyMove.elevation = elevation;
 	return TRUE;
 }
+//Set Relative Elevation
+Boolean SrvBodyMoveSetRelativeElevation ( float elevation )
+{
+	bodyMove.elevation += elevation;
+	return TRUE;
+}
 //Get Elevation
 float SrvBodyMoveGetElevation ( void )
 {

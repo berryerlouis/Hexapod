@@ -27,9 +27,17 @@
 ////////////////////////////////////////PUBLIC ENUM///////////////////////////////////////////////
 
 ////////////////////////////////////////PUBLIC DEFINES////////////////////////////////////////////
-
+typedef void (*CBNotifyTask)(void);
 ////////////////////////////////////////PUBLIC STRUCTURES/////////////////////////////////////////
-typedef struct SBodyPublic 
+typedef struct
+{
+	Int8U id;
+	Boolean enable;
+	CBNotifyTask notify;
+	Int32U updateTime;
+	Int32U timeout;
+}STask;
+typedef struct 
 {
 	SLegs *legs;
 	SHead *head;
@@ -40,11 +48,15 @@ typedef struct SBodyPublic
 	SBodyMove *move;
 	SFeeling *feeling;
 	Boolean initialized;
-}SBodyPublic;
+	STask *tasks;
+	Int8U nbTasks;
+}STaskPublic;
 ////////////////////////////////////////PUBLIC FUNCTIONS//////////////////////////////////////////
 //Fonction d'initialisation
-Boolean SrvBodyInit ( void ) ;
+Boolean SrvTasknit ( void ) ;
 //Fonction de dispatching d'evenements
-void SrvBodyUpdate (void) ;
+void SrvTaskUpdate (void) ;
 
+void SrvTaskEnable (Int8U taskId);
+void SrvTaskDisable (Int8U taskId);
 #endif //SRVBODY_H_

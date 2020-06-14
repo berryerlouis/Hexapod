@@ -14,24 +14,27 @@
 
 ////////////////////////////////////////PRIVATE VARIABLES/////////////////////////////////////////
 uint32_t prevMillisUpdateUltrason = 0UL;
-E_US usIndexToSendEcho = E_US_0;
+E_US usIndexToSendEcho = E_ULTRASON_0;
 SDetection detection;
 ////////////////////////////////////////PUBILC FUNCTIONS//////////////////////////////////////////
 
 //Fonction d'initialisation
 Boolean SrvDetectionInit ( void ) 
 {
-	usIndexToSendEcho = E_US_0;
+	usIndexToSendEcho = E_ULTRASON_0;
 	detection.notification = NULL;
 	detection.usThreshold = US_THRESHOLD_DISTANCE;
 	detection.lazerThreshold = LAZER_THRESHOLD_DISTANCE;
-	detection.distance[E_US_0] = 0U;
-	detection.distance[E_US_1] = 0U;
+	detection.distance[E_ULTRASON_0] = 0U;
+	detection.detect[E_ULTRASON_0] = FALSE;
+	detection.distance[E_ULTRASON_1] = 0U;
+	detection.detect[E_ULTRASON_1] = FALSE;
 	detection.distance[E_LAZER_0 + 2U] = 0U;
+	detection.detect[E_LAZER_0 + 2U] = FALSE;
+	
 	prevMillisUpdateUltrason = 0UL;
 	if(TRUE == CmpVL53L0XInit(0.25, 20000))
 	{
-		//CmpVL53L0XSetTimeout(2);
 		CmpVL53L0XStartContinuous(50);
 	}
 	
@@ -40,7 +43,7 @@ Boolean SrvDetectionInit ( void )
 //Fonction de dispatching d'evenements
 void SrvDetectionUpdate (void) 
 {
-	//update every 20ms
+	//update every 50ms
 	if ((DrvTickGetTimeMs() - prevMillisUpdateUltrason) > 50U)
 	{
 		if(CmpVL53L0XAvailable())
@@ -51,29 +54,64 @@ void SrvDetectionUpdate (void)
 		//CmpVL53L0XTimeoutOccurred();
 		//send pulse to each ultrason module
 		CmpSRF04SendPulse(usIndexToSendEcho);
-		usIndexToSendEcho++;
-		if(usIndexToSendEcho == E_NB_USS)
-		{
-			usIndexToSendEcho = E_US_0;
-		}
 		//get distance
 		detection.distance[usIndexToSendEcho] = CmpSRF04GetDistance(usIndexToSendEcho);
 		
 		//if threshold is reach 
 		if((detection.distance[usIndexToSendEcho] != 0) && (detection.distance[usIndexToSendEcho] < detection.usThreshold))
-		{
-			//notify 
-			if(detection.notification != NULL)
+		{ 
+			//only once
+			if(detection.detect[usIndexToSendEcho] == FALSE)
 			{
-				detection.notification(usIndexToSendEcho,detection.distance[usIndexToSendEcho]);
+				detection.detect[usIndexToSendEcho] = TRUE;
+				if(detection.notification != NULL)
+				{
+					detection.notification(detection.detect[usIndexToSendEcho]);
+				}
 			}
 		}
+		else
+		{
+			//only once
+			if(detection.detect[usIndexToSendEcho] == TRUE)
+			{
+				detection.detect[usIndexToSendEcho] = FALSE;
+				if(detection.notification != NULL)
+				{
+					detection.notification(detection.detect[usIndexToSendEcho]);
+				}
+			}
+		}
+		
 		if((detection.distance[E_LAZER_0 + 2U] != 0) && (detection.distance[E_LAZER_0 + 2U] < detection.lazerThreshold))
 		{
-			if(detection.notification != NULL)
+			//only once
+			if(detection.detect[E_LAZER_0 + 2U] == FALSE)
 			{
-				detection.notification(E_LAZER_0 + 2U,detection.distance[E_LAZER_0 + 2U]);
-			} 
+				detection.detect[E_LAZER_0 + 2U] = TRUE;
+				if(detection.notification != NULL)
+				{
+					detection.notification(detection.detect[E_LAZER_0 + 2U]);
+				}
+			}
+		}
+		else
+		{
+			//only once
+			if(detection.detect[E_LAZER_0 + 2U] == TRUE)
+			{
+				detection.detect[E_LAZER_0 + 2U] = FALSE;
+				if(detection.notification != NULL)
+				{
+					detection.notification(detection.detect[E_LAZER_0 + 2U]);
+				}
+			}
+		}
+		
+		usIndexToSendEcho++;
+		if(usIndexToSendEcho == E_NB_ULTRASONS)
+		{
+			usIndexToSendEcho = E_ULTRASON_0;
 		}
 		prevMillisUpdateUltrason = DrvTickGetTimeMs();
 	}

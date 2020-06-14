@@ -569,8 +569,8 @@ static Boolean SrvCommExecuteClusterDetection( void )
 	{
 		//prepare output string
 		uint8_t nbData = SrvCommPrepareMessage(COMM_CLUSTER_DETECTION,COMM_CLUSTER_DETECTION_ULTRASON_COMMAND_GET_DISTANCE, 4U);
-		nbData += sprintf((char*)&response[ nbData ], "%02X", (uint8_t)SrvDetectionGetDistanceUS(E_US_0));
-		nbData += sprintf((char*)&response[ nbData ], "%02X", (uint8_t)SrvDetectionGetDistanceUS(E_US_1));
+		nbData += sprintf((char*)&response[ nbData ], "%02X", (uint8_t)SrvDetectionGetDistanceUS(E_ULTRASON_0));
+		nbData += sprintf((char*)&response[ nbData ], "%02X", (uint8_t)SrvDetectionGetDistanceUS(E_ULTRASON_1));
 		return SrvCommWriteMessage(nbData);
 	}
 	else if(( inMessage.command == COMM_CLUSTER_DETECTION_LAZER_COMMAND_GET_THRESHOLD) && (inMessage.size == 0U))

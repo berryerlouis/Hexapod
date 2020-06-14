@@ -80,10 +80,10 @@ typedef enum
 //set output UltraSound used
 typedef enum
 {
-	E_US_0,
-	E_US_1,
+	E_ULTRASON_0,
+	E_ULTRASON_1,
 	//Alaways at end
-	E_NB_USS,
+	E_NB_ULTRASONS,
 	E_US_NONE
 }E_US;
 

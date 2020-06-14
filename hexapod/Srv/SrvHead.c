@@ -14,6 +14,7 @@
 
 ////////////////////////////////////////PRIVATE DEFINES///////////////////////////////////////////
 #define HEAD_HORI_SERO_TAB_INDEX	(E_NB_LEGS * NB_SERVOS_PER_LEG) + HEAD_HORI_SERVO_INDEX
+#define HEAD_SCAN_TIME				4000U // ms
 
 ////////////////////////////////////////PRIVATE VARIABLES/////////////////////////////////////////
 static SHead head;
@@ -31,7 +32,7 @@ void SrvHeadServoCallbackReachMax (Int8U index);
 // Init of Drv Head
 Boolean SrvHeadInit( void )
 {	
-	head.enable			= TRUE ;
+	head.enable			= FALSE ;
 	head.initialized	= FALSE ;
 	head.scanning		= FALSE ;
 	
@@ -45,6 +46,8 @@ Boolean SrvHeadInit( void )
 	head.servos[ HEAD_HORI_SERVO_INDEX ]->max					= HEAD_HORI_MAX ;
 	head.servos[ HEAD_HORI_SERVO_INDEX ]->enable				= TRUE ;
 
+
+	head.enable			= FALSE /*TRUE*/ ; 
 	head.initialized	= TRUE ;
 	return TRUE;
 }
@@ -61,7 +64,7 @@ Boolean SrvHeadScan( void )
 	{
 		head.scanning = TRUE ;
 		
-		SrvHeadSetMinPosition(1000);
+		SrvHeadSetMinPosition(HEAD_SCAN_TIME/2);
 		DrvServoSetCallback(HEAD_HORI_SERO_TAB_INDEX, SrvHeadServoCallbackReachMin);
 		return TRUE;
 	}
@@ -96,13 +99,13 @@ void SrvHeadSetMinPosition( Int16U time )
 
 void SrvHeadServoCallbackReachMin (Int8U index)
 {
-	SrvHeadSetMaxPosition(2000);
+	SrvHeadSetMaxPosition(HEAD_SCAN_TIME );
 	DrvServoSetCallback(HEAD_HORI_SERO_TAB_INDEX, SrvHeadServoCallbackReachMax);
 }
 
 void SrvHeadServoCallbackReachMax (Int8U index)
 {
-	SrvHeadSetMidPosition(1000);
+	SrvHeadSetMidPosition(HEAD_SCAN_TIME/2);
 	DrvServoSetCallback(HEAD_HORI_SERO_TAB_INDEX, SrvHeadServoCallbackReachMid);
 }
 

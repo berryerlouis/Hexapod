@@ -10,6 +10,7 @@
 #include "DrvLeg.h"
 
 
+//#define DEBUG_WITHOUT_SERVOS_ON_LEGS
 ////////////////////////////////////////PRIVATE DEFINES///////////////////////////////////////////
 #define SERVO_INTIALIZATION_PERIOD	250U
 
@@ -295,7 +296,6 @@ static void DrvLegInititalizing( void )
 				legs.leg[servoIndexInitialization / NB_SERVOS_PER_LEG].initialized = TRUE ;
 			}
 			
-			//#define DEBUG_WITHOUT_SERVOS_ON_LEGS
 			#ifndef DEBUG_WITHOUT_SERVOS_ON_LEGS
 				//enable servo
 				DrvServoActivate(servoIndexInitialization,TRUE);

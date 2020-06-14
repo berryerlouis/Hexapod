@@ -23,14 +23,15 @@
 #define US_THRESHOLD_DISTANCE		30U		// cm
 #define LAZER_THRESHOLD_DISTANCE	300U	// mm
 
-typedef void (*SrvDetectionNotification) (Int8U sensorId, Int16U distance);
+typedef void (*SrvDetectionNotification) (Boolean reachThreshold);
 ////////////////////////////////////////PUBLIC STRUCTURES/////////////////////////////////////////
 //struct of legs, 
 typedef struct
 {
 	Int16U usThreshold;
 	Int16U lazerThreshold;
-	Int16U distance [E_NB_USS + E_NB_LAZERS];
+	Int16U distance [E_NB_ULTRASONS + E_NB_LAZERS];
+	Boolean detect[E_NB_ULTRASONS + E_NB_LAZERS];
 	SrvDetectionNotification notification;
 }SDetection;
 
