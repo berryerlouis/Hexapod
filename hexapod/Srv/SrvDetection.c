@@ -25,12 +25,12 @@ Boolean SrvDetectionInit ( void )
 	detection.notification = NULL;
 	detection.usThreshold = US_THRESHOLD_DISTANCE;
 	detection.lazerThreshold = LAZER_THRESHOLD_DISTANCE;
-	detection.distance[E_ULTRASON_0] = 0U;
-	detection.detect[E_ULTRASON_0] = FALSE;
-	detection.distance[E_ULTRASON_1] = 0U;
-	detection.detect[E_ULTRASON_1] = FALSE;
-	detection.distance[E_LAZER_0 + 2U] = 0U;
-	detection.detect[E_LAZER_0 + 2U] = FALSE;
+	detection.distance[E_DIST_SENSOR_0] = 0U;
+	detection.detect[E_DIST_SENSOR_0] = FALSE;
+	detection.distance[E_DIST_SENSOR_1] = 0U;
+	detection.detect[E_DIST_SENSOR_1] = FALSE;
+	detection.distance[E_DIST_SENSOR_2] = 0U;
+	detection.detect[E_DIST_SENSOR_2 + 2U] = FALSE;
 	
 	prevMillisUpdateUltrason = 0UL;
 	if(TRUE == CmpVL53L0XInit(0.25, 20000))
@@ -48,7 +48,7 @@ void SrvDetectionUpdate (void)
 	{
 		if(CmpVL53L0XAvailable())
 		{
-			detection.distance[E_LAZER_0 + 2U] = CmpVL53L0XGetDistanceContinuous();
+			detection.distance[E_DIST_SENSOR_2] = CmpVL53L0XGetDistanceContinuous();
 		}
 		
 		//CmpVL53L0XTimeoutOccurred();
@@ -57,7 +57,7 @@ void SrvDetectionUpdate (void)
 		//get distance
 		detection.distance[usIndexToSendEcho] = CmpSRF04GetDistance(usIndexToSendEcho);
 		
-		//if threshold is reach 
+		//if threshold is reach n US sensors
 		if((detection.distance[usIndexToSendEcho] != 0) && (detection.distance[usIndexToSendEcho] < detection.usThreshold))
 		{ 
 			//only once
@@ -83,27 +83,28 @@ void SrvDetectionUpdate (void)
 			}
 		}
 		
-		if((detection.distance[E_LAZER_0 + 2U] != 0) && (detection.distance[E_LAZER_0 + 2U] < detection.lazerThreshold))
+		//if threshold is reach on lazer sensors
+		if((detection.distance[E_DIST_SENSOR_2] != 0) && (detection.distance[E_DIST_SENSOR_2] < detection.lazerThreshold))
 		{
 			//only once
-			if(detection.detect[E_LAZER_0 + 2U] == FALSE)
+			if(detection.detect[E_DIST_SENSOR_2] == FALSE)
 			{
-				detection.detect[E_LAZER_0 + 2U] = TRUE;
+				detection.detect[E_DIST_SENSOR_2] = TRUE;
 				if(detection.notification != NULL)
 				{
-					detection.notification(detection.detect[E_LAZER_0 + 2U]);
+					detection.notification(detection.detect[E_DIST_SENSOR_2]);
 				}
 			}
 		}
 		else
 		{
 			//only once
-			if(detection.detect[E_LAZER_0 + 2U] == TRUE)
+			if(detection.detect[E_DIST_SENSOR_2] == TRUE)
 			{
-				detection.detect[E_LAZER_0 + 2U] = FALSE;
+				detection.detect[E_DIST_SENSOR_2] = FALSE;
 				if(detection.notification != NULL)
 				{
-					detection.notification(detection.detect[E_LAZER_0 + 2U]);
+					detection.notification(detection.detect[E_DIST_SENSOR_2]);
 				}
 			}
 		}
@@ -156,73 +157,3 @@ void SrvDetectionSetNotification (SrvDetectionNotification cb)
 	detection.notification = cb;
 }
 
-/*
-static Boolean SrvBodyUltrasonDetection (void)
-{
-	if ((DrvTickGetTimeMs() - prevMillisUpdateUS) > 100U)
-	{
-		if( ( SrvUltrasonReachThreshold(E_US_0) ) &&
-		( SrvUltrasonReachThreshold(E_US_1) ))
-		{
-			Int8U step0 = (Int8U)((Int16U)(body.us->distance[E_US_0] * 15) / US_THRESHOLD_DISTANCE);
-			Int8U step1 = (Int8U)((Int16U)(body.us->distance[E_US_1] * 15) / US_THRESHOLD_DISTANCE);
-			if(step1 < step0) step0 = step1;
-			
-			if(body.feeling->state == FEELING_AGRESSIVE)
-			{
-				SrvBodyMoveSetRotationAndTranslation(step0,0,0,step0,0,-step0);
-			}
-			else if(body.feeling->state == FEELING_NEUTRAL)
-			{
-				SrvBodyMoveSetRotationAndTranslation(0,0,0,0,0,0);
-			}
-			else if(body.feeling->state == FEELING_FEAR)
-			{
-				SrvBodyMoveSetRotationAndTranslation(step0,0,0,-step0,0,+step0);
-			}
-		}
-		else if( SrvUltrasonReachThreshold(E_US_0) )
-		{
-			Int8U step = (Int8U)(body.us->distance[E_US_0] * 15 / US_THRESHOLD_DISTANCE);
-			if(body.feeling->state == FEELING_AGRESSIVE)
-			{
-				SrvBodyMoveSetRotationAndTranslation(step,0,step,step,0,-step);
-			}
-			else if(body.feeling->state == FEELING_NEUTRAL)
-			{
-				
-				SrvBodyMoveSetRotationAndTranslation(0,0,step,0,0,0);
-			}
-			else if(body.feeling->state == FEELING_FEAR)
-			{
-				SrvBodyMoveSetRotationAndTranslation(step,0,step,-step,0,+step);
-			}
-		}
-		else if( SrvUltrasonReachThreshold(E_US_1) )
-		{
-			Int8U step = (Int8U)(body.us->distance[E_US_1] * 15 / US_THRESHOLD_DISTANCE);
-			if(body.feeling->state == FEELING_AGRESSIVE)
-			{
-				SrvBodyMoveSetRotationAndTranslation(step,0,-step,step,0,-step);
-			}
-			else if(body.feeling->state == FEELING_NEUTRAL)
-			{
-				SrvBodyMoveSetRotationAndTranslation(0,0,-step,0,0,0);
-			}
-			else if(body.feeling->state == FEELING_FEAR)
-			{
-				SrvBodyMoveSetRotationAndTranslation(step,0,-step,-step,0,+step);
-			}
-		}
-		else
-		{
-			return FALSE;
-		}
-		SrvBodyMoveApplyRotationAndTranslation(250);
-		prevMillisUpdateUS = DrvTickGetTimeMs();
-		return TRUE;
-	}
-	
-	return FALSE;
-}
-*/

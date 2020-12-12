@@ -96,6 +96,18 @@ typedef enum
 	E_LAZER_NONE
 }E_LAZER;
 
+//enum of distance sensors
+typedef enum
+{
+	E_DIST_SENSOR_0,//E_ULTRASON_0
+	E_DIST_SENSOR_1,//E_ULTRASON_1
+	E_DIST_SENSOR_2,//E_LAZER_0
+	//Alaways at end
+	E_NB_DIST_SENSORS,
+	E_DIST_SENSOR_NONE
+}E_DIST_SENSORS;
+
+
 //set output Uart used
 typedef enum
 {

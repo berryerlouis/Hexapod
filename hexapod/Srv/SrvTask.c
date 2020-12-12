@@ -28,7 +28,7 @@ static void SrvTaskImuNotify (Int16S roll, Int16S pitch);
 static void SrvTaskDetectionNotify (Boolean reachThreshold);
 
 static void SrvTaskBreath (void);
-static void SrvTaskDetection (void);
+static void SrvTaskDistSensorTracking (void);
 static void SrvTaskIMU (void);
 static void SrvTaskScan (void);
 ////////////////////////////////////////PRIVATE VARIABLES/////////////////////////////////////////
@@ -47,8 +47,8 @@ STask tasks [] =
 	},
 	{
 		TASK_DETECTION_ID,
-		FALSE,
-		SrvTaskDetection,
+		TRUE,
+		SrvTaskDistSensorTracking,
 		0U,
 		TASK_DETECTION_TIMEOUT,
 	},
@@ -154,8 +154,6 @@ void SrvTaskUpdate (void)
 void SrvTaskEnable (Int8U taskId)
 {
 	tasks[taskId].enable = TRUE;
-	//reset time
-	tasks[taskId].updateTime = DrvTickGetTimeMs();
 }
 
 void SrvTaskDisable (Int8U taskId)
@@ -192,83 +190,91 @@ static void SrvTaskBreath (void)
 	}
 }
 
-static void SrvTaskDetection (void)
+static void SrvTaskDistSensorTracking (void)
 {
-	//start stressed heartbeat
-	SrvFeelingSetFeelingLevel(FEELING_STRESS);
-	float roll  = 0.0F;
-	float pitch = 0.0F;
-	float yaw   = 0.0F;
-	float x		= 0.0F;
-	float y		= 0.0F;
-	float z		= 0.0F;
+	//be sure that one of sensors senses object
+	if((hexapod.detection->detect[E_DIST_SENSOR_0] != FALSE) || (hexapod.detection->detect[E_DIST_SENSOR_1] != FALSE) || (hexapod.detection->detect[E_DIST_SENSOR_2] != FALSE))
+	{
+		//start stressed heartbeat
+		SrvFeelingSetFeelingLevel(FEELING_STRESS);
+		float roll  = 0.0F;
+		float pitch = 0.0F;
+		float yaw   = 0.0F;
+		float x		= 0.0F;
+		float y		= 0.0F;
+		float z		= 0.0F;
 	
-	//try to find angle
-	//LEFT US0
-	if((hexapod.detection->detect[0] == TRUE) && (hexapod.detection->detect[1] == FALSE) && (hexapod.detection->detect[2] == FALSE))
-	{
-		SrvHeadSetPosition(HEAD_HORI_MAX,50);
-		SrvIhmPlatformLeftLedTimeOn(E_LED_STATE_ON,50);
-		roll  = 15/2;
-		pitch = 0;
-		yaw   = -15;
-	}
-	//CENTER LEFT US0 + LAZER
-	else if((hexapod.detection->detect[0] == TRUE) && (hexapod.detection->detect[1] == FALSE) && (hexapod.detection->detect[2] == TRUE))
-	{
-		SrvHeadSetPosition(((HEAD_HORI_MAX - HEAD_HORI_MID) / 2)+HEAD_HORI_MID,50);
-		SrvIhmPlatformLeftLedTimeOn(E_LED_STATE_ON,50);
-		roll  = 15/2;
-		pitch = 0;
-		yaw   = -15/2;
-	}
-	//CENTER LAZER OR LAZER + US0 + US1
-	else if(((hexapod.detection->detect[0] == TRUE) && (hexapod.detection->detect[1] == TRUE) && (hexapod.detection->detect[2] == TRUE)) ||
-			((hexapod.detection->detect[0] == FALSE) && (hexapod.detection->detect[1] == FALSE) && (hexapod.detection->detect[2] == TRUE)))
-	{
-		SrvHeadSetPosition(HEAD_HORI_MID,50);
-		SrvIhmPlatformLeftLedTimeOn(E_LED_STATE_ON,50);
-		SrvIhmPlatformRightLedTimeOn(E_LED_STATE_ON,50);
-		roll  = 15/2;
-		pitch = 0;
-		yaw   = 0;
-	}
-	//CENTER RIGHT US1 + LAZER
-	else if((hexapod.detection->detect[0] == FALSE) && (hexapod.detection->detect[1] == TRUE) && (hexapod.detection->detect[2] == TRUE))
-	{
-		SrvIhmPlatformRightLedTimeOn(E_LED_STATE_ON,50);
-		SrvHeadSetPosition(((HEAD_HORI_MIN - HEAD_HORI_MID) / 2)+HEAD_HORI_MID,50);
-		roll  = 15/2;
-		pitch = 0;
-		yaw   = 15/2;
-	}
-	//RIGHT US1
-	else if((hexapod.detection->detect[0] == FALSE) && (hexapod.detection->detect[1] == TRUE) && (hexapod.detection->detect[2] == FALSE))
-	{
-		SrvHeadSetPosition(HEAD_HORI_MIN,50);
-		SrvIhmPlatformRightLedTimeOn(E_LED_STATE_ON,50);
-		roll  = 15/2;
-		pitch = 0;
-		yaw   = 15;
-	}
+		//find angle
+		//LEFT US0
+		if((hexapod.detection->detect[E_DIST_SENSOR_0] == TRUE) && (hexapod.detection->detect[E_DIST_SENSOR_1] == FALSE) && (hexapod.detection->detect[E_DIST_SENSOR_2] == FALSE))
+		{
+			SrvHeadSetPosition(HEAD_HORI_MAX,50);
+			SrvIhmPlatformLeftLedTimeOn(E_LED_STATE_ON,50);
+			roll  = (15/2);
+			pitch = 0;
+			yaw   = -15;
+		}
+		//CENTER LEFT US0 + LAZER
+		else if((hexapod.detection->detect[E_DIST_SENSOR_0] == TRUE) && (hexapod.detection->detect[E_DIST_SENSOR_1] == FALSE) && (hexapod.detection->detect[E_DIST_SENSOR_2] == TRUE))
+		{
+			SrvHeadSetPosition(((HEAD_HORI_MAX - HEAD_HORI_MID) / 2)+HEAD_HORI_MID,50);
+			SrvIhmPlatformLeftLedTimeOn(E_LED_STATE_ON,50);
+			//float moy	= ((hexapod.detection->distance[E_DIST_SENSOR_0] / US_THRESHOLD_DISTANCE) + (hexapod.detection->distance[E_DIST_SENSOR_2] / LAZER_THRESHOLD_DISTANCE) ) /2;
+			roll  = (15/2);
+			pitch = 0;
+			yaw   = -(15/2);
+		}
+		//CENTER LAZER OR LAZER + US0 + US1
+		else if(((hexapod.detection->detect[E_DIST_SENSOR_0] == TRUE) && (hexapod.detection->detect[E_DIST_SENSOR_1] == TRUE) && (hexapod.detection->detect[E_DIST_SENSOR_2] == TRUE)) ||
+				((hexapod.detection->detect[E_DIST_SENSOR_0] == FALSE) && (hexapod.detection->detect[E_DIST_SENSOR_1] == FALSE) && (hexapod.detection->detect[E_DIST_SENSOR_2] == TRUE)))
+		{
+			SrvHeadSetPosition(HEAD_HORI_MID,50);
+			SrvIhmPlatformLeftLedTimeOn(E_LED_STATE_ON,50);
+			SrvIhmPlatformRightLedTimeOn(E_LED_STATE_ON,50);
+			//float moy1	= ((hexapod.detection->distance[E_DIST_SENSOR_0] / US_THRESHOLD_DISTANCE) + (hexapod.detection->distance[E_DIST_SENSOR_1] / US_THRESHOLD_DISTANCE) + (hexapod.detection->distance[E_DIST_SENSOR_2] / LAZER_THRESHOLD_DISTANCE) ) /3;
+			//float moy2	= (hexapod.detection->distance[E_DIST_SENSOR_2] / LAZER_THRESHOLD_DISTANCE);		
+			roll  = (15/2);//(15/2) * moy1 > moy2 ? moy1 : (hexapod.detection->distance[E_DIST_SENSOR_2] / LAZER_THRESHOLD_DISTANCE) ;
+			pitch = 0;
+			yaw   = 0;
+		}
+		//CENTER RIGHT US1 + LAZER
+		else if((hexapod.detection->detect[E_DIST_SENSOR_0] == FALSE) && (hexapod.detection->detect[E_DIST_SENSOR_1] == TRUE) && (hexapod.detection->detect[E_DIST_SENSOR_2] == TRUE))
+		{
+			SrvIhmPlatformRightLedTimeOn(E_LED_STATE_ON,50);
+			SrvHeadSetPosition(((HEAD_HORI_MIN - HEAD_HORI_MID) / 2)+HEAD_HORI_MID,50);
+			//float moy	= ((hexapod.detection->distance[E_DIST_SENSOR_1] / US_THRESHOLD_DISTANCE) + (hexapod.detection->distance[E_DIST_SENSOR_2] / LAZER_THRESHOLD_DISTANCE) ) /2;
+			roll  = (15/2);
+			pitch = 0;
+			yaw   = (15/2);
+		}
+		//RIGHT US1
+		else if((hexapod.detection->detect[E_DIST_SENSOR_0] == FALSE) && (hexapod.detection->detect[E_DIST_SENSOR_1] == TRUE) && (hexapod.detection->detect[E_DIST_SENSOR_2] == FALSE))
+		{
+			SrvHeadSetPosition(HEAD_HORI_MIN,50);
+			SrvIhmPlatformRightLedTimeOn(E_LED_STATE_ON,50);
+			roll  = (15/2);
+			pitch = 0;
+			yaw   = 15;
+		}
 	
-	if(hexapod.feeling->state == FEELING_AGRESSIVE)
-	{
-		yaw *= -1;
-		x = 15;
-	}
-	else if(hexapod.feeling->state == FEELING_NEUTRAL)
-	{
+		if(hexapod.feeling->state == FEELING_AGRESSIVE)
+		{
+			yaw *= -1;
+			x = 5;
+		}
+		else if(hexapod.feeling->state == FEELING_NEUTRAL)
+		{
 		
-	}
-	else if(hexapod.feeling->state == FEELING_FEAR)
-	{
-		yaw *= 1;
-		x = -15;
-	}
+		}
+		else if(hexapod.feeling->state == FEELING_FEAR)
+		{
+			yaw *= 1;
+			x = -5;
+		}
 	
-	SrvBodyMoveSetRotationAndTranslation(roll,pitch,yaw,x,y,z);
-	SrvBodyMoveApplyRotationAndTranslation(250);	
+		SrvBodyMoveSetRotationAndTranslation(roll,pitch,yaw,x,y,z);
+		SrvBodyMoveApplyRotationAndTranslation(250);
+	}
 }
 
 static void SrvTaskScan (void)
@@ -303,16 +309,14 @@ static void SrvTaskDetectionNotify (Boolean reachThreshold)
 {
 	if(reachThreshold)
 	{
-		//enable task detection
-		SrvTaskEnable(TASK_DETECTION_ID);
+		//disable task when detection
 		SrvTaskDisable(TASK_BREATH_ID);
 		SrvTaskDisable(TASK_SCAN_ID);
 		hexapod.head->scanning = FALSE;
 	}
 	else
 	{
-		//disable task detection
-		SrvTaskDisable(TASK_DETECTION_ID);
+		//enable tasks when detection
 		SrvTaskEnable(TASK_BREATH_ID);
 		SrvTaskEnable(TASK_SCAN_ID);
 	}

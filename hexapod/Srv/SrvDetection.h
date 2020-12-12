@@ -25,13 +25,13 @@
 
 typedef void (*SrvDetectionNotification) (Boolean reachThreshold);
 ////////////////////////////////////////PUBLIC STRUCTURES/////////////////////////////////////////
-//struct of legs, 
+//struct of detection, 
 typedef struct
 {
 	Int16U usThreshold;
 	Int16U lazerThreshold;
-	Int16U distance [E_NB_ULTRASONS + E_NB_LAZERS];
-	Boolean detect[E_NB_ULTRASONS + E_NB_LAZERS];
+	Int16U distance [E_NB_DIST_SENSORS];
+	Boolean detect[E_NB_DIST_SENSORS];
 	SrvDetectionNotification notification;
 }SDetection;
 
