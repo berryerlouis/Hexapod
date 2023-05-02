@@ -86,6 +86,38 @@ typedef struct
 	Int16U maxSize;
 }Buffer;
 
+static inline float EaseIn(float t)
+{
+	return t * t;
+}
+
+static inline float Flip(float x)
+{
+	return 1 - x;
+}
+
+static inline float EaseOut(float t)
+{
+	return Flip(sqrt(Flip(t)));
+}
+
+static inline float LerpSimple(float start_value, float end_value, float pct)
+{
+	return (start_value + (end_value - start_value) * pct);
+}
+
+static inline float EaseInOut(float t)
+{
+	return LerpSimple(EaseIn(t), EaseOut(t), t);
+}
+static inline AxisFloat LerpAxis(AxisFloat start_value, AxisFloat end_value, float t)
+{
+	AxisFloat position;
+	position.x = LerpSimple(start_value.x,end_value.x,t);
+	position.y = LerpSimple(start_value.y,end_value.y,t);
+	position.z = LerpSimple(start_value.z,end_value.z,t);
+	return position;
+}
 
 // Null pointer
 #ifndef NULL

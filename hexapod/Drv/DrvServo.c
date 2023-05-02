@@ -18,8 +18,6 @@
 
 ////////////////////////////////////////PRIVATE FUNCTIONS/////////////////////////////////////////
 
-static float DrvServoEase( E_SERVO_EASES ease, float target, float start, Int32U startTime, Int32U duration);
-
 ////////////////////////////////////////PRIVATE VARIABLES/////////////////////////////////////////
 static SServo servos[NB_SERVOS];
 /////////////////////////////////////////PUBLIC FUNCTIONS/////////////////////////////////////////
@@ -31,13 +29,7 @@ Boolean DrvServoInit( void )
 	{
 		servos[ index ].id = index;
 		servos[ index ].enable = FALSE;
-		servos[ index ].newPosition = FALSE;
 		servos[ index ].currentPosition = 0;
-		servos[ index ].startPosition = 0;
-		servos[ index ].targetPosition = 0;
-		servos[ index ].movingTime = 0U;
-		servos[ index ].startTime = 0U;
-		servos[ index ].callback = NULL;
 		servos[ index ].offset = 0;
 		servos[ index ].min = SERVO_ANGLE_MIN;
 		servos[ index ].mid = SERVO_ANGLE_MID;
@@ -60,30 +52,11 @@ Boolean DrvServoSetTarget( Int8U index, Int16S angle, Int16U time)
 		//if between limits
 		if(( angle >= servos[ index ].min ) && ( angle <= servos[ index ].max ))
 		{
-			//if not already set, the servo need to move
-			if(servos[ index ].targetPosition != angle)
-			{
-				//new position asked 
-				servos[ index ].newPosition = TRUE;
-				//set position and target
-				servos[ index ].startPosition	= servos[ index ].currentPosition;
-				servos[ index ].targetPosition	= angle;
-				//compute the delta
-				Int16S delta = servos[ index ].targetPosition - servos[ index ].startPosition;
-				//compute minimum time for this delta
-				servos[ index ].movingTime = (Int16U)ABS((float)delta)/(SERVO_SPEED_MSEC_PER_DEG) > time ?(Int16U)ABS((float)delta)/(SERVO_SPEED_MSEC_PER_DEG) : time ;
-			}
+			servos[ index ].currentPosition = angle;
 			return TRUE;
 		}
 	}
 	return FALSE;
-}
-
-// set the callback to the selected servo
-Boolean DrvServoSetCallback( Int8U index, DrvServoCallback callback )
-{
-	servos[ index ].callback = callback;
-	return TRUE;
 }
 
 // activate or not the desired servo
@@ -96,18 +69,9 @@ Boolean DrvServoActivate( Int8U index, Boolean enable)
 // get the target of the selected servo
 Int16S DrvServoGetTarget( Int8U index )
 {
-	return servos[ index ].targetPosition;
+	return servos[ index ].currentPosition;
 }
 
-//check if servo reaches target
-Boolean DrvServoReachesPosition( Int8U index )
-{
-	if( servos[index].currentPosition != servos[index].targetPosition ) 
-	{
-		return FALSE;
-	}
-	return TRUE;
-}
 
 //permits to send not in a same time to the 2 PCA9685
 Boolean switchPCA9685 = FALSE;
@@ -138,40 +102,6 @@ void DrvServoUpdate ( void )
 		{
 			//get current angle
 			angle = servos[index].currentPosition;
-			//if servo reach its target
-			if((DrvServoReachesPosition(index) == TRUE))
-			{
-				//send callback once if different of NULL
-				if(servos[ index ].callback != NULL)
-				{
-					servos[index].callback(index);
-				}
-			}
-			else
-			{
-				//if new position asked, get the current time as start time
-				if(servos[ index ].newPosition)
-				{
-					//now position asked is starting
-					servos[ index ].newPosition = FALSE;
-					servos[ index ].startTime = DrvTickGetTimeMs();
-				}
-				else
-				{
-					//compute new current 
-					float currentTime	= DrvTickGetTimeMs() - servos[index].startTime;
-					float changeValue	= servos[ index ].targetPosition - servos[ index ].startPosition;
-					servos[ index ].currentPosition = changeValue * (currentTime / servos[ index ].movingTime) + servos[index].startPosition;
-				}
-				
-				if((Int32U)(servos[ index ].startTime + servos[ index ].movingTime) <= DrvTickGetTimeMs())
-				{
-					//time elapse, so servo has reaches its target position
-					servos[index].currentPosition = servos[index].targetPosition;
-				}
-				//get updated angle
-				angle = servos[index].currentPosition;
-			}
 			//convert -900deg to 900deg => 0deg to 1800deg
 			angle += 900;
 			//do range for PCA9585
@@ -183,24 +113,19 @@ void DrvServoUpdate ( void )
 			pwm->off = 4096;
 		}
 	}
-		
-	//#define DEBUG_WITHOUT_SERVOS
-	#ifndef DEBUG_WITHOUT_SERVOS
-		//send to each component
-		if(switchPCA9685)
-		{
-			switchPCA9685 = FALSE;
-			//there are 9 servos on left side legs
-			CmpPCA9685SendBuffer(PCA9685_ADDRESS_1, NB_SERVOS_ON_PCA9685_ADDRESS_1);
-		}
-		else
-		{
-			switchPCA9685 = TRUE;
-			//there are 9 servos on right side legs + 1 servo for the head
-			CmpPCA9685SendBuffer(PCA9685_ADDRESS_0,NB_SERVOS_ON_PCA9685_ADDRESS_0);
-		}
-	#endif
-	
+	//send to each component
+	if(switchPCA9685)
+	{
+		switchPCA9685 = FALSE;
+		//there are 9 servos on left side legs
+		CmpPCA9685SendBuffer(PCA9685_ADDRESS_1, NB_SERVOS_ON_PCA9685_ADDRESS_1);
+	}
+	else
+	{
+		switchPCA9685 = TRUE;
+		//there are 9 servos on right side legs + 1 servo for the head
+		CmpPCA9685SendBuffer(PCA9685_ADDRESS_0,NB_SERVOS_ON_PCA9685_ADDRESS_0);
+	}
 }
 
 // get the servo structure pointer at index
@@ -214,38 +139,6 @@ SServo* DrvServoGetStruture( Int8U index )
 	}
 	//return null if wrong
 	return NULL;
-}
-
-
-static inline float DrvServoEase( E_SERVO_EASES ease, float targetPos, float startPos, Int32U startTime, Int32U duration)
-{
-	float currentTime	= DrvTickGetTimeMs() - startTime;
-	float changeValue	= targetPos - startPos;
-	float current = 0;
-	if(ease == E_SERVO_EASE_LINEAR)
-	{
-		current = changeValue * (currentTime / duration) + startPos;
-	}
-	else if(ease == E_SERVO_EASE_SINUS_IN)
-	{
-		current = -changeValue * (cos( M_PI_2 * (currentTime / duration))) + changeValue + startPos;
-	}
-	else if(ease == E_SERVO_EASE_SINUS_OUT)
-	{
-		current = changeValue * (sin( M_PI_2 * (currentTime / duration))) + startPos;
-	}
-	else if(ease == E_SERVO_EASE_SINUS_IN_OUT)
-	{
-		current = (-changeValue/2.0) * (cos( M_PI * (currentTime / duration)) - 1.0 ) + startPos;
-	}
-	
-	//if time is over set the current position to target
-	if(currentTime >= duration)
-	{
-		return targetPos;
-	}
-	
-	return current;
 }
 
 ////////////////////////////////////////PRIVATE FUNCTIONS/////////////////////////////////////////

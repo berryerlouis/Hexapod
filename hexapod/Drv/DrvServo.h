@@ -24,17 +24,6 @@
 #define PERIOD_SERVO_MAX		15000U  //�s
 #define NB_SERVOS				19U
 
-#define SERVO_SPEED_MSEC_PER_DEG	(160.0 / 60.0)	// specs  : 0.16s/60°
-
-//enum of kind of easing
-typedef enum
-{
-	E_SERVO_EASE_LINEAR, //no easing, no acceleration
-	E_SERVO_EASE_SINUS_IN, //accelerating from zero velocity
-	E_SERVO_EASE_SINUS_OUT, //decelerating to zero velocity
-	E_SERVO_EASE_SINUS_IN_OUT //accelerating until halfway, then decelerating
-}E_SERVO_EASES;
-
 /////////////////////////////////////////PUBLIC ENUM/////////////////////////////////////////
 
 
@@ -48,13 +37,7 @@ typedef struct
 {
 	Int8U id;
 	Boolean enable;
-	Boolean newPosition;
 	Int16S currentPosition;
-	Int16S startPosition;
-	Int16S targetPosition;
-	Int32U startTime;
-	Int16U movingTime;
-	DrvServoCallback callback;
 	Int16S min;
 	Int16S mid;
 	Int16S max;
@@ -69,13 +52,9 @@ Boolean DrvServoInit( void ) ;
 // move the selected servo to the desired position [-900,900] and during the desired time
 Boolean DrvServoSetTarget( Int8U index, Int16S angle , Int16U time ) ;
 // set the callback to the selected servo
-Boolean DrvServoSetCallback( Int8U index, DrvServoCallback callback ) ;
-// get the target of the selected servo
 Int16S DrvServoGetTarget( Int8U index ) ;
 // activate or not the desired servo
 Boolean DrvServoActivate( Int8U index, Boolean enable) ;
-//check if servo reaches target
-Boolean DrvServoReachesPosition( Int8U index ) ;
 //compute and set the next angle
 void DrvServoUpdate ( void ) ;
 

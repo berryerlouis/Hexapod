@@ -15,9 +15,11 @@
 #define	NB_SERVOS_PER_LEG		3U
 
 //length in cm of leg's member
-#define LEG_COCYX_LENGTH		60		//in mm 
+#define LEG_COCYX_LENGTH		30		//in mm 
 #define LEG_FEMUR_LENGTH		85		//in mm 
-#define LEG_TIBIA_LENGTH		123		//in mm 
+#define LEG_TIBIA_LENGTH		130		//in mm 
+
+#define LEG_TIBIA_ANGLE_OFFSET  0		//13°
 
 #define LEG_COCYX_AMPLITUDE			500		
 #define LEG_COCYX_AMPLITUDE_DIV_2	LEG_COCYX_AMPLITUDE / 2		
@@ -32,7 +34,7 @@
 #define LEG_COCYX_U_L_MID	LEG_COCYX_U_L_OFT + LEG_COCYX_AMPLITUDE_DIV_2
 #define LEG_COCYX_U_L_MAX	LEG_COCYX_U_L_OFT + LEG_COCYX_AMPLITUDE
 
-#define LEG_FEMUR_U_L_OFT	20
+#define LEG_FEMUR_U_L_OFT	20 - LEG_TIBIA_ANGLE_OFFSET
 #define LEG_FEMUR_U_L_MIN	LEG_FEMUR_U_L_OFT - LEG_FEMUR_AMPLITUDE
 #define LEG_FEMUR_U_L_MID	LEG_FEMUR_U_L_OFT - LEG_FEMUR_AMPLITUDE_DIV_2
 #define LEG_FEMUR_U_L_MAX	LEG_FEMUR_U_L_OFT //
@@ -48,7 +50,7 @@
 #define LEG_COCYX_M_L_MID	LEG_COCYX_M_L_OFT //
 #define LEG_COCYX_M_L_MAX	LEG_COCYX_M_L_OFT + LEG_COCYX_AMPLITUDE_DIV_2
 
-#define LEG_FEMUR_M_L_OFT	-50
+#define LEG_FEMUR_M_L_OFT	-50 - LEG_TIBIA_ANGLE_OFFSET
 #define LEG_FEMUR_M_L_MIN	LEG_FEMUR_M_L_OFT - LEG_FEMUR_AMPLITUDE
 #define LEG_FEMUR_M_L_MID	LEG_FEMUR_M_L_OFT - LEG_FEMUR_AMPLITUDE_DIV_2
 #define LEG_FEMUR_M_L_MAX	LEG_FEMUR_M_L_OFT //
@@ -64,7 +66,7 @@
 #define LEG_COCYX_B_L_MID	LEG_COCYX_B_L_OFT - LEG_COCYX_AMPLITUDE_DIV_2
 #define LEG_COCYX_B_L_MAX	LEG_COCYX_B_L_OFT //
 
-#define LEG_FEMUR_B_L_OFT	0
+#define LEG_FEMUR_B_L_OFT	0 - LEG_TIBIA_ANGLE_OFFSET
 #define LEG_FEMUR_B_L_MIN	LEG_FEMUR_B_L_OFT - LEG_FEMUR_AMPLITUDE
 #define LEG_FEMUR_B_L_MID	LEG_FEMUR_B_L_OFT - LEG_FEMUR_AMPLITUDE_DIV_2
 #define LEG_FEMUR_B_L_MAX	LEG_FEMUR_B_L_OFT //
@@ -80,7 +82,7 @@
 #define LEG_COCYX_U_R_MID	LEG_COCYX_U_R_OFT - LEG_COCYX_AMPLITUDE_DIV_2
 #define LEG_COCYX_U_R_MAX	LEG_COCYX_U_R_OFT//
 
-#define LEG_FEMUR_U_R_OFT	-40
+#define LEG_FEMUR_U_R_OFT	-40 + LEG_TIBIA_ANGLE_OFFSET
 #define LEG_FEMUR_U_R_MIN	LEG_FEMUR_U_R_OFT//
 #define LEG_FEMUR_U_R_MID	LEG_FEMUR_U_R_OFT + LEG_FEMUR_AMPLITUDE_DIV_2
 #define LEG_FEMUR_U_R_MAX	LEG_FEMUR_U_R_OFT + LEG_FEMUR_AMPLITUDE
@@ -96,7 +98,7 @@
 #define LEG_COCYX_M_R_MID	LEG_COCYX_M_R_OFT//
 #define LEG_COCYX_M_R_MAX	LEG_COCYX_M_R_OFT + LEG_COCYX_AMPLITUDE_DIV_2
 
-#define LEG_FEMUR_M_R_OFT	-30
+#define LEG_FEMUR_M_R_OFT	-30 + LEG_TIBIA_ANGLE_OFFSET
 #define LEG_FEMUR_M_R_MIN	LEG_FEMUR_M_R_OFT//
 #define LEG_FEMUR_M_R_MID	LEG_FEMUR_M_R_OFT + LEG_FEMUR_AMPLITUDE_DIV_2
 #define LEG_FEMUR_M_R_MAX	LEG_FEMUR_M_R_OFT + LEG_FEMUR_AMPLITUDE
@@ -112,7 +114,7 @@
 #define LEG_COCYX_B_R_MID	LEG_COCYX_B_R_OFT + LEG_COCYX_AMPLITUDE_DIV_2
 #define LEG_COCYX_B_R_MAX	LEG_COCYX_B_R_OFT + LEG_COCYX_AMPLITUDE
 
-#define LEG_FEMUR_B_R_OFT	-40
+#define LEG_FEMUR_B_R_OFT	-40 + LEG_TIBIA_ANGLE_OFFSET
 #define LEG_FEMUR_B_R_MIN	LEG_FEMUR_B_R_OFT//
 #define LEG_FEMUR_B_R_MID	LEG_FEMUR_B_R_OFT + LEG_FEMUR_AMPLITUDE_DIV_2
 #define LEG_FEMUR_B_R_MAX	LEG_FEMUR_B_R_OFT + LEG_FEMUR_AMPLITUDE
@@ -151,9 +153,8 @@ typedef struct
 	SServo *coxaAngle;
 	SServo *femurAngle;
 	SServo *tibiaAngle;
-	float targetPositionX;
-	float targetPositionY;
-	float targetPositionZ;
+	AxisFloat startPosition;
+	AxisFloat targetPosition;
 	Int32U startTime;
 	Int32U speed;
 }SLeg;
@@ -172,10 +173,10 @@ SLegs* DrvLegGetLegs( void );
 Boolean DrvLegIsInitialized( void );
 SLeg* DrvLegGetStruct( ELeg indexLeg );
 Boolean DrvLegSetSpeed( ELeg indexLeg, Int16U speed  );
-Boolean DrvLegGetXYZ( ELeg indexLeg, float *x, float *y, float *z );
+AxisFloat DrvLegGetXYZ( ELeg indexLeg );
 Boolean DrvLegComputeInverseKinematics( float x, float y, float z, float *coxaAngle, float *femurAngle, float *tibiaAngle );
-Boolean DrvLegSetTarget( ELeg indexLeg, float x, float y, float z, Int16U speed );
-Boolean DrvLegCheckTarget( ELeg indexLeg );
+Boolean DrvLegSetTarget( ELeg indexLeg, AxisFloat posotion, Int16U speed );
+Boolean DrvLegReachPosition( ELeg indexLeg );
 float DrvLegGetXFromCoxaAngle( float angle , float y);
 
 #endif /* DRVLEG_H_ */

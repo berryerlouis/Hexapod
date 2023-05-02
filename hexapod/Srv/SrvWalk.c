@@ -230,7 +230,7 @@ static void SrvWalkStep ( void )
 	for(ELeg legIndex = E_LEG_F_L ; legIndex < E_NB_LEGS ; legIndex++)
 	{
 		//check leg position
-		if( DrvLegCheckTarget(legIndex) )
+		if( DrvLegReachPosition(legIndex) )
 		{
 			//leg reach position and could go to another position
 			okTarget += 1U << legIndex;
@@ -339,11 +339,11 @@ static void SrvWalkStep ( void )
 			
 			//SBodyLegMove compute = SrvBodyMoveComputeLegRotationAndTranslation(legIndex);
 			
-			DrvLegSetTarget(legIndex,
+			/*DrvLegSetTarget(legIndex,
 							xTemp,
 							yTemp,
 							zTemp,
-							delay);
+							delay);*/
 		}
 	}
 }

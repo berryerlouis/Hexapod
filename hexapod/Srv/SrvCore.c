@@ -17,6 +17,7 @@
 
 #include "SrvHeartbeat.h"
 #include "SrvIhm.h"
+#include "SrvGait.h"
 #include "SrvWalk.h"
 #include "SrvComm.h"
 #include "SrvTask.h"
@@ -59,11 +60,6 @@ SCoreDriver coreDrivers [] =
 		4U,
 		DrvTwiInit,
 		0UL,
-	},
-	{
-		5U,
-		DrvServoInit,
-		0UL,
 	}
 };
 
@@ -79,6 +75,13 @@ SCoreService coreServices [] =
 		0UL
 	},
 	{
+		1U,
+		SrvGaitInit,
+		SrvGaitUpdate,
+		0UL,
+		0UL
+	},
+	/*{
 		1U,
 		SrvBatteryInit,
 		SrvBatteryUpdate,
@@ -140,7 +143,7 @@ SCoreService coreServices [] =
 		SrvTaskUpdate,
 		0UL,
 		0UL
-	},
+	},*/
 	/*{
 		9U,
 		SrvDisplayInit,
@@ -155,7 +158,7 @@ SCoreService coreServices [] =
 SCore core = 
 {
 	.drivers = coreDrivers,
-	.nbDrivers = NB_CORE_DRIVERS,
+	.nbDrivers = 5U,
 	.services = coreServices,
 	.nbServices = NB_CORE_SERVICES,
 	.updateTime = 0U,
@@ -171,7 +174,7 @@ SCore core =
 Boolean SrvCoreInit ( void ) 
 {
 	Boolean oSuccess = TRUE;
-	DrvTwiInit();
+		
 	//Init Core Drivers
 	for(uint8_t i = 0U ; i < core.nbDrivers ; i++)
 	{

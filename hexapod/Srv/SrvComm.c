@@ -714,7 +714,7 @@ static Boolean SrvCommExecuteClusterLeg( void )
 			Int16S y = inMessage.data[ 5U ] * 4096 + inMessage.data[ 6U ] * 256 + inMessage.data[ 7U ] * 16 + inMessage.data[ 8U ];
 			Int16S z = inMessage.data[ 9U ] * 4096 + inMessage.data[ 10U ] * 256 + inMessage.data[ 11U ] * 16 + inMessage.data[ 12U ];
 			uint32_t delay = inMessage.data[ 13U ] * 4096 + inMessage.data[ 14U ] * 256 + inMessage.data[ 15U ] * 16 + inMessage.data[ 16U ];
-			return DrvLegSetTarget(legId,x,y,z, delay);
+			return TRUE;//DrvLegSetTarget(legId,x,y,z, delay);
 		}
 	}
 	else if(( inMessage.command == COMM_CLUSTER_LEG_COMMAND_GET_LEG_XYZ) && (inMessage.size == 1U))
@@ -725,10 +725,10 @@ static Boolean SrvCommExecuteClusterLeg( void )
 			//prepare output string
 			leg = DrvLegGetStruct(legId);
 			uint8_t nbData = SrvCommPrepareMessage(COMM_CLUSTER_LEG,COMM_CLUSTER_LEG_COMMAND_GET_LEG_XYZ, 13U);
-			Int16S x = (Int16S)leg->targetPositionX;
+			/*Int16S x = (Int16S)leg->targetPositionX;
 			Int16S y = (Int16S)leg->targetPositionY;
-			Int16S z = (Int16S)leg->targetPositionZ;
-			nbData += sprintf((char*)&response[ nbData ],"%01X%04X%04X%04X",legId,x,y,z);
+			Int16S z = (Int16S)leg->targetPositionZ;*/
+			//nbData += sprintf((char*)&response[ nbData ],"%01X%04X%04X%04X",legId,x,y,z);
 			return SrvCommWriteMessage(nbData);
 		}
 	}

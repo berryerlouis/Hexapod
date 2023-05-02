@@ -39,7 +39,6 @@ Boolean SrvHeadInit( void )
 	head.servos[ HEAD_HORI_SERVO_INDEX ] = DrvServoGetStruture( HEAD_HORI_SERO_TAB_INDEX ) ;
 	head.servos[ HEAD_HORI_SERVO_INDEX ]->id					= 18 ;
 	head.servos[ HEAD_HORI_SERVO_INDEX ]->currentPosition		= HEAD_HORI_MID ;
-	head.servos[ HEAD_HORI_SERVO_INDEX ]->targetPosition		= HEAD_HORI_MID ;
 	head.servos[ HEAD_HORI_SERVO_INDEX ]->offset				= HEAD_HORI_OFT ;
 	head.servos[ HEAD_HORI_SERVO_INDEX ]->mid					= HEAD_HORI_MID ;
 	head.servos[ HEAD_HORI_SERVO_INDEX ]->min					= HEAD_HORI_MIN ;
@@ -65,7 +64,7 @@ Boolean SrvHeadScan( void )
 		head.scanning = TRUE ;
 		
 		SrvHeadSetMinPosition(HEAD_SCAN_TIME/2);
-		DrvServoSetCallback(HEAD_HORI_SERO_TAB_INDEX, SrvHeadServoCallbackReachMin);
+		//DrvServoSetCallback(HEAD_HORI_SERO_TAB_INDEX, SrvHeadServoCallbackReachMin);
 		return TRUE;
 	}
 	return FALSE;
@@ -107,7 +106,7 @@ void SrvHeadServoCallbackReachMin (Int8U index)
 	if(head.scanning)
 	{
 		SrvHeadSetMaxPosition(HEAD_SCAN_TIME );
-		DrvServoSetCallback(HEAD_HORI_SERO_TAB_INDEX, SrvHeadServoCallbackReachMax);
+		//DrvServoSetCallback(HEAD_HORI_SERO_TAB_INDEX, SrvHeadServoCallbackReachMax);
 	}
 }
 
@@ -116,7 +115,7 @@ void SrvHeadServoCallbackReachMax (Int8U index)
 	if(head.scanning)
 	{
 		SrvHeadSetMidPosition(HEAD_SCAN_TIME/2);
-		DrvServoSetCallback(HEAD_HORI_SERO_TAB_INDEX, SrvHeadServoCallbackReachMid);
+		//DrvServoSetCallback(HEAD_HORI_SERO_TAB_INDEX, SrvHeadServoCallbackReachMid);
 	}
 }
 
@@ -125,7 +124,7 @@ void SrvHeadServoCallbackReachMid (Int8U index)
 	if(head.scanning)
 	{
 		head.scanning = FALSE ;
-		DrvServoSetCallback(HEAD_HORI_SERO_TAB_INDEX, NULL);
+		//DrvServoSetCallback(HEAD_HORI_SERO_TAB_INDEX, NULL);
 	}
 }
 

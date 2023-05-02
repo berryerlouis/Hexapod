@@ -109,7 +109,7 @@ Boolean SrvBodyMoveApplyRotationAndTranslation ( uint16_t delay )
 	for(Int8U indexLeg = 0U ; indexLeg < E_NB_LEGS ; indexLeg++ )
 	{
 		legMove = SrvBodyMoveComputeLegRotationAndTranslation(indexLeg);
-		DrvLegSetTarget(indexLeg,	legMove.x , legMove.y, legMove.z , delay);
+		//DrvLegSetTarget(indexLeg,	legMove.x , legMove.y, legMove.z , delay);
 	}
 	return TRUE;
 }
@@ -126,23 +126,23 @@ Boolean SrvBodyMoveSetPosition ( EBodyBehavior pos, uint16_t delay )
 	if(bodyMove.behavior == E_BODY_STOP)
 	{
 		//Stop position
-		DrvLegSetTarget(E_LEG_F_L,	0,	bodyMove.groundSize,	bodyMove.elevation,	delay);
+		/*DrvLegSetTarget(E_LEG_F_L,	0,	bodyMove.groundSize,	bodyMove.elevation,	delay);
 		DrvLegSetTarget(E_LEG_M_L,	0,	bodyMove.groundSize,	bodyMove.elevation,	delay);
 		DrvLegSetTarget(E_LEG_R_L,	0,	bodyMove.groundSize,	bodyMove.elevation,	delay);
 		DrvLegSetTarget(E_LEG_F_R,	0,	bodyMove.groundSize,	bodyMove.elevation,	delay);
 		DrvLegSetTarget(E_LEG_M_R,	0,	bodyMove.groundSize,	bodyMove.elevation,	delay);
-		DrvLegSetTarget(E_LEG_R_R,	0,	bodyMove.groundSize,	bodyMove.elevation,	delay);
+		DrvLegSetTarget(E_LEG_R_R,	0,	bodyMove.groundSize,	bodyMove.elevation,	delay);*/
 		return TRUE;
 	}
 	else if(bodyMove.behavior == E_BODY_STAR)
 	{
 		//star position
-		DrvLegSetTarget(E_LEG_F_L,	DrvLegGetXFromCoxaAngle(15,bodyMove.groundSize)		,bodyMove.groundSize,	bodyMove.elevation,	delay);
+		/*DrvLegSetTarget(E_LEG_F_L,	DrvLegGetXFromCoxaAngle(15,bodyMove.groundSize)		,bodyMove.groundSize,	bodyMove.elevation,	delay);
 		DrvLegSetTarget(E_LEG_M_L,	0													,bodyMove.groundSize,	bodyMove.elevation,	delay);
 		DrvLegSetTarget(E_LEG_R_L,	-DrvLegGetXFromCoxaAngle(15,bodyMove.groundSize)	,bodyMove.groundSize,	bodyMove.elevation,	delay);
 		DrvLegSetTarget(E_LEG_F_R,	-DrvLegGetXFromCoxaAngle(15,bodyMove.groundSize)	,bodyMove.groundSize,	bodyMove.elevation,	delay);
 		DrvLegSetTarget(E_LEG_M_R,	0													,bodyMove.groundSize,	bodyMove.elevation,	delay);
-		DrvLegSetTarget(E_LEG_R_R,	DrvLegGetXFromCoxaAngle(15,bodyMove.groundSize)		,bodyMove.groundSize,	bodyMove.elevation,	delay);
+		DrvLegSetTarget(E_LEG_R_R,	DrvLegGetXFromCoxaAngle(15,bodyMove.groundSize)		,bodyMove.groundSize,	bodyMove.elevation,	delay);*/
 		return TRUE;
 	}
 	else if(bodyMove.behavior == E_BODY_STRAIGHT)
@@ -150,12 +150,12 @@ Boolean SrvBodyMoveSetPosition ( EBodyBehavior pos, uint16_t delay )
 		bodyMove.groundSize = 0;
 		bodyMove.elevation = 0;
 		//straight position
-		DrvLegSetTarget(E_LEG_F_L,	DrvLegGetXFromCoxaAngle(15,0)	,	bodyMove.groundSize,	bodyMove.elevation,	delay);
+		/*DrvLegSetTarget(E_LEG_F_L,	DrvLegGetXFromCoxaAngle(15,0)	,	bodyMove.groundSize,	bodyMove.elevation,	delay);
 		DrvLegSetTarget(E_LEG_M_L,	0								,	bodyMove.groundSize,	bodyMove.elevation,	delay);
 		DrvLegSetTarget(E_LEG_R_L,	-DrvLegGetXFromCoxaAngle(15,0)	,	bodyMove.groundSize,	bodyMove.elevation,	delay);
 		DrvLegSetTarget(E_LEG_F_R,	-DrvLegGetXFromCoxaAngle(15,0)	,	bodyMove.groundSize,	bodyMove.elevation,	delay);
 		DrvLegSetTarget(E_LEG_M_R,	0								,	bodyMove.groundSize,	bodyMove.elevation,	delay);
-		DrvLegSetTarget(E_LEG_R_R,	DrvLegGetXFromCoxaAngle(15,0)	,	bodyMove.groundSize,	bodyMove.elevation,	delay);
+		DrvLegSetTarget(E_LEG_R_R,	DrvLegGetXFromCoxaAngle(15,0)	,	bodyMove.groundSize,	bodyMove.elevation,	delay);*/
 		return TRUE;
 	}
 	return FALSE;
