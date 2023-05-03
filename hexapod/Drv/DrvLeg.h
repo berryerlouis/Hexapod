@@ -19,7 +19,7 @@
 #define LEG_FEMUR_LENGTH		85		//in mm 
 #define LEG_TIBIA_LENGTH		130		//in mm 
 
-#define LEG_TIBIA_ANGLE_OFFSET  0		//13°
+#define LEG_TIBIA_ANGLE_OFFSET  100		//13°
 
 #define LEG_COCYX_AMPLITUDE			500		
 #define LEG_COCYX_AMPLITUDE_DIV_2	LEG_COCYX_AMPLITUDE / 2		
@@ -174,7 +174,6 @@ Boolean DrvLegIsInitialized( void );
 SLeg* DrvLegGetStruct( ELeg indexLeg );
 Boolean DrvLegSetSpeed( ELeg indexLeg, Int16U speed  );
 AxisFloat DrvLegGetXYZ( ELeg indexLeg );
-Boolean DrvLegComputeInverseKinematics( float x, float y, float z, float *coxaAngle, float *femurAngle, float *tibiaAngle );
 Boolean DrvLegSetTarget( ELeg indexLeg, AxisFloat posotion, Int16U speed );
 Boolean DrvLegReachPosition( ELeg indexLeg );
 float DrvLegGetXFromCoxaAngle( float angle , float y);

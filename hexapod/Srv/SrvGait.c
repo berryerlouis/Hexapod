@@ -24,13 +24,13 @@ AxisFloat positionPath[3U];
 Boolean SrvGaitInit ( void ) 
 {
 	positionPath[0].x = 0;
-	positionPath[0].y = 60;
+	positionPath[0].y = 65;
 	positionPath[0].z = 20;
 	positionPath[1].x = 45;
-	positionPath[1].y = 60;
+	positionPath[1].y = 65;
 	positionPath[1].z = 0;
 	positionPath[2].x = 60;
-	positionPath[2].y = 60;
+	positionPath[2].y = 65;
 	positionPath[2].z = 20;
 	return DrvLegInit();
 	return TRUE;

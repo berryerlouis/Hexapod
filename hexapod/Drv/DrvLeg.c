@@ -27,6 +27,7 @@ uint8_t legIndexInitialization = 0U;
 static Boolean DrvLegSetOffset ( void ) ;
 static void DrvLegInititalizing( void );
 static Boolean DrvLegApplyPosition( ELeg indexLeg, float coxaAngle, float femurAngle, float tibiaAngle, Int16U speed );
+static Boolean DrvLegComputeInverseKinematics( AxisFloat position, float *coxaAngle, float *femurAngle, float *tibiaAngle );
 /////////////////////////////////////////PUBLIC FUNCTIONS/////////////////////////////////////////
 
 // Init of Drv PWM
@@ -57,7 +58,6 @@ Boolean DrvLegInit( void )
 		
 	return TRUE;
 }
-
 
 SLegs* DrvLegGetLegs( void )
 {
@@ -90,7 +90,6 @@ Boolean DrvLegSetSpeed( ELeg indexLeg, Int16U speed  )
 	legs.leg[ indexLeg ].speed = speed;
 	return TRUE;
 }
-
 
 AxisFloat DrvLegGetXYZ(ELeg indexLeg )
 {
@@ -126,13 +125,13 @@ Boolean DrvLegUpdate( void )
 				float percentage = (DrvTickGetTimeMs() - legs.leg[ indexLeg ].startTime) / (float)legs.leg[ indexLeg ].speed;
 				position = LerpAxis(legs.leg[ indexLeg ].startPosition,legs.leg[ indexLeg ].targetPosition,percentage);
 				
+				//position.x = DrvLegGetXFromCoxaAngle(position.x,position.y);
+				
 				float coxaAngle  = 0;
 				float femurAngle = 0;
 				float tibiaAngle = 0;
 				DrvLegComputeInverseKinematics(
-					position.x,
-					position.y,
-					position.z,
+					position,
 					&coxaAngle,
 					&femurAngle,
 					&tibiaAngle);
@@ -164,22 +163,23 @@ float DrvLegGetXFromCoxaAngle( float angle , float y)
 }
 
 
-Boolean DrvLegComputeInverseKinematics(float x, float y, float z, float *coxaAngle, float *femurAngle, float *tibiaAngle )
+////////////////////////////////////////PRIVATE FUNCTIONS/////////////////////////////////////////
+static Boolean DrvLegComputeInverseKinematics(AxisFloat position, float *coxaAngle, float *femurAngle, float *tibiaAngle )
 {
 	//variable for trigonometry
 	float L, L1;
 	float alpha, alpha1,alpha2,beta,gama;
 	//add size of members
-	x += 0;
-	y += LEG_COCYX_LENGTH;
-	z += (LEG_TIBIA_LENGTH - LEG_FEMUR_LENGTH);
+	position.x += 0;
+	position.y += LEG_COCYX_LENGTH;
+	position.z += (LEG_TIBIA_LENGTH - LEG_FEMUR_LENGTH);
 		
 	//compute angles from distances
-	L1 = (float)sqrt((float)((float)(x * x) + (float)(y * y)));
-	gama = (float)atan((float)x / (float)y);
-	L = (float)sqrt(((L1 - LEG_COCYX_LENGTH) * (L1 - LEG_COCYX_LENGTH)) + (float)(z * z));
+	L1 = (float)sqrt((float)((float)(position.x * position.x) + (float)(position.y * position.y)));
+	gama = (float)atan((float)position.x / (float)position.y);
+	L = (float)sqrt(((L1 - LEG_COCYX_LENGTH) * (L1 - LEG_COCYX_LENGTH)) + (float)(position.z * position.z));
 	beta = (float)acos(((LEG_TIBIA_LENGTH * LEG_TIBIA_LENGTH) + (LEG_FEMUR_LENGTH * LEG_FEMUR_LENGTH) - (L * L)) / (2 * LEG_TIBIA_LENGTH * LEG_FEMUR_LENGTH));
-	alpha1 = (float)acos((float)z / L);
+	alpha1 = (float)acos((float)position.z / L);
 	alpha2 = (float)acos(((LEG_FEMUR_LENGTH * LEG_FEMUR_LENGTH) + (L * L) - (LEG_TIBIA_LENGTH * LEG_TIBIA_LENGTH)) / (2 * LEG_FEMUR_LENGTH * L));
 	alpha = alpha1 + alpha2;
 		
@@ -281,9 +281,7 @@ static void DrvLegInititalizing( void )
 			float femurAngle = 0;
 			float tibiaAngle = 0;
 			DrvLegComputeInverseKinematics(
-				position.x,
-				position.y,
-				position.z,
+				position,
 				&coxaAngle,
 				&femurAngle,
 				&tibiaAngle);
