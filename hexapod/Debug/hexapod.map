@@ -130,13 +130,13 @@ C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/a
 Allocating common symbols
 Common symbol       size              file
 
+legPosition         0x48              Srv/SrvGait.o
 feeling             0x6               Srv/SrvFeeling.o
 MesLeds             0x2c              Drv/DrvLed.o
 detection           0xf               Srv/SrvDetection.o
 walkPrivate         0x1e              Srv/SrvWalk.o
 cmpsOffsetMoy       0x6               Cmps/CmpMPU9150.o
 pwmOutpus           0x80              Cmps/CmpPCA9685.o
-positionPath        0x24              Srv/SrvGait.o
 gyrOffsetMoy        0x6               Cmps/CmpMPU9150.o
 bodyMove            0x21              Srv/SrvBodyMove.o
 direction           0x1               Srv/SrvDisplay.o
@@ -148,6 +148,7 @@ hexapod             0x14              Srv/SrvTask.o
 batteryInfo         0x3               Srv/SrvBattery.o
 bufferScreen        0x200             Cmps/CmpSSD1306.o
 accOffsetMoy        0x6               Cmps/CmpMPU9150.o
+positionBot         0x24              Srv/SrvGait.o
 levelPin            0x2               Cmps/CmpSRF04.o
 did_timeout         0x1               Cmps/CmpVL53L0X.o
 MesTimers           0x9               Drv/DrvTimer.o
@@ -2022,7 +2023,7 @@ Discarded input sections
  .debug_macro   0x00000000      0x796 Srv/SrvGait.o
  .debug_macro   0x00000000       0x70 Srv/SrvGait.o
  .debug_macro   0x00000000       0x34 Srv/SrvGait.o
- .debug_macro   0x00000000      0x1f6 Srv/SrvGait.o
+ .debug_macro   0x00000000       0xb2 Srv/SrvGait.o
  .group         0x00000000        0x8 Srv/SrvTask.o
  .group         0x00000000        0x8 Srv/SrvTask.o
  .group         0x00000000        0x8 Srv/SrvTask.o
@@ -2124,14 +2125,14 @@ Discarded input sections
  .debug_macro   0x00000000      0x796 Srv/SrvTask.o
  .debug_macro   0x00000000       0x70 Srv/SrvTask.o
  .debug_macro   0x00000000       0x34 Srv/SrvTask.o
- .debug_macro   0x00000000      0x1f6 Srv/SrvTask.o
+ .debug_macro   0x00000000       0xb2 Srv/SrvTask.o
  .debug_macro   0x00000000      0x31a Srv/SrvTask.o
  .debug_macro   0x00000000      0x16c Srv/SrvTask.o
  .debug_macro   0x00000000       0x10 Srv/SrvTask.o
  .debug_macro   0x00000000       0x16 Srv/SrvTask.o
  .debug_macro   0x00000000       0x34 Srv/SrvTask.o
  .debug_line    0x00000000      0x950 Srv/SrvTask.o
- .debug_str     0x00000000     0xf72c Srv/SrvTask.o
+ .debug_str     0x00000000     0xec06 Srv/SrvTask.o
  .comment       0x00000000       0x31 Srv/SrvTask.o
  .debug_frame   0x00000000      0x138 Srv/SrvTask.o
  COMMON         0x00000000       0x14 Srv/SrvTask.o
@@ -2208,7 +2209,7 @@ Discarded input sections
  .debug_macro   0x00000000      0x796 Srv/SrvBodyMove.o
  .debug_macro   0x00000000       0x70 Srv/SrvBodyMove.o
  .debug_macro   0x00000000       0x3a Srv/SrvBodyMove.o
- .debug_macro   0x00000000      0x1f6 Srv/SrvBodyMove.o
+ .debug_macro   0x00000000       0xb2 Srv/SrvBodyMove.o
  .debug_macro   0x00000000       0x16 Srv/SrvBodyMove.o
  .group         0x00000000        0x8 Srv/SrvComm.o
  .group         0x00000000        0x8 Srv/SrvComm.o
@@ -2282,7 +2283,7 @@ Discarded input sections
  .debug_macro   0x00000000      0x796 Srv/SrvComm.o
  .debug_macro   0x00000000       0x70 Srv/SrvComm.o
  .debug_macro   0x00000000       0x34 Srv/SrvComm.o
- .debug_macro   0x00000000      0x1f6 Srv/SrvComm.o
+ .debug_macro   0x00000000       0xb2 Srv/SrvComm.o
  .debug_macro   0x00000000      0x31a Srv/SrvComm.o
  .debug_macro   0x00000000      0x16c Srv/SrvComm.o
  .debug_macro   0x00000000       0x10 Srv/SrvComm.o
@@ -2367,7 +2368,7 @@ Discarded input sections
  .debug_macro   0x00000000       0x10 Srv/SrvCore.o
  .debug_macro   0x00000000       0x3a Srv/SrvCore.o
  .debug_macro   0x00000000       0x16 Srv/SrvCore.o
- .debug_macro   0x00000000      0x1f6 Srv/SrvCore.o
+ .debug_macro   0x00000000       0xb2 Srv/SrvCore.o
  .debug_macro   0x00000000      0x31a Srv/SrvCore.o
  .debug_macro   0x00000000      0x16c Srv/SrvCore.o
  .debug_macro   0x00000000       0x10 Srv/SrvCore.o
@@ -2648,7 +2649,7 @@ Discarded input sections
  .debug_macro   0x00000000       0x70 Srv/SrvHead.o
  .debug_macro   0x00000000       0x34 Srv/SrvHead.o
  .debug_macro   0x00000000       0x34 Srv/SrvHead.o
- .debug_macro   0x00000000      0x1f6 Srv/SrvHead.o
+ .debug_macro   0x00000000       0xb2 Srv/SrvHead.o
  .group         0x00000000        0x8 Srv/SrvHeartbeat.o
  .group         0x00000000        0x8 Srv/SrvHeartbeat.o
  .group         0x00000000        0x8 Srv/SrvHeartbeat.o
@@ -3143,7 +3144,7 @@ Discarded input sections
  .debug_macro   0x00000000       0x70 Srv/SrvWalk.o
  .debug_macro   0x00000000       0x16 Srv/SrvWalk.o
  .debug_macro   0x00000000       0x3a Srv/SrvWalk.o
- .debug_macro   0x00000000      0x1f6 Srv/SrvWalk.o
+ .debug_macro   0x00000000       0xb2 Srv/SrvWalk.o
  .text          0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(acos.o)
  .data          0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(acos.o)
  .bss           0x00000000        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(acos.o)
@@ -3647,7 +3648,7 @@ END GROUP
 .rela.plt
  *(.rela.plt)
 
-.text           0x00000000     0x5116
+.text           0x00000000     0x5056
  *(.vectors)
  .vectors       0x00000000       0x8c C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega1284p/avr51/crtatmega1284p.o
                 0x00000000                __vector_default
@@ -3777,402 +3778,402 @@ END GROUP
  .text.DrvLegComputeInverseKinematics
                 0x000007b4      0x2d2 Drv/DrvLeg.o
  .text.DrvLegApplyPosition
-                0x00000a86      0x43e Drv/DrvLeg.o
+                0x00000a86      0x258 Drv/DrvLeg.o
  .text.DrvLegInit
-                0x00000ec4      0x56c Drv/DrvLeg.o
-                0x00000ec4                DrvLegInit
+                0x00000cde      0x57a Drv/DrvLeg.o
+                0x00000cde                DrvLegInit
  .text.DrvLegGetStruct
-                0x00001430        0xe Drv/DrvLeg.o
-                0x00001430                DrvLegGetStruct
+                0x00001258        0xe Drv/DrvLeg.o
+                0x00001258                DrvLegGetStruct
  .text.DrvLegSetTarget
-                0x0000143e       0xd8 Drv/DrvLeg.o
-                0x0000143e                DrvLegSetTarget
+                0x00001266       0xd8 Drv/DrvLeg.o
+                0x00001266                DrvLegSetTarget
  .text.DrvLegUpdate
-                0x00001516      0x3a2 Drv/DrvLeg.o
-                0x00001516                DrvLegUpdate
+                0x0000133e      0x396 Drv/DrvLeg.o
+                0x0000133e                DrvLegUpdate
  .text.DrvLegGetXFromCoxaAngle
-                0x000018b8       0x5e Drv/DrvLeg.o
-                0x000018b8                DrvLegGetXFromCoxaAngle
+                0x000016d4       0x5e Drv/DrvLeg.o
+                0x000016d4                DrvLegGetXFromCoxaAngle
  .text.DrvServoInit
-                0x00001916       0x4e Drv/DrvServo.o
-                0x00001916                DrvServoInit
+                0x00001732       0x4e Drv/DrvServo.o
+                0x00001732                DrvServoInit
  .text.DrvServoSetTarget
-                0x00001964       0x90 Drv/DrvServo.o
-                0x00001964                DrvServoSetTarget
+                0x00001780       0x90 Drv/DrvServo.o
+                0x00001780                DrvServoSetTarget
  .text.DrvServoActivate
-                0x000019f4       0x1e Drv/DrvServo.o
-                0x000019f4                DrvServoActivate
+                0x00001810       0x1e Drv/DrvServo.o
+                0x00001810                DrvServoActivate
  .text.DrvServoUpdate
-                0x00001a12       0xd8 Drv/DrvServo.o
-                0x00001a12                DrvServoUpdate
+                0x0000182e       0xd8 Drv/DrvServo.o
+                0x0000182e                DrvServoUpdate
  .text.DrvServoGetStruture
-                0x00001aea       0x24 Drv/DrvServo.o
-                0x00001aea                DrvServoGetStruture
+                0x00001906       0x24 Drv/DrvServo.o
+                0x00001906                DrvServoGetStruture
  .text.__vector_19
-                0x00001b0e       0x1e Drv/DrvSpi.o
-                0x00001b0e                __vector_19
+                0x0000192a       0x1e Drv/DrvSpi.o
+                0x0000192a                __vector_19
  .text.DrvTickInit
-                0x00001b2c       0x40 Drv/DrvTick.o
-                0x00001b2c                DrvTickInit
+                0x00001948       0x40 Drv/DrvTick.o
+                0x00001948                DrvTickInit
  .text.DrvTickGetTimeUs
-                0x00001b6c       0x44 Drv/DrvTick.o
-                0x00001b6c                DrvTickGetTimeUs
+                0x00001988       0x44 Drv/DrvTick.o
+                0x00001988                DrvTickGetTimeUs
  .text.DrvTickGetTimeMs
-                0x00001bb0       0x14 Drv/DrvTick.o
-                0x00001bb0                DrvTickGetTimeMs
+                0x000019cc       0x14 Drv/DrvTick.o
+                0x000019cc                DrvTickGetTimeMs
  .text.DrvTickDelayUs
-                0x00001bc4       0x2c Drv/DrvTick.o
-                0x00001bc4                DrvTickDelayUs
+                0x000019e0       0x2c Drv/DrvTick.o
+                0x000019e0                DrvTickDelayUs
  .text.DrvTickDelayMs
-                0x00001bf0        0xe Drv/DrvTick.o
-                0x00001bf0                DrvTickDelayMs
+                0x00001a0c        0xe Drv/DrvTick.o
+                0x00001a0c                DrvTickDelayMs
  .text.__vector_18
-                0x00001bfe       0x4a Drv/DrvTick.o
-                0x00001bfe                __vector_18
+                0x00001a1a       0x4a Drv/DrvTick.o
+                0x00001a1a                __vector_18
  .text.DrvTimerInit
-                0x00001c48       0x38 Drv/DrvTimer.o
-                0x00001c48                DrvTimerInit
+                0x00001a64       0x38 Drv/DrvTimer.o
+                0x00001a64                DrvTimerInit
  .text.DrvTimerStopTimer
-                0x00001c80       0x2e Drv/DrvTimer.o
-                0x00001c80                DrvTimerStopTimer
+                0x00001a9c       0x2e Drv/DrvTimer.o
+                0x00001a9c                DrvTimerStopTimer
  .text.DrvTimerTickReset
-                0x00001cae       0x24 Drv/DrvTimer.o
-                0x00001cae                DrvTimerTickReset
+                0x00001aca       0x24 Drv/DrvTimer.o
+                0x00001aca                DrvTimerTickReset
  .text.__vector_9
-                0x00001cd2       0xc8 Drv/DrvTimer.o
-                0x00001cd2                __vector_9
+                0x00001aee       0xc8 Drv/DrvTimer.o
+                0x00001aee                __vector_9
  .text.DrvTwiWaitTransmission
-                0x00001d9a       0x2c Drv/DrvTwi.o
+                0x00001bb6       0x2c Drv/DrvTwi.o
  .text.DrvTwiInit
-                0x00001dc6       0x34 Drv/DrvTwi.o
-                0x00001dc6                DrvTwiInit
+                0x00001be2       0x34 Drv/DrvTwi.o
+                0x00001be2                DrvTwiInit
  .text.DrvTwiReadReg
-                0x00001dfa       0xde Drv/DrvTwi.o
-                0x00001dfa                DrvTwiReadReg
+                0x00001c16       0xde Drv/DrvTwi.o
+                0x00001c16                DrvTwiReadReg
  .text.DrvTwiWriteReg
-                0x00001ed8       0xa0 Drv/DrvTwi.o
-                0x00001ed8                DrvTwiWriteReg
+                0x00001cf4       0xa0 Drv/DrvTwi.o
+                0x00001cf4                DrvTwiWriteReg
  .text.DrvTwiWriteRegBuf
-                0x00001f78       0xfc Drv/DrvTwi.o
-                0x00001f78                DrvTwiWriteRegBuf
+                0x00001d94       0xfc Drv/DrvTwi.o
+                0x00001d94                DrvTwiWriteRegBuf
  .text.DrvUartInit
-                0x00002074       0x5e Drv/DrvUart.o
-                0x00002074                DrvUartInit
+                0x00001e90       0x5e Drv/DrvUart.o
+                0x00001e90                DrvUartInit
  .text.DrvUartFillTxBuffer
-                0x000020d2       0x30 Drv/DrvUart.o
-                0x000020d2                DrvUartFillTxBuffer
+                0x00001eee       0x30 Drv/DrvUart.o
+                0x00001eee                DrvUartFillTxBuffer
  .text.DrvUartSendData
-                0x00002102       0x16 Drv/DrvUart.o
-                0x00002102                DrvUartSendData
+                0x00001f1e       0x16 Drv/DrvUart.o
+                0x00001f1e                DrvUartSendData
  .text.DrvUartReadData
-                0x00002118       0x48 Drv/DrvUart.o
-                0x00002118                DrvUartReadData
+                0x00001f34       0x48 Drv/DrvUart.o
+                0x00001f34                DrvUartReadData
  .text.DrvUartDataAvailable
-                0x00002160       0x1e Drv/DrvUart.o
-                0x00002160                DrvUartDataAvailable
+                0x00001f7c       0x1e Drv/DrvUart.o
+                0x00001f7c                DrvUartDataAvailable
  .text.__vector_20
-                0x0000217e       0x4c Drv/DrvUart.o
-                0x0000217e                __vector_20
+                0x00001f9a       0x4c Drv/DrvUart.o
+                0x00001f9a                __vector_20
  .text.__vector_21
-                0x000021ca       0x60 Drv/DrvUart.o
-                0x000021ca                __vector_21
+                0x00001fe6       0x60 Drv/DrvUart.o
+                0x00001fe6                __vector_21
  .text.__vector_22
-                0x0000222a       0x14 Drv/DrvUart.o
-                0x0000222a                __vector_22
+                0x00002046       0x14 Drv/DrvUart.o
+                0x00002046                __vector_22
  .text.__vector_28
-                0x0000223e       0x4c Drv/DrvUart.o
-                0x0000223e                __vector_28
+                0x0000205a       0x4c Drv/DrvUart.o
+                0x0000205a                __vector_28
  .text.__vector_29
-                0x0000228a       0x60 Drv/DrvUart.o
-                0x0000228a                __vector_29
+                0x000020a6       0x60 Drv/DrvUart.o
+                0x000020a6                __vector_29
  .text.__vector_30
-                0x000022ea       0x14 Drv/DrvUart.o
-                0x000022ea                __vector_30
- .text.main     0x000022fe       0x44 main.o
-                0x000022fe                main
+                0x00002106       0x14 Drv/DrvUart.o
+                0x00002106                __vector_30
+ .text.main     0x0000211a       0x44 main.o
+                0x0000211a                main
  .text.SrvGaitInit
-                0x00002342       0x7a Srv/SrvGait.o
-                0x00002342                SrvGaitInit
+                0x0000215e      0x116 Srv/SrvGait.o
+                0x0000215e                SrvGaitInit
  .text.SrvGaitUpdate
-                0x000023bc       0xa8 Srv/SrvGait.o
-                0x000023bc                SrvGaitUpdate
+                0x00002274      0x12e Srv/SrvGait.o
+                0x00002274                SrvGaitUpdate
  .text.SrvBodyMoveGetStruct
-                0x00002464        0x6 Srv/SrvBodyMove.o
-                0x00002464                SrvBodyMoveGetStruct
+                0x000023a2        0x6 Srv/SrvBodyMove.o
+                0x000023a2                SrvBodyMoveGetStruct
  .text.SrvBodyMoveComputeLegRotationAndTranslation
-                0x0000246a      0x3fa Srv/SrvBodyMove.o
-                0x0000246a                SrvBodyMoveComputeLegRotationAndTranslation
+                0x000023a8      0x3fc Srv/SrvBodyMove.o
+                0x000023a8                SrvBodyMoveComputeLegRotationAndTranslation
  .text.SrvBodyMoveSetRotationAndTranslation
-                0x00002864       0x74 Srv/SrvBodyMove.o
-                0x00002864                SrvBodyMoveSetRotationAndTranslation
+                0x000027a4       0x74 Srv/SrvBodyMove.o
+                0x000027a4                SrvBodyMoveSetRotationAndTranslation
  .text.SrvBodyMoveApplyRotationAndTranslation
-                0x000028d8       0x3c Srv/SrvBodyMove.o
-                0x000028d8                SrvBodyMoveApplyRotationAndTranslation
+                0x00002818       0x3c Srv/SrvBodyMove.o
+                0x00002818                SrvBodyMoveApplyRotationAndTranslation
  .text.SrvBodyMoveGetPosition
-                0x00002914        0x6 Srv/SrvBodyMove.o
-                0x00002914                SrvBodyMoveGetPosition
+                0x00002854        0x6 Srv/SrvBodyMove.o
+                0x00002854                SrvBodyMoveGetPosition
  .text.SrvBodyMoveSetPosition
-                0x0000291a       0x2c Srv/SrvBodyMove.o
-                0x0000291a                SrvBodyMoveSetPosition
+                0x0000285a       0x2c Srv/SrvBodyMove.o
+                0x0000285a                SrvBodyMoveSetPosition
  .text.SrvBodyMoveSetGroundSize
-                0x00002946       0x14 Srv/SrvBodyMove.o
-                0x00002946                SrvBodyMoveSetGroundSize
+                0x00002886       0x14 Srv/SrvBodyMove.o
+                0x00002886                SrvBodyMoveSetGroundSize
  .text.SrvBodyMoveSetElevation
-                0x0000295a       0x14 Srv/SrvBodyMove.o
-                0x0000295a                SrvBodyMoveSetElevation
+                0x0000289a       0x14 Srv/SrvBodyMove.o
+                0x0000289a                SrvBodyMoveSetElevation
  .text.SrvCommWriteMessage
-                0x0000296e       0x48 Srv/SrvComm.o
+                0x000028ae       0x48 Srv/SrvComm.o
  .text.SrvCommPrepareMessage
-                0x000029b6       0x38 Srv/SrvComm.o
+                0x000028f6       0x38 Srv/SrvComm.o
  .text.SrvCommExecuteMessage
-                0x000029ee      0xfca Srv/SrvComm.o
+                0x0000292e      0xfca Srv/SrvComm.o
  .text.SrvCommInit
-                0x000039b8       0x2a Srv/SrvComm.o
-                0x000039b8                SrvCommInit
+                0x000038f8       0x2a Srv/SrvComm.o
+                0x000038f8                SrvCommInit
  .text.SrvCommUpdate
-                0x000039e2      0x480 Srv/SrvComm.o
-                0x000039e2                SrvCommUpdate
+                0x00003922      0x480 Srv/SrvComm.o
+                0x00003922                SrvCommUpdate
  .text.SrvCoreInit
-                0x00003e62      0x154 Srv/SrvCore.o
-                0x00003e62                SrvCoreInit
+                0x00003da2      0x154 Srv/SrvCore.o
+                0x00003da2                SrvCoreInit
  .text.SrvCoreLoop
-                0x00003fb6      0x112 Srv/SrvCore.o
-                0x00003fb6                SrvCoreLoop
+                0x00003ef6      0x112 Srv/SrvCore.o
+                0x00003ef6                SrvCoreLoop
  .text.SrvFeelingSetFeelingStatus
-                0x000040c8        0x6 Srv/SrvFeeling.o
-                0x000040c8                SrvFeelingSetFeelingStatus
+                0x00004008        0x6 Srv/SrvFeeling.o
+                0x00004008                SrvFeelingSetFeelingStatus
  .text.SrvFeelingGetFeeling
-                0x000040ce        0x6 Srv/SrvFeeling.o
-                0x000040ce                SrvFeelingGetFeeling
+                0x0000400e        0x6 Srv/SrvFeeling.o
+                0x0000400e                SrvFeelingGetFeeling
  .text.SrvHeadSetMinPosition
-                0x000040d4       0x16 Srv/SrvHead.o
-                0x000040d4                SrvHeadSetMinPosition
+                0x00004014       0x16 Srv/SrvHead.o
+                0x00004014                SrvHeadSetMinPosition
  .text.SrvHeadScan
-                0x000040ea       0x18 Srv/SrvHead.o
-                0x000040ea                SrvHeadScan
+                0x0000402a       0x18 Srv/SrvHead.o
+                0x0000402a                SrvHeadScan
  .text.SrvImuSimpleSetThreshold
-                0x00004102        0x8 Srv/SrvImuSimple.o
-                0x00004102                SrvImuSimpleSetThreshold
+                0x00004042        0x8 Srv/SrvImuSimple.o
+                0x00004042                SrvImuSimpleSetThreshold
  .text.SrvImuSimpleGetThreshold
-                0x0000410a        0x6 Srv/SrvImuSimple.o
-                0x0000410a                SrvImuSimpleGetThreshold
+                0x0000404a        0x6 Srv/SrvImuSimple.o
+                0x0000404a                SrvImuSimpleGetThreshold
  .text.SrvImuSimpleGetRoll
-                0x00004110        0xa Srv/SrvImuSimple.o
-                0x00004110                SrvImuSimpleGetRoll
+                0x00004050        0xa Srv/SrvImuSimple.o
+                0x00004050                SrvImuSimpleGetRoll
  .text.SrvImuSimpleGetPitch
-                0x0000411a        0xa Srv/SrvImuSimple.o
-                0x0000411a                SrvImuSimpleGetPitch
+                0x0000405a        0xa Srv/SrvImuSimple.o
+                0x0000405a                SrvImuSimpleGetPitch
  .text.SrvImuSimpleGetYaw
-                0x00004124        0xa Srv/SrvImuSimple.o
-                0x00004124                SrvImuSimpleGetYaw
+                0x00004064        0xa Srv/SrvImuSimple.o
+                0x00004064                SrvImuSimpleGetYaw
  .text.SrvDetectionGetThresholdLazer
-                0x0000412e        0xa Srv/SrvDetection.o
-                0x0000412e                SrvDetectionGetThresholdLazer
+                0x0000406e        0xa Srv/SrvDetection.o
+                0x0000406e                SrvDetectionGetThresholdLazer
  .text.SrvDetectionSetThresholdLazer
-                0x00004138        0xa Srv/SrvDetection.o
-                0x00004138                SrvDetectionSetThresholdLazer
+                0x00004078        0xa Srv/SrvDetection.o
+                0x00004078                SrvDetectionSetThresholdLazer
  .text.SrvDetectionGetDistanceLazer
-                0x00004142       0x12 Srv/SrvDetection.o
-                0x00004142                SrvDetectionGetDistanceLazer
+                0x00004082       0x12 Srv/SrvDetection.o
+                0x00004082                SrvDetectionGetDistanceLazer
  .text.SrvDetectionGetThresholdUS
-                0x00004154        0xa Srv/SrvDetection.o
-                0x00004154                SrvDetectionGetThresholdUS
+                0x00004094        0xa Srv/SrvDetection.o
+                0x00004094                SrvDetectionGetThresholdUS
  .text.SrvDetectionSetThresholdUS
-                0x0000415e        0xa Srv/SrvDetection.o
-                0x0000415e                SrvDetectionSetThresholdUS
+                0x0000409e        0xa Srv/SrvDetection.o
+                0x0000409e                SrvDetectionSetThresholdUS
  .text.SrvDetectionGetDistanceUS
-                0x00004168       0x12 Srv/SrvDetection.o
-                0x00004168                SrvDetectionGetDistanceUS
+                0x000040a8       0x12 Srv/SrvDetection.o
+                0x000040a8                SrvDetectionGetDistanceUS
  .text.SrvWalkGetStruct
-                0x0000417a        0x6 Srv/SrvWalk.o
-                0x0000417a                SrvWalkGetStruct
+                0x000040ba        0x6 Srv/SrvWalk.o
+                0x000040ba                SrvWalkGetStruct
  .text.SrvWalkSetSpeed
-                0x00004180       0x1c Srv/SrvWalk.o
-                0x00004180                SrvWalkSetSpeed
+                0x000040c0       0x1c Srv/SrvWalk.o
+                0x000040c0                SrvWalkSetSpeed
  .text.SrvWalkGetSpeed
-                0x0000419c        0xa Srv/SrvWalk.o
-                0x0000419c                SrvWalkGetSpeed
+                0x000040dc        0xa Srv/SrvWalk.o
+                0x000040dc                SrvWalkGetSpeed
  .text.SrvWalkStopWalk
-                0x000041a6        0xa Srv/SrvWalk.o
-                0x000041a6                SrvWalkStopWalk
+                0x000040e6        0xa Srv/SrvWalk.o
+                0x000040e6                SrvWalkStopWalk
  .text.SrvWalkSetAmplitude
-                0x000041b0       0x3a Srv/SrvWalk.o
-                0x000041b0                SrvWalkSetAmplitude
+                0x000040f0       0x3a Srv/SrvWalk.o
+                0x000040f0                SrvWalkSetAmplitude
  .text.SrvWalkSetWalk
-                0x000041ea      0x104 Srv/SrvWalk.o
-                0x000041ea                SrvWalkSetWalk
+                0x0000412a      0x104 Srv/SrvWalk.o
+                0x0000412a                SrvWalkSetWalk
  .text.SrvWalkGetAmplitude
-                0x000042ee        0x6 Srv/SrvWalk.o
-                0x000042ee                SrvWalkGetAmplitude
+                0x0000422e        0x6 Srv/SrvWalk.o
+                0x0000422e                SrvWalkGetAmplitude
  .text.SrvWalkSetDirection
-                0x000042f4       0x14 Srv/SrvWalk.o
-                0x000042f4                SrvWalkSetDirection
+                0x00004234       0x14 Srv/SrvWalk.o
+                0x00004234                SrvWalkSetDirection
  .text.SrvWalkGetDirection
-                0x00004308        0x6 Srv/SrvWalk.o
-                0x00004308                SrvWalkGetDirection
+                0x00004248        0x6 Srv/SrvWalk.o
+                0x00004248                SrvWalkGetDirection
  .text.avr-libc.fplib
-                0x0000430e       0x1c c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(acos.o)
-                0x0000430e                acos
+                0x0000424e       0x1c c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(acos.o)
+                0x0000424e                acos
  .text.avr-libc.fplib
-                0x0000432a        0xa c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(addsf3.o)
-                0x0000432a                __subsf3
-                0x0000432c                __addsf3
+                0x0000426a        0xa c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(addsf3.o)
+                0x0000426a                __subsf3
+                0x0000426c                __addsf3
  .text.avr-libc.fplib
-                0x00004334       0xc0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(addsf3x.o)
-                0x0000434e                __addsf3x
+                0x00004274       0xc0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(addsf3x.o)
+                0x0000428e                __addsf3x
  .text.avr-libc.fplib
-                0x000043f4       0x50 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(atan.o)
-                0x000043f4                atan
+                0x00004334       0x50 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(atan.o)
+                0x00004334                atan
  .text.avr-libc.fplib
-                0x00004444        0x8 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(cmpsf2.o)
-                0x00004444                __nesf2
-                0x00004444                __eqsf2
-                0x00004444                __cmpsf2
-                0x00004444                __ltsf2
-                0x00004444                __lesf2
+                0x00004384        0x8 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(cmpsf2.o)
+                0x00004384                __nesf2
+                0x00004384                __eqsf2
+                0x00004384                __cmpsf2
+                0x00004384                __ltsf2
+                0x00004384                __lesf2
  .text.avr-libc.fplib
-                0x0000444c        0x4 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(divsf3.o)
-                0x0000444c                __divsf3
+                0x0000438c        0x4 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(divsf3.o)
+                0x0000438c                __divsf3
  .text.avr-libc.fplib
-                0x00004450       0xcc c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(divsf3x.o)
-                0x00004466                __divsf3x
-                0x0000446a                __divsf3_pse
+                0x00004390       0xcc c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(divsf3x.o)
+                0x000043a6                __divsf3x
+                0x000043aa                __divsf3_pse
  .text.avr-libc.fplib
-                0x0000451c        0xa c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fixsfsi.o)
-                0x0000451c                __fixsfsi
+                0x0000445c        0xa c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fixsfsi.o)
+                0x0000445c                __fixsfsi
  .text.avr-libc.fplib
-                0x00004526       0x58 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fixunssfsi.o)
-                0x00004526                __fixunssfsi
+                0x00004466       0x58 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fixunssfsi.o)
+                0x00004466                __fixunssfsi
  .text.avr-libc.fplib
-                0x0000457e       0x7a c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(floatsisf.o)
-                0x0000457e                __floatunsisf
-                0x00004582                __floatsisf
+                0x000044be       0x7a c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(floatsisf.o)
+                0x000044be                __floatunsisf
+                0x000044c2                __floatsisf
  .text.avr-libc.fplib
-                0x000045f8       0x26 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(floor.o)
-                0x000045f8                floor
+                0x00004538       0x26 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(floor.o)
+                0x00004538                floor
  .text.avr-libc.fplib
-                0x0000461e       0x36 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fp_arccos.o)
-                0x0000461e                __fp_arccos
+                0x0000455e       0x36 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fp_arccos.o)
+                0x0000455e                __fp_arccos
  .text.avr-libc.fplib
-                0x00004654       0x48 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fp_cmp.o)
-                0x00004654                __fp_cmp
+                0x00004594       0x48 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fp_cmp.o)
+                0x00004594                __fp_cmp
  .text.avr-libc.fplib
-                0x0000469c        0xc c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fp_inf.o)
-                0x0000469c                __fp_inf
+                0x000045dc        0xc c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fp_inf.o)
+                0x000045dc                __fp_inf
  .text.avr-libc.fplib
-                0x000046a8       0x36 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fp_mintl.o)
-                0x000046a8                __fp_mintl
+                0x000045e8       0x36 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fp_mintl.o)
+                0x000045e8                __fp_mintl
  .text.avr-libc.fplib
-                0x000046de       0x1c c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fp_mpack.o)
-                0x000046de                __fp_mpack
-                0x000046e2                __fp_mpack_finite
+                0x0000461e       0x1c c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fp_mpack.o)
+                0x0000461e                __fp_mpack
+                0x00004622                __fp_mpack_finite
  .text.avr-libc.fplib
-                0x000046fa        0x6 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fp_nan.o)
-                0x000046fa                __fp_nan
+                0x0000463a        0x6 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fp_nan.o)
+                0x0000463a                __fp_nan
  .text.avr-libc.fplib
-                0x00004700       0x4a c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fp_powser.o)
-                0x00004700                __fp_powser
+                0x00004640       0x4a c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fp_powser.o)
+                0x00004640                __fp_powser
  .text.avr-libc.fplib
-                0x0000474a        0xe c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fp_pscA.o)
-                0x0000474a                __fp_pscA
+                0x0000468a        0xe c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fp_pscA.o)
+                0x0000468a                __fp_pscA
  .text.avr-libc.fplib
-                0x00004758        0xe c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fp_pscB.o)
-                0x00004758                __fp_pscB
+                0x00004698        0xe c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fp_pscB.o)
+                0x00004698                __fp_pscB
  .text.avr-libc.fplib
-                0x00004766       0x50 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fp_rempio2.o)
-                0x00004768                __fp_rempio2
+                0x000046a6       0x50 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fp_rempio2.o)
+                0x000046a8                __fp_rempio2
  .text.avr-libc.fplib
-                0x000047b6       0x22 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fp_round.o)
-                0x000047b6                __fp_round
+                0x000046f6       0x22 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fp_round.o)
+                0x000046f6                __fp_round
  .text.avr-libc.fplib
-                0x000047d8       0x44 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fp_split3.o)
-                0x000047d8                __fp_split3
-                0x000047e8                __fp_splitA
+                0x00004718       0x44 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fp_split3.o)
+                0x00004718                __fp_split3
+                0x00004728                __fp_splitA
  .text.avr-libc.fplib
-                0x0000481c       0x2e c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fp_trunc.o)
-                0x0000481c                __fp_trunc
+                0x0000475c       0x2e c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fp_trunc.o)
+                0x0000475c                __fp_trunc
  .text.avr-libc.fplib
-                0x0000484a        0xe c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fp_zero.o)
-                0x0000484a                __fp_zero
-                0x0000484c                __fp_szero
+                0x0000478a        0xe c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fp_zero.o)
+                0x0000478a                __fp_zero
+                0x0000478c                __fp_szero
  .text.avr-libc.fplib
-                0x00004858        0x8 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(gesf2.o)
-                0x00004858                __gesf2
-                0x00004858                __gtsf2
+                0x00004798        0x8 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(gesf2.o)
+                0x00004798                __gesf2
+                0x00004798                __gtsf2
  .text.avr-libc.fplib
-                0x00004860        0xe c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(inverse.o)
-                0x00004860                inverse
+                0x000047a0        0xe c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(inverse.o)
+                0x000047a0                inverse
  .text.avr-libc.fplib
-                0x0000486e        0x4 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(mulsf3.o)
-                0x0000486e                __mulsf3
+                0x000047ae        0x4 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(mulsf3.o)
+                0x000047ae                __mulsf3
  .text.avr-libc.fplib
-                0x00004872       0xc2 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(mulsf3x.o)
-                0x00004886                __mulsf3x
-                0x0000488a                __mulsf3_pse
+                0x000047b2       0xc2 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(mulsf3x.o)
+                0x000047c6                __mulsf3x
+                0x000047ca                __mulsf3_pse
  .text.avr-libc.fplib
-                0x00004934       0x40 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(round.o)
-                0x00004934                round
+                0x00004874       0x40 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(round.o)
+                0x00004874                round
  .text.avr-libc.fplib
-                0x00004974       0x84 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(sqrt.o)
-                0x0000497c                sqrtf
-                0x0000497c                sqrt
+                0x000048b4       0x84 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(sqrt.o)
+                0x000048bc                sqrtf
+                0x000048bc                sqrt
  .text.avr-libc.fplib
-                0x000049f8        0x6 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(square.o)
-                0x000049f8                square
+                0x00004938        0x6 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(square.o)
+                0x00004938                square
  .text.avr-libc.fplib
-                0x000049fe       0x40 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(tan.o)
-                0x000049fe                tan
+                0x0000493e       0x40 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(tan.o)
+                0x0000493e                tan
  .text.avr-libc.fplib
-                0x00004a3e        0xe c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fp_norm2.o)
-                0x00004a3e                __fp_norm2
+                0x0000497e        0xe c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fp_norm2.o)
+                0x0000497e                __fp_norm2
  .text.avr-libc.fplib
-                0x00004a4c       0x22 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fp_powsodd.o)
-                0x00004a4c                __fp_powsodd
+                0x0000498c       0x22 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libm.a(fp_powsodd.o)
+                0x0000498c                __fp_powsodd
  .text.libgcc.div
-                0x00004a6e       0x28 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr51\libgcc.a(_udivmodhi4.o)
-                0x00004a6e                __udivmodhi4
+                0x000049ae       0x28 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr51\libgcc.a(_udivmodhi4.o)
+                0x000049ae                __udivmodhi4
  .text.libgcc.div
-                0x00004a96       0x26 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr51\libgcc.a(_divmodhi4.o)
-                0x00004a96                _div
-                0x00004a96                __divmodhi4
+                0x000049d6       0x26 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr51\libgcc.a(_divmodhi4.o)
+                0x000049d6                _div
+                0x000049d6                __divmodhi4
  .text.libgcc.div
-                0x00004abc       0x44 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr51\libgcc.a(_udivmodsi4.o)
-                0x00004abc                __udivmodsi4
- .text.libgcc   0x00004b00       0x12 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr51\libgcc.a(_tablejump2.o)
-                0x00004b00                __tablejump2__
+                0x000049fc       0x44 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr51\libgcc.a(_udivmodsi4.o)
+                0x000049fc                __udivmodsi4
+ .text.libgcc   0x00004a40       0x12 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr51\libgcc.a(_tablejump2.o)
+                0x00004a40                __tablejump2__
  .text.libgcc.mul
-                0x00004b12       0x1e c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr51\libgcc.a(_umulhisi3.o)
-                0x00004b12                __umulhisi3
+                0x00004a52       0x1e c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr51\libgcc.a(_umulhisi3.o)
+                0x00004a52                __umulhisi3
  .text.avr-libc
-                0x00004b30       0x5c c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libc.a(sprintf.o)
-                0x00004b30                sprintf
+                0x00004a70       0x5c c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libc.a(sprintf.o)
+                0x00004a70                sprintf
  .text.avr-libc
-                0x00004b8c      0x3fa c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libc.a(vfprintf_std.o)
-                0x00004b8c                vfprintf
+                0x00004acc      0x3fa c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libc.a(vfprintf_std.o)
+                0x00004acc                vfprintf
  .text.avr-libc
-                0x00004f86       0x16 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libc.a(strnlen_P.o)
-                0x00004f86                strnlen_P
+                0x00004ec6       0x16 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libc.a(strnlen_P.o)
+                0x00004ec6                strnlen_P
  .text.avr-libc
-                0x00004f9c       0x16 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libc.a(strnlen.o)
-                0x00004f9c                strnlen
+                0x00004edc       0x16 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libc.a(strnlen.o)
+                0x00004edc                strnlen
  .text.avr-libc
-                0x00004fb2       0x78 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libc.a(fputc.o)
-                0x00004fb2                fputc
+                0x00004ef2       0x78 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libc.a(fputc.o)
+                0x00004ef2                fputc
  .text.avr-libc
-                0x0000502a       0xbc c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libc.a(ultoa_invert.o)
-                0x0000502a                __ultoa_invert
+                0x00004f6a       0xbc c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/../../../../avr/lib/avr51\libc.a(ultoa_invert.o)
+                0x00004f6a                __ultoa_invert
  .text.avr-libc
-                0x000050e6       0x10 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega1284p/avr51\libatmega1284p.a(eerd_byte.o)
-                0x000050e6                eeprom_read_byte
+                0x00005026       0x10 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega1284p/avr51\libatmega1284p.a(eerd_byte.o)
+                0x00005026                eeprom_read_byte
  .text.avr-libc
-                0x000050f6       0x1c C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega1284p/avr51\libatmega1284p.a(eewr_byte.o)
-                0x000050f6                eeprom_write_byte
-                0x000050f8                eeprom_write_r18
-                0x00005112                . = ALIGN (0x2)
+                0x00005036       0x1c C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega1284p/avr51\libatmega1284p.a(eewr_byte.o)
+                0x00005036                eeprom_write_byte
+                0x00005038                eeprom_write_r18
+                0x00005052                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x00005112        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr51\libgcc.a(_exit.o)
-                0x00005112                _exit
-                0x00005112                exit
+ .fini9         0x00005052        0x0 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr51\libgcc.a(_exit.o)
+                0x00005052                _exit
+                0x00005052                exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -4191,11 +4192,11 @@ END GROUP
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x00005112        0x4 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr51\libgcc.a(_exit.o)
+ .fini0         0x00005052        0x4 c:/program files (x86)/atmel/studio/7.0/toolchain/avr8/avr8-gnu-toolchain/bin/../lib/gcc/avr/5.4.0/avr51\libgcc.a(_exit.o)
  *(.fini0)
-                0x00005116                _etext = .
+                0x00005056                _etext = .
 
-.data           0x00800100      0x1ea load address 0x00005116
+.data           0x00800100      0x1ea load address 0x00005056
                 0x00800100                PROVIDE (__data_start, .)
  *(.data)
  *(.data*)
@@ -4235,7 +4236,7 @@ END GROUP
                 0x008002ea                _edata = .
                 0x008002ea                PROVIDE (__data_end, .)
 
-.bss            0x008002ea      0xbda
+.bss            0x008002ea      0xc5e
                 0x008002ea                PROVIDE (__bss_start, .)
  *(.bss)
  *(.bss*)
@@ -4269,59 +4270,70 @@ END GROUP
                 0x008004e8        0x2 Drv/DrvTwi.o
  .bss.uartRingBuffer
                 0x008004ea      0x808 Drv/DrvUart.o
- .bss.toto      0x00800cf2        0x1 Srv/SrvGait.o
+ .bss.BodyCenterOffsetY
+                0x00800cf2       0x18 Srv/SrvGait.o
+ .bss.BodyCenterOffsetX
+                0x00800d0a       0x18 Srv/SrvGait.o
+ .bss.BodyCenterOffset3
+                0x00800d22        0x4 Srv/SrvGait.o
+ .bss.BodyCenterOffset2
+                0x00800d26        0x4 Srv/SrvGait.o
+ .bss.BodyCenterOffset1
+                0x00800d2a        0x4 Srv/SrvGait.o
+ .bss.toto      0x00800d2e        0x1 Srv/SrvGait.o
  .bss.prevMillisGait
-                0x00800cf3        0x4 Srv/SrvGait.o
-                0x00800cf3                prevMillisGait
+                0x00800d2f        0x4 Srv/SrvGait.o
+                0x00800d2f                prevMillisGait
  .bss.countData
-                0x00800cf7        0x1 Srv/SrvComm.o
-                0x00800cf7                countData
+                0x00800d33        0x1 Srv/SrvComm.o
+                0x00800d33                countData
  .bss.errorMessage
-                0x00800cf8        0x1 Srv/SrvComm.o
-                0x00800cf8                errorMessage
+                0x00800d34        0x1 Srv/SrvComm.o
+                0x00800d34                errorMessage
  .bss.uartUsing
-                0x00800cf9        0x1 Srv/SrvComm.o
-                0x00800cf9                uartUsing
+                0x00800d35        0x1 Srv/SrvComm.o
+                0x00800d35                uartUsing
  .bss.sendPeriodic
-                0x00800cfa        0x1 Srv/SrvComm.o
-                0x00800cfa                sendPeriodic
+                0x00800d36        0x1 Srv/SrvComm.o
+                0x00800d36                sendPeriodic
  .bss.prevMillisSendPeriodic
-                0x00800cfb        0x4 Srv/SrvComm.o
-                0x00800cfb                prevMillisSendPeriodic
- .bss.response  0x00800cff       0x64 Srv/SrvComm.o
+                0x00800d37        0x4 Srv/SrvComm.o
+                0x00800d37                prevMillisSendPeriodic
+ .bss.response  0x00800d3b       0x64 Srv/SrvComm.o
  .bss.inMessage
-                0x00800d63       0x36 Srv/SrvComm.o
- .bss.status    0x00800d99        0x1 Srv/SrvComm.o
+                0x00800d9f       0x36 Srv/SrvComm.o
+ .bss.status    0x00800dd5        0x1 Srv/SrvComm.o
  .bss.nbDataAvailable
-                0x00800d9a        0x2 Srv/SrvComm.o
- .bss.head      0x00800d9c        0x7 Srv/SrvHead.o
- .bss.imu       0x00800da3       0x1e Srv/SrvImuSimple.o
+                0x00800dd6        0x2 Srv/SrvComm.o
+ .bss.head      0x00800dd8        0x7 Srv/SrvHead.o
+ .bss.imu       0x00800ddf       0x1e Srv/SrvImuSimple.o
  *(COMMON)
- COMMON         0x00800dc1       0x80 Cmps/CmpPCA9685.o
-                0x00800dc1                pwmOutpus
- COMMON         0x00800e41        0x2 Cmps/CmpSRF04.o
-                0x00800e41                levelPin
- COMMON         0x00800e43        0x9 Drv/DrvTimer.o
-                0x00800e43                MesTimers
- COMMON         0x00800e4c       0x24 Srv/SrvGait.o
-                0x00800e4c                positionPath
- COMMON         0x00800e70       0x21 Srv/SrvBodyMove.o
-                0x00800e70                bodyMove
- COMMON         0x00800e91        0x6 Srv/SrvFeeling.o
-                0x00800e91                feeling
- COMMON         0x00800e97        0xf Srv/SrvDetection.o
-                0x00800e97                detection
- COMMON         0x00800ea6       0x1e Srv/SrvWalk.o
-                0x00800ea6                walkPrivate
-                0x00800ec4                PROVIDE (__bss_end, .)
-                0x00005116                __data_load_start = LOADADDR (.data)
-                0x00005300                __data_load_end = (__data_load_start + SIZEOF (.data))
+ COMMON         0x00800dfd       0x80 Cmps/CmpPCA9685.o
+                0x00800dfd                pwmOutpus
+ COMMON         0x00800e7d        0x2 Cmps/CmpSRF04.o
+                0x00800e7d                levelPin
+ COMMON         0x00800e7f        0x9 Drv/DrvTimer.o
+                0x00800e7f                MesTimers
+ COMMON         0x00800e88       0x6c Srv/SrvGait.o
+                0x00800e88                legPosition
+                0x00800ed0                positionBot
+ COMMON         0x00800ef4       0x21 Srv/SrvBodyMove.o
+                0x00800ef4                bodyMove
+ COMMON         0x00800f15        0x6 Srv/SrvFeeling.o
+                0x00800f15                feeling
+ COMMON         0x00800f1b        0xf Srv/SrvDetection.o
+                0x00800f1b                detection
+ COMMON         0x00800f2a       0x1e Srv/SrvWalk.o
+                0x00800f2a                walkPrivate
+                0x00800f48                PROVIDE (__bss_end, .)
+                0x00005056                __data_load_start = LOADADDR (.data)
+                0x00005240                __data_load_end = (__data_load_start + SIZEOF (.data))
 
-.noinit         0x00800ec4        0x0
+.noinit         0x00800f48        0x0
                 [!provide]                PROVIDE (__noinit_start, .)
  *(.noinit*)
                 [!provide]                PROVIDE (__noinit_end, .)
-                0x00800ec4                _end = .
+                0x00800f48                _end = .
                 [!provide]                PROVIDE (__heap_start, .)
 
 .eeprom         0x00810000        0x0
@@ -4462,112 +4474,112 @@ END GROUP
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000     0x88f5
+.debug_info     0x00000000     0x89c8
  *(.debug_info .gnu.linkonce.wi.*)
  .debug_info    0x00000000      0x792 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega1284p/avr51/crtatmega1284p.o
  .debug_info    0x00000792      0x4c4 Cmps/CmpPCA9685.o
  .debug_info    0x00000c56      0x509 Cmps/CmpSRF04.o
  .debug_info    0x0000115f      0x608 Drv/DrvEeprom.o
  .debug_info    0x00001767      0x3bc Drv/DrvIo.o
- .debug_info    0x00001b23      0xc52 Drv/DrvLeg.o
- .debug_info    0x00002775      0x425 Drv/DrvServo.o
- .debug_info    0x00002b9a      0x518 Drv/DrvSpi.o
- .debug_info    0x000030b2      0x24c Drv/DrvTick.o
- .debug_info    0x000032fe      0x39d Drv/DrvTimer.o
- .debug_info    0x0000369b      0x5c0 Drv/DrvTwi.o
- .debug_info    0x00003c5b      0x563 Drv/DrvUart.o
- .debug_info    0x000041be      0x13e main.o
- .debug_info    0x000042fc      0x234 Srv/SrvGait.o
- .debug_info    0x00004530      0x58d Srv/SrvBodyMove.o
- .debug_info    0x00004abd     0x1d64 Srv/SrvComm.o
- .debug_info    0x00006821      0x44c Srv/SrvCore.o
- .debug_info    0x00006c6d      0x26b Srv/SrvFeeling.o
- .debug_info    0x00006ed8      0x4c9 Srv/SrvHead.o
- .debug_info    0x000073a1      0x685 Srv/SrvImuSimple.o
- .debug_info    0x00007a26      0x4b2 Srv/SrvDetection.o
- .debug_info    0x00007ed8      0x8c1 Srv/SrvWalk.o
- .debug_info    0x00008799       0xae C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega1284p/avr51\libatmega1284p.a(eerd_byte.o)
- .debug_info    0x00008847       0xae C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega1284p/avr51\libatmega1284p.a(eewr_byte.o)
+ .debug_info    0x00001b23      0xc3e Drv/DrvLeg.o
+ .debug_info    0x00002761      0x425 Drv/DrvServo.o
+ .debug_info    0x00002b86      0x518 Drv/DrvSpi.o
+ .debug_info    0x0000309e      0x24c Drv/DrvTick.o
+ .debug_info    0x000032ea      0x39d Drv/DrvTimer.o
+ .debug_info    0x00003687      0x5c0 Drv/DrvTwi.o
+ .debug_info    0x00003c47      0x563 Drv/DrvUart.o
+ .debug_info    0x000041aa      0x13e main.o
+ .debug_info    0x000042e8      0x31b Srv/SrvGait.o
+ .debug_info    0x00004603      0x58d Srv/SrvBodyMove.o
+ .debug_info    0x00004b90     0x1d64 Srv/SrvComm.o
+ .debug_info    0x000068f4      0x44c Srv/SrvCore.o
+ .debug_info    0x00006d40      0x26b Srv/SrvFeeling.o
+ .debug_info    0x00006fab      0x4c9 Srv/SrvHead.o
+ .debug_info    0x00007474      0x685 Srv/SrvImuSimple.o
+ .debug_info    0x00007af9      0x4b2 Srv/SrvDetection.o
+ .debug_info    0x00007fab      0x8c1 Srv/SrvWalk.o
+ .debug_info    0x0000886c       0xae C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega1284p/avr51\libatmega1284p.a(eerd_byte.o)
+ .debug_info    0x0000891a       0xae C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega1284p/avr51\libatmega1284p.a(eewr_byte.o)
 
-.debug_abbrev   0x00000000     0x2996
+.debug_abbrev   0x00000000     0x29b2
  *(.debug_abbrev)
  .debug_abbrev  0x00000000      0x729 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega1284p/avr51/crtatmega1284p.o
  .debug_abbrev  0x00000729      0x1d1 Cmps/CmpPCA9685.o
  .debug_abbrev  0x000008fa      0x150 Cmps/CmpSRF04.o
  .debug_abbrev  0x00000a4a      0x1ae Drv/DrvEeprom.o
  .debug_abbrev  0x00000bf8      0x11a Drv/DrvIo.o
- .debug_abbrev  0x00000d12      0x33e Drv/DrvLeg.o
- .debug_abbrev  0x00001050      0x182 Drv/DrvServo.o
- .debug_abbrev  0x000011d2      0x154 Drv/DrvSpi.o
- .debug_abbrev  0x00001326      0x123 Drv/DrvTick.o
- .debug_abbrev  0x00001449      0x158 Drv/DrvTimer.o
- .debug_abbrev  0x000015a1      0x175 Drv/DrvTwi.o
- .debug_abbrev  0x00001716      0x18d Drv/DrvUart.o
- .debug_abbrev  0x000018a3       0xb7 main.o
- .debug_abbrev  0x0000195a      0x136 Srv/SrvGait.o
- .debug_abbrev  0x00001a90      0x1dc Srv/SrvBodyMove.o
- .debug_abbrev  0x00001c6c      0x2f2 Srv/SrvComm.o
- .debug_abbrev  0x00001f5e      0x150 Srv/SrvCore.o
- .debug_abbrev  0x000020ae      0x113 Srv/SrvFeeling.o
- .debug_abbrev  0x000021c1      0x17b Srv/SrvHead.o
- .debug_abbrev  0x0000233c      0x1d0 Srv/SrvImuSimple.o
- .debug_abbrev  0x0000250c      0x193 Srv/SrvDetection.o
- .debug_abbrev  0x0000269f      0x2cf Srv/SrvWalk.o
- .debug_abbrev  0x0000296e       0x14 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega1284p/avr51\libatmega1284p.a(eerd_byte.o)
- .debug_abbrev  0x00002982       0x14 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega1284p/avr51\libatmega1284p.a(eewr_byte.o)
+ .debug_abbrev  0x00000d12      0x337 Drv/DrvLeg.o
+ .debug_abbrev  0x00001049      0x182 Drv/DrvServo.o
+ .debug_abbrev  0x000011cb      0x154 Drv/DrvSpi.o
+ .debug_abbrev  0x0000131f      0x123 Drv/DrvTick.o
+ .debug_abbrev  0x00001442      0x158 Drv/DrvTimer.o
+ .debug_abbrev  0x0000159a      0x175 Drv/DrvTwi.o
+ .debug_abbrev  0x0000170f      0x18d Drv/DrvUart.o
+ .debug_abbrev  0x0000189c       0xb7 main.o
+ .debug_abbrev  0x00001953      0x159 Srv/SrvGait.o
+ .debug_abbrev  0x00001aac      0x1dc Srv/SrvBodyMove.o
+ .debug_abbrev  0x00001c88      0x2f2 Srv/SrvComm.o
+ .debug_abbrev  0x00001f7a      0x150 Srv/SrvCore.o
+ .debug_abbrev  0x000020ca      0x113 Srv/SrvFeeling.o
+ .debug_abbrev  0x000021dd      0x17b Srv/SrvHead.o
+ .debug_abbrev  0x00002358      0x1d0 Srv/SrvImuSimple.o
+ .debug_abbrev  0x00002528      0x193 Srv/SrvDetection.o
+ .debug_abbrev  0x000026bb      0x2cf Srv/SrvWalk.o
+ .debug_abbrev  0x0000298a       0x14 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega1284p/avr51\libatmega1284p.a(eerd_byte.o)
+ .debug_abbrev  0x0000299e       0x14 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega1284p/avr51\libatmega1284p.a(eewr_byte.o)
 
-.debug_line     0x00000000     0x8add
+.debug_line     0x00000000     0x8ada
  *(.debug_line .debug_line.* .debug_line_end)
  .debug_line    0x00000000      0x169 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega1284p/avr51/crtatmega1284p.o
  .debug_line    0x00000169      0x515 Cmps/CmpPCA9685.o
  .debug_line    0x0000067e      0x53d Cmps/CmpSRF04.o
  .debug_line    0x00000bbb      0x56b Drv/DrvEeprom.o
  .debug_line    0x00001126      0x519 Drv/DrvIo.o
- .debug_line    0x0000163f      0xa35 Drv/DrvLeg.o
- .debug_line    0x00002074      0x5c6 Drv/DrvServo.o
- .debug_line    0x0000263a      0x4fd Drv/DrvSpi.o
- .debug_line    0x00002b37      0x506 Drv/DrvTick.o
- .debug_line    0x0000303d      0x578 Drv/DrvTimer.o
- .debug_line    0x000035b5      0x875 Drv/DrvTwi.o
- .debug_line    0x00003e2a      0x62b Drv/DrvUart.o
- .debug_line    0x00004455      0x418 main.o
- .debug_line    0x0000486d      0x4b3 Srv/SrvGait.o
- .debug_line    0x00004d20      0x6f0 Srv/SrvBodyMove.o
- .debug_line    0x00005410      0xf62 Srv/SrvComm.o
- .debug_line    0x00006372      0x70c Srv/SrvCore.o
- .debug_line    0x00006a7e      0x4e9 Srv/SrvFeeling.o
- .debug_line    0x00006f67      0x5b3 Srv/SrvHead.o
- .debug_line    0x0000751a      0x5fc Srv/SrvImuSimple.o
- .debug_line    0x00007b16      0x635 Srv/SrvDetection.o
- .debug_line    0x0000814b      0x87a Srv/SrvWalk.o
- .debug_line    0x000089c5       0x7a C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega1284p/avr51\libatmega1284p.a(eerd_byte.o)
- .debug_line    0x00008a3f       0x9e C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega1284p/avr51\libatmega1284p.a(eewr_byte.o)
+ .debug_line    0x0000163f      0x9f5 Drv/DrvLeg.o
+ .debug_line    0x00002034      0x5c6 Drv/DrvServo.o
+ .debug_line    0x000025fa      0x4fd Drv/DrvSpi.o
+ .debug_line    0x00002af7      0x506 Drv/DrvTick.o
+ .debug_line    0x00002ffd      0x578 Drv/DrvTimer.o
+ .debug_line    0x00003575      0x875 Drv/DrvTwi.o
+ .debug_line    0x00003dea      0x62b Drv/DrvUart.o
+ .debug_line    0x00004415      0x418 main.o
+ .debug_line    0x0000482d      0x4f0 Srv/SrvGait.o
+ .debug_line    0x00004d1d      0x6f0 Srv/SrvBodyMove.o
+ .debug_line    0x0000540d      0xf62 Srv/SrvComm.o
+ .debug_line    0x0000636f      0x70c Srv/SrvCore.o
+ .debug_line    0x00006a7b      0x4e9 Srv/SrvFeeling.o
+ .debug_line    0x00006f64      0x5b3 Srv/SrvHead.o
+ .debug_line    0x00007517      0x5fc Srv/SrvImuSimple.o
+ .debug_line    0x00007b13      0x635 Srv/SrvDetection.o
+ .debug_line    0x00008148      0x87a Srv/SrvWalk.o
+ .debug_line    0x000089c2       0x7a C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega1284p/avr51\libatmega1284p.a(eerd_byte.o)
+ .debug_line    0x00008a3c       0x9e C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega1284p/avr51\libatmega1284p.a(eewr_byte.o)
 
-.debug_frame    0x00000000     0x1518
+.debug_frame    0x00000000     0x1534
  *(.debug_frame)
  .debug_frame   0x00000000       0xa0 Cmps/CmpPCA9685.o
  .debug_frame   0x000000a0      0x12c Cmps/CmpSRF04.o
  .debug_frame   0x000001cc      0x114 Drv/DrvEeprom.o
  .debug_frame   0x000002e0       0x84 Drv/DrvIo.o
- .debug_frame   0x00000364      0x270 Drv/DrvLeg.o
- .debug_frame   0x000005d4       0x98 Drv/DrvServo.o
- .debug_frame   0x0000066c      0x11c Drv/DrvSpi.o
- .debug_frame   0x00000788       0xb8 Drv/DrvTick.o
- .debug_frame   0x00000840       0xec Drv/DrvTimer.o
- .debug_frame   0x0000092c      0x178 Drv/DrvTwi.o
- .debug_frame   0x00000aa4      0x1b8 Drv/DrvUart.o
- .debug_frame   0x00000c5c       0x24 main.o
- .debug_frame   0x00000c80       0x68 Srv/SrvGait.o
- .debug_frame   0x00000ce8      0x16c Srv/SrvBodyMove.o
- .debug_frame   0x00000e54      0x160 Srv/SrvComm.o
- .debug_frame   0x00000fb4       0xdc Srv/SrvCore.o
- .debug_frame   0x00001090       0x8c Srv/SrvFeeling.o
- .debug_frame   0x0000111c       0xe0 Srv/SrvHead.o
- .debug_frame   0x000011fc      0x110 Srv/SrvImuSimple.o
- .debug_frame   0x0000130c       0xc4 Srv/SrvDetection.o
- .debug_frame   0x000013d0      0x148 Srv/SrvWalk.o
+ .debug_frame   0x00000364      0x28c Drv/DrvLeg.o
+ .debug_frame   0x000005f0       0x98 Drv/DrvServo.o
+ .debug_frame   0x00000688      0x11c Drv/DrvSpi.o
+ .debug_frame   0x000007a4       0xb8 Drv/DrvTick.o
+ .debug_frame   0x0000085c       0xec Drv/DrvTimer.o
+ .debug_frame   0x00000948      0x178 Drv/DrvTwi.o
+ .debug_frame   0x00000ac0      0x1b8 Drv/DrvUart.o
+ .debug_frame   0x00000c78       0x24 main.o
+ .debug_frame   0x00000c9c       0x68 Srv/SrvGait.o
+ .debug_frame   0x00000d04      0x16c Srv/SrvBodyMove.o
+ .debug_frame   0x00000e70      0x160 Srv/SrvComm.o
+ .debug_frame   0x00000fd0       0xdc Srv/SrvCore.o
+ .debug_frame   0x000010ac       0x8c Srv/SrvFeeling.o
+ .debug_frame   0x00001138       0xe0 Srv/SrvHead.o
+ .debug_frame   0x00001218      0x110 Srv/SrvImuSimple.o
+ .debug_frame   0x00001328       0xc4 Srv/SrvDetection.o
+ .debug_frame   0x000013ec      0x148 Srv/SrvWalk.o
 
-.debug_str      0x00000000    0x12267
+.debug_str      0x00000000    0x11948
  *(.debug_str)
  .debug_str     0x00000000      0x296 C:/Program Files (x86)/Atmel/Studio/7.0/Packs/atmel/ATmega_DFP/1.2.209/gcc/dev/atmega1284p/avr51/crtatmega1284p.o
  .debug_str     0x00000296     0xc62a Cmps/CmpPCA9685.o
@@ -4578,64 +4590,64 @@ END GROUP
                                0xc873 (size before relaxing)
  .debug_str     0x0000cf3a       0x6c Drv/DrvIo.o
                                0xc86b (size before relaxing)
- .debug_str     0x0000cfa6     0x1326 Drv/DrvLeg.o
-                               0xd921 (size before relaxing)
- .debug_str     0x0000e2cc       0xb4 Drv/DrvServo.o
+ .debug_str     0x0000cfa6      0x7d1 Drv/DrvLeg.o
+                               0xcdcc (size before relaxing)
+ .debug_str     0x0000d777       0xb4 Drv/DrvServo.o
                                0xc97e (size before relaxing)
- .debug_str     0x0000e380      0x109 Drv/DrvSpi.o
+ .debug_str     0x0000d82b      0x109 Drv/DrvSpi.o
                                0xc8dc (size before relaxing)
- .debug_str     0x0000e489       0x8b Drv/DrvTick.o
+ .debug_str     0x0000d934       0x8b Drv/DrvTick.o
                                0xc6a2 (size before relaxing)
- .debug_str     0x0000e514      0x20e Drv/DrvTimer.o
+ .debug_str     0x0000d9bf      0x20e Drv/DrvTimer.o
                                0xc7f4 (size before relaxing)
- .debug_str     0x0000e722      0x3ae Drv/DrvTwi.o
+ .debug_str     0x0000dbcd      0x3ae Drv/DrvTwi.o
                                0xcbd1 (size before relaxing)
- .debug_str     0x0000ead0      0x20a Drv/DrvUart.o
+ .debug_str     0x0000df7b      0x20a Drv/DrvUart.o
                                0xc9cf (size before relaxing)
- .debug_str     0x0000ecda       0x40 main.o
+ .debug_str     0x0000e185       0x40 main.o
                                0xc5fe (size before relaxing)
- .debug_str     0x0000ed1a       0x58 Srv/SrvGait.o
-                               0xd603 (size before relaxing)
- .debug_str     0x0000ed72      0x25b Srv/SrvBodyMove.o
-                               0xd7fb (size before relaxing)
- .debug_str     0x0000efcd     0x296b Srv/SrvComm.o
-                              0x10283 (size before relaxing)
- .debug_str     0x00011938      0x22d Srv/SrvCore.o
-                               0xfb32 (size before relaxing)
- .debug_str     0x00011b65       0x92 Srv/SrvFeeling.o
+ .debug_str     0x0000e1c5      0x28e Srv/SrvGait.o
+                               0xcd13 (size before relaxing)
+ .debug_str     0x0000e453      0x25b Srv/SrvBodyMove.o
+                               0xccd5 (size before relaxing)
+ .debug_str     0x0000e6ae     0x296b Srv/SrvComm.o
+                               0xf75d (size before relaxing)
+ .debug_str     0x00011019      0x22d Srv/SrvCore.o
+                               0xf00c (size before relaxing)
+ .debug_str     0x00011246       0x92 Srv/SrvFeeling.o
                                0xc754 (size before relaxing)
- .debug_str     0x00011bf7      0x195 Srv/SrvHead.o
-                               0xd8a3 (size before relaxing)
- .debug_str     0x00011d8c      0x1fd Srv/SrvImuSimple.o
+ .debug_str     0x000112d8      0x195 Srv/SrvHead.o
+                               0xcd7d (size before relaxing)
+ .debug_str     0x0001146d      0x1fd Srv/SrvImuSimple.o
                                0xd5a6 (size before relaxing)
- .debug_str     0x00011f89      0x152 Srv/SrvDetection.o
+ .debug_str     0x0001166a      0x152 Srv/SrvDetection.o
                                0xd344 (size before relaxing)
- .debug_str     0x000120db      0x18c Srv/SrvWalk.o
-                               0xd96b (size before relaxing)
+ .debug_str     0x000117bc      0x18c Srv/SrvWalk.o
+                               0xce45 (size before relaxing)
 
-.debug_loc      0x00000000     0x6181
+.debug_loc      0x00000000     0x5fdc
  *(.debug_loc)
  .debug_loc     0x00000000      0x34c Cmps/CmpPCA9685.o
  .debug_loc     0x0000034c      0x37e Cmps/CmpSRF04.o
  .debug_loc     0x000006ca      0x3cf Drv/DrvEeprom.o
  .debug_loc     0x00000a99      0x29b Drv/DrvIo.o
- .debug_loc     0x00000d34     0x100a Drv/DrvLeg.o
- .debug_loc     0x00001d3e      0x217 Drv/DrvServo.o
- .debug_loc     0x00001f55      0x4c8 Drv/DrvSpi.o
- .debug_loc     0x0000241d      0x1b0 Drv/DrvTick.o
- .debug_loc     0x000025cd      0x242 Drv/DrvTimer.o
- .debug_loc     0x0000280f      0x96f Drv/DrvTwi.o
- .debug_loc     0x0000317e      0x4c4 Drv/DrvUart.o
- .debug_loc     0x00003642       0x28 main.o
- .debug_loc     0x0000366a       0xac Srv/SrvGait.o
- .debug_loc     0x00003716      0x632 Srv/SrvBodyMove.o
- .debug_loc     0x00003d48     0x16b6 Srv/SrvComm.o
- .debug_loc     0x000053fe      0x2ff Srv/SrvCore.o
- .debug_loc     0x000056fd       0xb3 Srv/SrvFeeling.o
- .debug_loc     0x000057b0      0x1a0 Srv/SrvHead.o
- .debug_loc     0x00005950      0x297 Srv/SrvImuSimple.o
- .debug_loc     0x00005be7       0x7e Srv/SrvDetection.o
- .debug_loc     0x00005c65      0x51c Srv/SrvWalk.o
+ .debug_loc     0x00000d34      0xe65 Drv/DrvLeg.o
+ .debug_loc     0x00001b99      0x217 Drv/DrvServo.o
+ .debug_loc     0x00001db0      0x4c8 Drv/DrvSpi.o
+ .debug_loc     0x00002278      0x1b0 Drv/DrvTick.o
+ .debug_loc     0x00002428      0x242 Drv/DrvTimer.o
+ .debug_loc     0x0000266a      0x96f Drv/DrvTwi.o
+ .debug_loc     0x00002fd9      0x4c4 Drv/DrvUart.o
+ .debug_loc     0x0000349d       0x28 main.o
+ .debug_loc     0x000034c5       0xac Srv/SrvGait.o
+ .debug_loc     0x00003571      0x632 Srv/SrvBodyMove.o
+ .debug_loc     0x00003ba3     0x16b6 Srv/SrvComm.o
+ .debug_loc     0x00005259      0x2ff Srv/SrvCore.o
+ .debug_loc     0x00005558       0xb3 Srv/SrvFeeling.o
+ .debug_loc     0x0000560b      0x1a0 Srv/SrvHead.o
+ .debug_loc     0x000057ab      0x297 Srv/SrvImuSimple.o
+ .debug_loc     0x00005a42       0x7e Srv/SrvDetection.o
+ .debug_loc     0x00005ac0      0x51c Srv/SrvWalk.o
 
 .debug_macinfo
  *(.debug_macinfo)
@@ -4655,31 +4667,31 @@ END GROUP
 .debug_pubtypes
  *(.debug_pubtypes)
 
-.debug_ranges   0x00000000      0x728
+.debug_ranges   0x00000000      0x710
  *(.debug_ranges)
  .debug_ranges  0x00000000       0x30 Cmps/CmpPCA9685.o
  .debug_ranges  0x00000030       0x40 Cmps/CmpSRF04.o
  .debug_ranges  0x00000070       0x70 Drv/DrvEeprom.o
  .debug_ranges  0x000000e0       0x40 Drv/DrvIo.o
- .debug_ranges  0x00000120       0x80 Drv/DrvLeg.o
- .debug_ranges  0x000001a0       0x38 Drv/DrvServo.o
- .debug_ranges  0x000001d8       0x48 Drv/DrvSpi.o
- .debug_ranges  0x00000220       0x40 Drv/DrvTick.o
- .debug_ranges  0x00000260       0x48 Drv/DrvTimer.o
- .debug_ranges  0x000002a8       0x78 Drv/DrvTwi.o
- .debug_ranges  0x00000320       0x70 Drv/DrvUart.o
- .debug_ranges  0x00000390       0x10 main.o
- .debug_ranges  0x000003a0       0x18 Srv/SrvGait.o
- .debug_ranges  0x000003b8       0x68 Srv/SrvBodyMove.o
- .debug_ranges  0x00000420       0xd8 Srv/SrvComm.o
- .debug_ranges  0x000004f8       0x68 Srv/SrvCore.o
- .debug_ranges  0x00000560       0x30 Srv/SrvFeeling.o
- .debug_ranges  0x00000590       0x68 Srv/SrvHead.o
- .debug_ranges  0x000005f8       0x60 Srv/SrvImuSimple.o
- .debug_ranges  0x00000658       0x58 Srv/SrvDetection.o
- .debug_ranges  0x000006b0       0x78 Srv/SrvWalk.o
+ .debug_ranges  0x00000120       0x68 Drv/DrvLeg.o
+ .debug_ranges  0x00000188       0x38 Drv/DrvServo.o
+ .debug_ranges  0x000001c0       0x48 Drv/DrvSpi.o
+ .debug_ranges  0x00000208       0x40 Drv/DrvTick.o
+ .debug_ranges  0x00000248       0x48 Drv/DrvTimer.o
+ .debug_ranges  0x00000290       0x78 Drv/DrvTwi.o
+ .debug_ranges  0x00000308       0x70 Drv/DrvUart.o
+ .debug_ranges  0x00000378       0x10 main.o
+ .debug_ranges  0x00000388       0x18 Srv/SrvGait.o
+ .debug_ranges  0x000003a0       0x68 Srv/SrvBodyMove.o
+ .debug_ranges  0x00000408       0xd8 Srv/SrvComm.o
+ .debug_ranges  0x000004e0       0x68 Srv/SrvCore.o
+ .debug_ranges  0x00000548       0x30 Srv/SrvFeeling.o
+ .debug_ranges  0x00000578       0x68 Srv/SrvHead.o
+ .debug_ranges  0x000005e0       0x60 Srv/SrvImuSimple.o
+ .debug_ranges  0x00000640       0x58 Srv/SrvDetection.o
+ .debug_ranges  0x00000698       0x78 Srv/SrvWalk.o
 
-.debug_macro    0x00000000     0x29ec
+.debug_macro    0x00000000     0x2908
  *(.debug_macro)
  .debug_macro   0x00000000      0x195 Cmps/CmpPCA9685.o
  .debug_macro   0x00000195       0x76 Cmps/CmpPCA9685.o
@@ -4688,30 +4700,30 @@ END GROUP
  .debug_macro   0x00000543      0x16e Drv/DrvIo.o
  .debug_macro   0x000006b1      0x19a Drv/DrvLeg.o
  .debug_macro   0x0000084b       0x3a Drv/DrvLeg.o
- .debug_macro   0x00000885      0x1f6 Drv/DrvLeg.o
- .debug_macro   0x00000a7b      0x1ac Drv/DrvServo.o
- .debug_macro   0x00000c27       0x34 Drv/DrvServo.o
- .debug_macro   0x00000c5b      0x174 Drv/DrvSpi.o
- .debug_macro   0x00000dcf      0x17e Drv/DrvTick.o
- .debug_macro   0x00000f4d      0x184 Drv/DrvTimer.o
- .debug_macro   0x000010d1      0x18f Drv/DrvTwi.o
- .debug_macro   0x00001260       0xdd Drv/DrvTwi.o
- .debug_macro   0x0000133d      0x186 Drv/DrvUart.o
- .debug_macro   0x000014c3      0x178 main.o
- .debug_macro   0x0000163b      0x1a8 Srv/SrvGait.o
- .debug_macro   0x000017e3      0x1bd Srv/SrvBodyMove.o
- .debug_macro   0x000019a0      0x240 Srv/SrvComm.o
- .debug_macro   0x00001be0      0x136 Srv/SrvComm.o
- .debug_macro   0x00001d16       0x1c Srv/SrvComm.o
- .debug_macro   0x00001d32       0x16 Srv/SrvComm.o
- .debug_macro   0x00001d48       0x3a Srv/SrvComm.o
- .debug_macro   0x00001d82      0x2c5 Srv/SrvCore.o
- .debug_macro   0x00002047       0x16 Srv/SrvCore.o
- .debug_macro   0x0000205d      0x13c Srv/SrvCore.o
- .debug_macro   0x00002199      0x194 Srv/SrvFeeling.o
- .debug_macro   0x0000232d      0x1b9 Srv/SrvHead.o
- .debug_macro   0x000024e6      0x199 Srv/SrvImuSimple.o
- .debug_macro   0x0000267f      0x1a2 Srv/SrvDetection.o
- .debug_macro   0x00002821      0x1cb Srv/SrvWalk.o
+ .debug_macro   0x00000885       0xb2 Drv/DrvLeg.o
+ .debug_macro   0x00000937      0x1ac Drv/DrvServo.o
+ .debug_macro   0x00000ae3       0x34 Drv/DrvServo.o
+ .debug_macro   0x00000b17      0x174 Drv/DrvSpi.o
+ .debug_macro   0x00000c8b      0x17e Drv/DrvTick.o
+ .debug_macro   0x00000e09      0x184 Drv/DrvTimer.o
+ .debug_macro   0x00000f8d      0x18f Drv/DrvTwi.o
+ .debug_macro   0x0000111c       0xdd Drv/DrvTwi.o
+ .debug_macro   0x000011f9      0x186 Drv/DrvUart.o
+ .debug_macro   0x0000137f      0x178 main.o
+ .debug_macro   0x000014f7      0x208 Srv/SrvGait.o
+ .debug_macro   0x000016ff      0x1bd Srv/SrvBodyMove.o
+ .debug_macro   0x000018bc      0x240 Srv/SrvComm.o
+ .debug_macro   0x00001afc      0x136 Srv/SrvComm.o
+ .debug_macro   0x00001c32       0x1c Srv/SrvComm.o
+ .debug_macro   0x00001c4e       0x16 Srv/SrvComm.o
+ .debug_macro   0x00001c64       0x3a Srv/SrvComm.o
+ .debug_macro   0x00001c9e      0x2c5 Srv/SrvCore.o
+ .debug_macro   0x00001f63       0x16 Srv/SrvCore.o
+ .debug_macro   0x00001f79      0x13c Srv/SrvCore.o
+ .debug_macro   0x000020b5      0x194 Srv/SrvFeeling.o
+ .debug_macro   0x00002249      0x1b9 Srv/SrvHead.o
+ .debug_macro   0x00002402      0x199 Srv/SrvImuSimple.o
+ .debug_macro   0x0000259b      0x1a2 Srv/SrvDetection.o
+ .debug_macro   0x0000273d      0x1cb Srv/SrvWalk.o
 OUTPUT(hexapod.elf elf32-avr)
 LOAD linker stubs
